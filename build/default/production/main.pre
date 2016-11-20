@@ -7787,57 +7787,7 @@ void Timer0_Init(void);
 void Timer1_Init(void);
 void Timer2_Init(void);
 
-# 6 "./h/user_interface.h"
-typedef union DATA_PACKET
-{
-unsigned char byte[64];
-
-struct
-{
-unsigned char Device_Type;
-unsigned char RMB_MSB;
-
-unsigned :8;
-unsigned :8;
-unsigned :8;
-unsigned :8;
-unsigned :8;
-unsigned :8;
-
-unsigned char Vend_Id0;
-unsigned char Vend_Id1;
-unsigned char Vend_Id2;
-unsigned char Vend_Id3;
-unsigned char Vend_Id4;
-unsigned char Vend_Id5;
-unsigned char Vend_Id6;
-unsigned char Vend_Id7;
-
-unsigned char Prod_Id0;
-unsigned char Prod_Id1;
-unsigned char Prod_Id2;
-unsigned char Prod_Id3;
-unsigned char Prod_Id4;
-unsigned char Prod_Id5;
-unsigned char Prod_Id6;
-unsigned char Prod_Id7;
-unsigned char Prod_Id8;
-unsigned char Prod_Id9;
-unsigned char Prod_Id10;
-unsigned char Prod_Id11;
-unsigned char Prod_Id12;
-unsigned char Prod_Id13;
-unsigned char Prod_Id14;
-unsigned char Prod_Id15;
-
-unsigned char Prod_Rev0;
-unsigned char Prod_Rev1;
-unsigned char Prod_Rev2;
-unsigned char Prod_Rev3;
-};
-
-} DATA_PACKET;
-
+# 8 "./h/user_interface.h"
 typedef union DATA_SPI
 {
 unsigned char _byte[20];
@@ -8024,14 +7974,14 @@ _asm GOTO int_flag_low _endasm
 void int_flag_high(void)
 {
 
-if(PIR1bits.SSP1IF)
+if(SSP1IF)
 {
 flag.spi = 1;
-PIR1bits.SSP1IF = 0;
+SSP1IF = 0;
 
 if (flagspi.bit4)
 {
-PORTCbits.RC7 = ~PORTCbits.RC7;
+RC7 = ~RC7;
 *p_spi = SSP1BUF;
 dataSRC.DataRead++;
 *p_spi++;
@@ -8045,7 +7995,7 @@ dataSRC.DataWrite++;
 else
 {
 
-PORTDbits.RD6 = 1;
+RD6 = 1;
 dataSRC.DataToWrite = 0;
 flagspi.bit4 = 0;
 }
@@ -8062,13 +8012,13 @@ dataDAC.DataRead++;
 if ((dataDAC.DataWrite & 0x01) == 0)
 
 {
-PORTDbits.RD7 = 1;
-PORTDbits.RD7 = 1;
-PORTDbits.RD7 = 1;
-PORTDbits.RD7 = 1;
-PORTDbits.RD7 = 1;
-PORTDbits.RD7 = 0;
-PORTDbits.RD7 = 0;
+RD7 = 1;
+RD7 = 1;
+RD7 = 1;
+RD7 = 1;
+RD7 = 1;
+RD7 = 0;
+RD7 = 0;
 }
 
 
@@ -8079,7 +8029,7 @@ dataDAC.DataWrite++;
 }
 else
 {
-PORTDbits.RD7 = 1;
+RD7 = 1;
 dataDAC.DataToWrite = 0;
 flagspi.bit0 = 0;
 }
@@ -8095,11 +8045,11 @@ p_dataDSPY.DataRead++;
 if (p_dataDSPY.DataWrite == 4)
 
 {
-PORTCbits.RC0 = 1;
-PORTCbits.RC0 = 1;
-PORTCbits.RC0 = 1;
-PORTCbits.RC0 = 1;
-PORTCbits.RC0 = 0;
+RC0 = 1;
+RC0 = 1;
+RC0 = 1;
+RC0 = 1;
+RC0 = 0;
 }
 
 if ( p_dataDSPY.DataWrite < p_dataDSPY.DataToWrite)
@@ -8109,7 +8059,7 @@ p_dataDSPY.DataWrite++;
 }
 else
 {
-PORTCbits.RC0 = 1;
+RC0 = 1;
 p_dataDSPY.DataWrite = 0;
 p_dataDSPY.DataRead = 0;
 if(flagspi.bit5)
@@ -8130,7 +8080,7 @@ flagspi.bit1 = 0;
 
 }
 
-if(PIR1bits.TMR2IF)
+if(TMR2IF)
 {
 if (flagspi.info)
 {
@@ -8144,7 +8094,7 @@ switch (count_spi)
 case 10:
 if (dataDAC.DataToWrite != 0 && dataDAC.DataToWrite < 20)
 {
-PORTDbits.RD7 = 0;
+RD7 = 0;
 p_spi = &dataDAC._byte[4];
 SSP1BUF = *p_spi;
 dataDAC.DataWrite++;
@@ -8154,9 +8104,9 @@ break;
 case 14:
 if (dataSRC.DataToWrite != 0 && dataSRC.DataToWrite < 20)
 {
-PORTDbits.RD6 = 0;
+RD6 = 0;
 p_spi = &dataSRC._byte[4];
-PORTCbits.RC7 = ~PORTCbits.RC7;
+RC7 = ~RC7;
 SSP1BUF = *p_spi;
 dataSRC.DataWrite++;
 flagspi.bit4 = 1;
@@ -8167,7 +8117,7 @@ case 18:
 p_dataDSPY = dataBlank;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8179,7 +8129,7 @@ p_dataDSPY = dataDSPY1;
 if (count_info < 20000) p_dataDSPY = dataDSPY1_info;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8192,7 +8142,7 @@ p_dataDSPY = dataREAD;
 flagspi.bit5 = 1;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8207,7 +8157,7 @@ p_dataDSPY._byte[4] = 0x41;
 p_dataDSPY._byte[8] = 0x41;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8218,7 +8168,7 @@ break;
 case 30:
 if (dataDAC.DataToWrite != 0 && dataDAC.DataToWrite < 20)
 {
-PORTDbits.RD7 = 0;
+RD7 = 0;
 p_spi = &dataDAC._byte[4];
 SSP1BUF = *p_spi;
 dataDAC.DataWrite++;
@@ -8228,9 +8178,9 @@ break;
 case 34:
 if (dataSRC.DataToWrite != 0 && dataSRC.DataToWrite < 20)
 {
-PORTDbits.RD6 = 0;
+RD6 = 0;
 p_spi = &dataSRC._byte[4];
-PORTCbits.RC7 = ~PORTCbits.RC7;
+RC7 = ~RC7;
 SSP1BUF = *p_spi;
 dataSRC.DataWrite++;
 flagspi.bit4 = 1;
@@ -8241,7 +8191,7 @@ case 38:
 p_dataDSPY = dataBlank;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8253,7 +8203,7 @@ p_dataDSPY = dataDSPY2;
 if (count_info < 20000) p_dataDSPY = dataDSPY2_info;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8264,7 +8214,7 @@ break;
 case 50:
 if (dataDAC.DataToWrite != 0 && dataDAC.DataToWrite < 20)
 {
-PORTDbits.RD7 = 0;
+RD7 = 0;
 p_spi = &dataDAC._byte[4];
 SSP1BUF = *p_spi;
 dataDAC.DataWrite++;
@@ -8274,9 +8224,9 @@ break;
 case 54:
 if (dataSRC.DataToWrite != 0 && dataSRC.DataToWrite < 20)
 {
-PORTDbits.RD6 = 0;
+RD6 = 0;
 p_spi = &dataSRC._byte[4];
-PORTCbits.RC7 = ~PORTCbits.RC7;
+RC7 = ~RC7;
 SSP1BUF = *p_spi;
 dataSRC.DataWrite++;
 flagspi.bit4 = 1;
@@ -8287,7 +8237,7 @@ case 58:
 p_dataDSPY = dataBlank;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8299,7 +8249,7 @@ p_dataDSPY = dataDSPY3;
 if (count_info < 20000) p_dataDSPY = dataDSPY3_info;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8310,7 +8260,7 @@ break;
 case 70:
 if (dataDAC.DataToWrite != 0 && dataDAC.DataToWrite < 20)
 {
-PORTDbits.RD7 = 0;
+RD7 = 0;
 p_spi = &dataDAC._byte[4];
 SSP1BUF = *p_spi;
 dataDAC.DataWrite++;
@@ -8320,9 +8270,9 @@ break;
 case 74:
 if (dataSRC.DataToWrite != 0 && dataSRC.DataToWrite < 20)
 {
-PORTDbits.RD6 = 0;
+RD6 = 0;
 p_spi = &dataSRC._byte[4];
-PORTCbits.RC7 = ~PORTCbits.RC7;
+RC7 = ~RC7;
 SSP1BUF = *p_spi;
 dataSRC.DataWrite++;
 flagspi.bit4 = 1;
@@ -8333,7 +8283,7 @@ case 78:
 p_dataDSPY = dataBlank;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8345,7 +8295,7 @@ p_dataDSPY = dataDSPY4;
 if (count_info < 20000) p_dataDSPY = dataDSPY4_info;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8356,7 +8306,7 @@ break;
 case 90:
 if (dataDAC.DataToWrite != 0 && dataDAC.DataToWrite < 20)
 {
-PORTDbits.RD7 = 0;
+RD7 = 0;
 p_spi = &dataDAC._byte[4];
 SSP1BUF = *p_spi;
 dataDAC.DataWrite++;
@@ -8366,9 +8316,9 @@ break;
 case 94:
 if (dataSRC.DataToWrite != 0 && dataSRC.DataToWrite < 20)
 {
-PORTDbits.RD6 = 0;
+RD6 = 0;
 p_spi = &dataSRC._byte[4];
-PORTCbits.RC7 = ~PORTCbits.RC7;
+RC7 = ~RC7;
 SSP1BUF = *p_spi;
 dataSRC.DataWrite++;
 flagspi.bit4 = 1;
@@ -8379,7 +8329,7 @@ case 98:
 p_dataDSPY = dataBlank;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8391,7 +8341,7 @@ p_dataDSPY = dataDSPY5;
 if (count_info < 20000) p_dataDSPY = dataDSPY5_info;
 if (p_dataDSPY.DataToWrite != 0 && p_dataDSPY.DataToWrite < 20 && !flagspi.bit1)
 {
-PORTCbits.RC0 = 0;
+RC0 = 0;
 p_spi = &p_dataDSPY._byte[4];
 SSP1BUF = *p_spi;
 p_dataDSPY.DataWrite++;
@@ -8407,10 +8357,10 @@ default:
 if (count_spi == 100) count_spi = 0;
 if (count_info >= 20000) count_info--;
 TMR2 = 0;
-PIR1bits.TMR2IF = 0;
+TMR2IF = 0;
 }
 
-if(INTCON3bits.INT1IF)
+if(INT1IF)
 {
 if (flag.bit7)
 {
@@ -8428,26 +8378,26 @@ count_IR = 0;
 start_IR_MSB = 0;
 start_IR_LSB = 0;
 flag.int1 = 0;
-T1CONbits.TMR1ON = 1;
-INTCON3bits.INT1IF = 0;
+TMR1ON = 1;
+INT1IF = 0;
 }
 
-if(PIR1bits.TMR1IF)
+if(TMR1IF)
 {
 if (count_IR < 32)
 {
 start_IR_MSB = start_IR_MSB << 1;
-start_IR_MSB |= PORTBbits.RB1;
+start_IR_MSB |= RB1;
 }
 else
 {
 start_IR_LSB = start_IR_LSB << 1;
-start_IR_LSB |= PORTBbits.RB1;
+start_IR_LSB |= RB1;
 }
 count_IR++;
 if (count_IR > 40 && !flag.bit7)
 {
-T1CONbits.TMR1ON = 0;
+TMR1ON = 0;
 if (start_IR_MSB < 16 && start_IR_LSB > 500)
 {
 flag.bit7 = 1;
@@ -8459,7 +8409,7 @@ trame_capt = 0;
 flag.tim1 = 1;
 TMR1H = 0xF4;
 TMR1L = 0x47;
-PIR1bits.TMR1IF = 0;
+TMR1IF = 0;
 
 
 }
@@ -8468,12 +8418,12 @@ PIR1bits.TMR1IF = 0;
 #pragma interruptlow int_flag_low
 void int_flag_low(void)
 {
-if(INTCONbits.TMR0IF)
+if(TMR0IF)
 {
 flag.tim0 = 1;
 TMR0H = 0xB3;
 TMR0L = 0xB4;
-INTCONbits.TMR0IF =0;
+TMR0IF =0;
 }
 }
 
@@ -8512,9 +8462,9 @@ dataDSPY1.DataToWrite = 0;
 dataDSPY2.DataToWrite = 0;
 dataDSPY3.DataToWrite = 0;
 dataDSPY4.DataToWrite = 0;
-PORTDbits.RD6 = 1;
-PORTDbits.RD7 = 1;
-PORTCbits.RC0 = 1;
+RD6 = 1;
+RD7 = 1;
+RC0 = 1;
 count_spi = 0;
 count_info = 20000;
 InitSRC4392();
@@ -8524,7 +8474,7 @@ Timer2_Init();
 trameok = 0;
 InitDSPY();
 
-PORTCbits.RC7 = 0;
+RC7 = 0;
 
 for(i=0;i<2;i++)
 {

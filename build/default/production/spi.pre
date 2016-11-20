@@ -7709,7 +7709,7 @@ extern __nonreentrant void _delaywdt(unsigned long);
 #pragma intrinsic(_delay3)
 extern __nonreentrant void _delay3(unsigned char);
 
-# 4 "spi.c"
+# 5 "spi.c"
 extern volatile struct chbits{
 unsigned spi:1;
 unsigned bit1:1;

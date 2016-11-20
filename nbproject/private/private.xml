@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/newmain.c</file>
-            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/newxc8_header.h</file>
+            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/h/user_interface.h</file>
+            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/h/hwprofile.h</file>
+            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/spi.c</file>
+            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/main.c</file>
+            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/h/user.h</file>
+            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/user.c</file>
+            <file>file:/home/blobby/MPLABXProjects/PlayerHCI.X/h/spi_ide.h</file>
         </group>
     </open-files>
 </project-private>

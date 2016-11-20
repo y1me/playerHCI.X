@@ -1,11 +1,10 @@
 
 #include "./h/user.h"
-#include "spi_ide.h"
+#include "./h/spi_ide.h"
 #include "delays.h"
-#include "HardwareProfile.h"
-#include <fct_ide.h>
-#include <user_interface.h>
-#include <interface_register.h>
+#include "./h/hwprofile.h"
+#include "./h/user_interface.h"
+#include <p18f6722.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -35,12 +34,6 @@ volatile struct flagspi{
 					}flagspi ;
 
 
-
-
-
-
-
-#pragma udata gpr3
 volatile   DATA_SPI        dataDAC;
 volatile   DATA_SPI        dataSRC;
 volatile   DATA_DISPLAY    dataDSPY1;
@@ -57,16 +50,9 @@ volatile   DATA_DISPLAY    dataDSPY3_info;
 volatile   DATA_DISPLAY    dataDSPY4_info;
 volatile   DATA_DISPLAY    dataDSPY5_info;
 
-#pragma udata
 
-#pragma udata gpr4
-ram   DATA_IDE        dataBUFFER_ide;
-#pragma udata
-
-#pragma udata gpr5
 char keypad;
 long trameok;
-DATA_PACKET     product_id;
 int CDStatus;
 int TrackToPlay;
 int NumbOfTrack;
@@ -74,9 +60,6 @@ unsigned char MuteState, RightVol, LeftVol, AudioStatus;
 unsigned char TimeoutEN;
 char buffer[20];
 int length;
-#pragma udata
-
-
 
 
 /** P R I V A T E  P R O T O T Y P E S ***************************************/
@@ -99,7 +82,7 @@ unsigned char ConvertDigit2(unsigned char );
 void InitMCP23S17(void)
 {   
 	
-        S_DISPLAY = 1;
+        S_DISPLAY=1;
 	S_DISPLAY = 0;
 	spi_out(0x40);
 	spi_out(0x00);
@@ -592,12 +575,12 @@ unsigned char ProcessIrCode(long *trameToProcess)
 			break;
 
 			case KEY10:
-                            if (!flagspi.aux && CDStatus != PAUSE)   NextTrack();
+                            if (!flagspi.aux && CDStatus != CD_PAUSE)   NextTrack();
                             return 1;
 			break;
 
 			case KEY11:
-                            if (!flagspi.aux && CDStatus != PAUSE)   PreviousTrack();
+                            if (!flagspi.aux && CDStatus != CD_PAUSE)   PreviousTrack();
                             return 1;
 			break;
 
@@ -706,7 +689,7 @@ void PlayPause(void)
             {
             case  CD_STOP:
                 Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-                CDStatus = PLAY;
+                CDStatus = CD_PLAY;
                 //Sound
                 dataDAC.DataToWrite = 2;
                 dataDAC.DataRead = 0;
@@ -725,9 +708,9 @@ void PlayPause(void)
                 flagspi.info = 1;
             break;
 
-            case  PLAY:
+            case  CD_PLAY:
                 Pause(dataBUFFER_ide);
-                CDStatus = PAUSE;
+                CDStatus = CD_PAUSE;
                 //Mute
                 dataDAC.DataToWrite = 2;
                 dataDAC.DataRead = 0;
@@ -746,10 +729,10 @@ void PlayPause(void)
                 flagspi.info = 1;
             break;
 
-            case  PAUSE:
+            case  CD_PAUSE:
                 //Resume();
                 Play_MSF_address(&CurrentAbsAddrMSF.track, &TOC[0],dataBUFFER_ide);
-                CDStatus = PLAY;
+                CDStatus = CD_PLAY;
                 //Sound
                 dataDAC.DataToWrite = 2;
                 dataDAC.DataRead = 0;
@@ -782,7 +765,7 @@ void NextTrack(void)
 		if (CDStatus != CD_STOP)
 		{
 			Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-			CDStatus = PLAY;
+			CDStatus = CD_PLAY;
 		}
                 else
                 {
@@ -817,13 +800,13 @@ void PreviousTrack(void)
                             if ( TrackToPlay == 1 )	TrackToPlay = EndAddrMSF.track - 1;
                             else	TrackToPlay -= 1;
                             Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-                            CDStatus = PLAY;
+                            CDStatus = CD_PLAY;
 
                     }
                     else
                     {
                             Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-                            CDStatus = PLAY;
+                            CDStatus = CD_PLAY;
                     }
 		}
 		else
@@ -917,7 +900,7 @@ void UpdateCurrentMSF(void)
 		{	
 			AudioStatus = Read_AbsMSF_SubCh(&CurrentAbsAddrMSF.track,dataBUFFER_ide);
 			Read_RelMSF_SubCh(&CurrentRelAddrMSF.track,dataBUFFER_ide);
-			if (CDStatus == PLAY)
+			if (CDStatus == CD_PLAY)
 			{	
 				TrackToPlay = CurrentRelAddrMSF.track;
 				if (AudioStatus == 0x13 || AudioStatus == 0x14 || AudioStatus == 0x15)

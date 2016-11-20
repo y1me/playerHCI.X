@@ -30,8 +30,8 @@
 
 
 /** DEBUG ***********************************************************/
-	#define	TRIS_PORTTEST		TRISCbits.TRISC7
-	#define PORTTEST 		PORTCbits.RC7
+	#define	TRIS_PORTTEST		TRISC7
+	#define PORTTEST            RC7
 
 /** TRIS ***********************************************************/
 	#define INPUT_PIN           1
@@ -41,40 +41,40 @@
 
     
     /** SPI ************************************************************/
-	#define RST_DRCV		PORTBbits.RB4
-	#define RST_DAC			PORTBbits.RB5
-	#define S_DRCV			PORTDbits.RD6
-	#define S_DAC			PORTDbits.RD7
-	#define S_DISPLAY               PORTCbits.RC0
+	#define RST_DRCV		RB4
+	#define RST_DAC			RB5
+	#define S_DRCV			RD6
+	#define S_DAC			RD7
+	#define S_DISPLAY       RC0
 	#define SPI_BUFF		SSP1BUF
-	#define SPI_INT_F		PIR1bits.SSP1IF
+	#define SPI_INT_F		SSP1IF
    
 
     /** Timer telecommande ************************************************************/
 
- 	#define TIMIR_INT_F		PIR1bits.TMR1IF
-	#define TIMERIR_REGH            TMR1H
-	#define TIMERIR_REG		TMR1L
-	#define EN_TIMIR		T1CONbits.TMR1ON
+ 	#define TIMIR_INT_F         TMR1IF
+	#define TIMERIR_REGH        TMR1H
+	#define TIMERIR_REG         TMR1L
+	#define EN_TIMIR            TMR1ON
 
     /** Timer SubChannel ************************************************************/
 
- 	#define TIMSUB_INT_F            INTCONbits.TMR0IF
+ 	#define TIMSUB_INT_F            TMR0IF
 	#define TIMERSUB_REGH           TMR0H
 	#define TIMERSUB_REG            TMR0L
-	#define EN_TIMSUB               T0CONbits.TMR0ON
+	#define EN_TIMSUB               TMR0ON
 
     /** Timer Display ************************************************************/
 
- 	#define TIMDSPY_INT_F           PIR1bits.TMR2IF
+ 	#define TIMDSPY_INT_F           TMR2IF
 	#define TIMERDSPY_REG           TMR2
-	#define EN_TIMDSPY              T2CONbits.TMR2ON
+	#define EN_TIMDSPY              TMR2ON
 
     /** External Int1 ****************************************************/
 
- 	#define INT1_INT_F		INTCON3bits.INT1IF
-	#define INPUT_IR		PORTBbits.RB1
-	#define EN_INT1			INTCON3bits.INT1IE
+ 	#define INT1_INT_F		INT1IF
+	#define INPUT_IR		RB1
+	#define EN_INT1			INT1IE
 
     /** Display **********************************************************/
 

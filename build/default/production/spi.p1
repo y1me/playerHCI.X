@@ -1,8 +1,8 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"4 spi.c
+"5 spi.c
 [s S709 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
 [n S709 chbits spi bit1 bit2 bit3 bit4 bit5 bit6 bit7 ]
-"14
+"15
 [v _flag `VS709 ~T0 @X0 0 e ]
 "11010 /opt/microchip/xc8/v1.30/include/pic18f6722.h
 [v _SSP1BUF `Vuc ~T0 @X0 0 e@4041 ]
@@ -5943,78 +5943,78 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic18.h: 147: extern __nonreentrant void _delay(unsigned long);
 [; ;pic18.h: 149: extern __nonreentrant void _delaywdt(unsigned long);
 [; ;pic18.h: 151: extern __nonreentrant void _delay3(unsigned char);
-[; ;spi.c: 4: extern volatile struct chbits{
-[; ;spi.c: 5: unsigned spi:1;
-[; ;spi.c: 6: unsigned bit1:1;
-[; ;spi.c: 7: unsigned bit2:1;
-[; ;spi.c: 8: unsigned bit3:1;
-[; ;spi.c: 9: unsigned bit4:1;
-[; ;spi.c: 10: unsigned bit5:1;
-[; ;spi.c: 11: unsigned bit6:1;
-[; ;spi.c: 12: unsigned bit7:1;
-[; ;spi.c: 14: }flag ;
-"16 spi.c
+[; ;spi.c: 5: extern volatile struct chbits{
+[; ;spi.c: 6: unsigned spi:1;
+[; ;spi.c: 7: unsigned bit1:1;
+[; ;spi.c: 8: unsigned bit2:1;
+[; ;spi.c: 9: unsigned bit3:1;
+[; ;spi.c: 10: unsigned bit4:1;
+[; ;spi.c: 11: unsigned bit5:1;
+[; ;spi.c: 12: unsigned bit6:1;
+[; ;spi.c: 13: unsigned bit7:1;
+[; ;spi.c: 15: }flag ;
+"17 spi.c
 [v _spi_out `(v ~T0 @X0 1 ef1`uc ]
-"17
-{
-[; ;spi.c: 16: void spi_out(unsigned char data)
-[; ;spi.c: 17: {
-[e :U _spi_out ]
-"16
-[v _data `uc ~T0 @X0 1 r1 ]
-"17
-[f ]
-[; ;spi.c: 18: flag.spi = 0;
 "18
-[e = . _flag 0 -> -> 0 `i `uc ]
-[; ;spi.c: 19: SSP1BUF = data;
+{
+[; ;spi.c: 17: void spi_out(unsigned char data)
+[; ;spi.c: 18: {
+[e :U _spi_out ]
+"17
+[v _data `uc ~T0 @X0 1 r1 ]
+"18
+[f ]
+[; ;spi.c: 19: flag.spi = 0;
 "19
-[e = _SSP1BUF _data ]
-[; ;spi.c: 20: while(flag.spi != 1);
+[e = . _flag 0 -> -> 0 `i `uc ]
+[; ;spi.c: 20: SSP1BUF = data;
 "20
+[e = _SSP1BUF _data ]
+[; ;spi.c: 21: while(flag.spi != 1);
+"21
 [e $U 711  ]
 [e :U 712 ]
 [e :U 711 ]
 [e $ != -> . _flag 0 `i -> 1 `i 712  ]
 [e :U 713 ]
-[; ;spi.c: 21: flag.spi = 0;
-"21
-[e = . _flag 0 -> -> 0 `i `uc ]
-[; ;spi.c: 22: }
+[; ;spi.c: 22: flag.spi = 0;
 "22
+[e = . _flag 0 -> -> 0 `i `uc ]
+[; ;spi.c: 23: }
+"23
 [e :UE 710 ]
 }
-"24
+"25
 [v _spi_in `(v ~T0 @X0 1 ef1`*uc ]
-"25
-{
-[; ;spi.c: 24: void spi_in(unsigned char *data)
-[; ;spi.c: 25: {
-[e :U _spi_in ]
-"24
-[v _data `*uc ~T0 @X0 1 r1 ]
-"25
-[f ]
-[; ;spi.c: 26: flag.spi = 0;
 "26
-[e = . _flag 0 -> -> 0 `i `uc ]
-[; ;spi.c: 27: SSP1BUF = 0x00;
+{
+[; ;spi.c: 25: void spi_in(unsigned char *data)
+[; ;spi.c: 26: {
+[e :U _spi_in ]
+"25
+[v _data `*uc ~T0 @X0 1 r1 ]
+"26
+[f ]
+[; ;spi.c: 27: flag.spi = 0;
 "27
-[e = _SSP1BUF -> -> 0 `i `uc ]
-[; ;spi.c: 28: while(flag.spi != 1);
+[e = . _flag 0 -> -> 0 `i `uc ]
+[; ;spi.c: 28: SSP1BUF = 0x00;
 "28
+[e = _SSP1BUF -> -> 0 `i `uc ]
+[; ;spi.c: 29: while(flag.spi != 1);
+"29
 [e $U 715  ]
 [e :U 716 ]
 [e :U 715 ]
 [e $ != -> . _flag 0 `i -> 1 `i 716  ]
 [e :U 717 ]
-[; ;spi.c: 29: flag.spi = 0;
-"29
-[e = . _flag 0 -> -> 0 `i `uc ]
-[; ;spi.c: 30: *data = SSP1BUF;
+[; ;spi.c: 30: flag.spi = 0;
 "30
-[e = *U _data _SSP1BUF ]
-[; ;spi.c: 31: }
+[e = . _flag 0 -> -> 0 `i `uc ]
+[; ;spi.c: 31: *data = SSP1BUF;
 "31
+[e = *U _data _SSP1BUF ]
+[; ;spi.c: 32: }
+"32
 [e :UE 714 ]
 }

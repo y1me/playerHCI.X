@@ -5,7 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>h/pic_init.h</itemPath>
-      <itemPath>h/spi.h</itemPath>
       <itemPath>h/spi_ide.h</itemPath>
       <itemPath>h/user.h</itemPath>
       <itemPath>h/user_interface.h</itemPath>
