@@ -1,0 +1,1 @@
+ build/default/production/main.d  build/default/production/main.p1:  main.c ./h/hwprofile.h ./h/spi_ide.h ./h/user_interface.h ./h/pic_init.h ./h/user.h
