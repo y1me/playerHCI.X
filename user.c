@@ -1,12 +1,13 @@
 
 #include "./h/user.h"
 #include "./h/spi_ide.h"
-#include "delays.h"
+//#include "delays.h"
 #include "./h/hwprofile.h"
 #include "./h/user_interface.h"
 #include <p18f6722.h>
 #include <stdio.h>
 #include <string.h>
+#include <xc.h>
 
 /** V A R I A B L E S ********************************************************/
 volatile struct chbits{
@@ -198,11 +199,11 @@ void InitSRC4392(void)
 	//config receiv
 	
 	RST_DRCV = 1;
-	Delay10TCYx(3); //wait 1탎*x
+	//Delay10TCYx(3); //wait 1탎*x
 	RST_DRCV = 0;
-	Delay10TCYx(3); //wait 1탎*x
+	//Delay10TCYx(3); //wait 1탎*x
 	RST_DRCV = 1;
-	Delay10KTCYx(10);//wait 1ms*x
+	//Delay10KTCYx(10);//wait 1ms*x
 	
 	// config power_on perif
 	S_DRCV = 0;
@@ -302,11 +303,11 @@ void InitPCM1792(void)
 	//config DAC
 	
 	RST_DAC = 1;
-	Delay10TCYx(3); //wait 1탎*x
+	//Delay10TCYx(3); //wait 1탎*x
 	RST_DAC = 0;
-	Delay10TCYx(3); //wait 1탎*x
+	//Delay10TCYx(3); //wait 1탎*x
 	RST_DAC = 1;
-	Delay10KTCYx(10);//wait 1ms*x
+	//Delay10KTCYx(10);//wait 1ms*x
 	
 	RightVol = 195;
 	LeftVol = 195;
@@ -537,7 +538,7 @@ unsigned char ProcessIrCode(long *trameToProcess)
                         return 1;
 
                         case KEY2:
-                            Reset_Hard();
+                            //Reset_Hard();
                             CDStatus = CD_STOP;
                         return 1;
 
@@ -551,7 +552,6 @@ unsigned char ProcessIrCode(long *trameToProcess)
 			case KEY9:
                             if (!flagspi.aux)
                             {
-				Stop(dataBUFFER_ide);
                                 //Mute
                                 dataDAC.DataToWrite = 2;
                                 dataDAC.DataRead = 0;
@@ -622,9 +622,9 @@ return 0;
 
 void EjectLoad(void)
 {   
-	if ( Mech_Stat(dataBUFFER_ide) == 1 )
+	if ( /*Mech_Stat(dataBUFFER_ide) ==*/ 1 )
 	{
-            Load(dataBUFFER_ide);
+          
             flag.mech = 1;
             CDStatus = CD_STOP;
             TrackToPlay = 1;
@@ -639,7 +639,7 @@ void EjectLoad(void)
 	}
 	else 
 	{
-            Eject(dataBUFFER_ide);
+
             flag.mech = 0;
             flag.nodisc = 1;
             dataDSPY2._byte[11] = D_void;//digit 1/2 r
@@ -670,9 +670,9 @@ void PlayPause(void)
     dataDAC._byte[4] = 0x12;
     dataDAC._byte[5] = 0xA1;
 
-    if ( Mech_Stat(dataBUFFER_ide) == 1 )
+    if ( /* Mech_Stat(dataBUFFER_ide) == */1 )
     {
-        Load(dataBUFFER_ide);
+        //Load(dataBUFFER_ide);
     }
 
     if ( flag.mech == 0)
@@ -688,7 +688,7 @@ void PlayPause(void)
         switch ( CDStatus )
             {
             case  CD_STOP:
-                Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
+                //Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
                 CDStatus = CD_PLAY;
                 //Sound
                 dataDAC.DataToWrite = 2;
@@ -709,7 +709,7 @@ void PlayPause(void)
             break;
 
             case  CD_PLAY:
-                Pause(dataBUFFER_ide);
+                //Pause(dataBUFFER_ide);
                 CDStatus = CD_PAUSE;
                 //Mute
                 dataDAC.DataToWrite = 2;
@@ -731,7 +731,7 @@ void PlayPause(void)
 
             case  CD_PAUSE:
                 //Resume();
-                Play_MSF_address(&CurrentAbsAddrMSF.track, &TOC[0],dataBUFFER_ide);
+                //Play_MSF_address(&CurrentAbsAddrMSF.track, &TOC[0],dataBUFFER_ide);
                 CDStatus = CD_PLAY;
                 //Sound
                 dataDAC.DataToWrite = 2;
@@ -756,6 +756,7 @@ void PlayPause(void)
 
 void NextTrack(void)
 {   
+    /*
 	if ( flag.mech && !flag.nodisc)
 	{	
 		if ( (EndAddrMSF.track - 1) > TrackToPlay )	TrackToPlay += 1;
@@ -788,11 +789,14 @@ void NextTrack(void)
                     flagspi.info = 1;
                 }
 	}
+     */
 }
 void PreviousTrack(void)
 {   
 	if ( flag.mech && !flag.nodisc)
 	{
+        /*
+         
 		if (CDStatus != CD_STOP)
 		{
                     if ( CurrentRelAddrMSF.min == 0 && CurrentRelAddrMSF.sec < 3 )
@@ -831,12 +835,14 @@ void PreviousTrack(void)
                     dataDSPY5_info._byte[10] = d_pp;//digit dp/4
                     flagspi.info = 1;
 		}
+         */
 	
 	}
 }
 
 void LoadTOCInfo(void)
 { 
+    /*
 	long i=0,k=1;
 	
         dataDSPY2._byte[11] = D_void;//digit 1/2 r
@@ -888,11 +894,12 @@ void LoadTOCInfo(void)
 
             flagspi.info = 1;
 	}
-
+*/
 }
 
 void UpdateCurrentMSF(void)
 { 
+    /*
 	if (flag.tim0)
 	{
 		flag.tim0 = 0;
@@ -913,7 +920,7 @@ void UpdateCurrentMSF(void)
 
 		}
 	}
-
+*/
 }
 
 void VolumeUp(void)
@@ -1068,7 +1075,7 @@ void SetAuxIn(void)
 {
     if (!flagspi.aux)
     {
-        Stop(dataBUFFER_ide);
+        //Stop(dataBUFFER_ide);
         TrackToPlay = 1;
         CDStatus = CD_STOP;
 
@@ -1269,7 +1276,7 @@ void ProcessIO(void)
                     dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
                 }
 
-                sprintf (buffer, "%u", EndAddrMSF.min);
+                //sprintf (buffer, "%u", EndAddrMSF.min);
                 if(strlen (buffer) == 2)
                 {
                     dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
@@ -1280,7 +1287,7 @@ void ProcessIO(void)
                     dataDSPY1._byte[10] = d_0;//digit 1/4
                     dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
                 }
-                sprintf (buffer, "%u", EndAddrMSF.sec);
+                //sprintf (buffer, "%u", EndAddrMSF.sec);
                 if(strlen (buffer) == 2)
                 {
                     dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4
@@ -1295,7 +1302,7 @@ void ProcessIO(void)
             }
             else
             {
-                sprintf (buffer, "%u", CurrentRelAddrMSF.track);
+                //sprintf (buffer, "%u", CurrentRelAddrMSF.track);
                 if(strlen (buffer) == 2)
                 {
                     dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
@@ -1306,7 +1313,7 @@ void ProcessIO(void)
                     dataDSPY2._byte[11] = D_0;//digit 1/2
                     dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
                 }
-                sprintf (buffer, "%u", CurrentRelAddrMSF.min);
+                //sprintf (buffer, "%u", CurrentRelAddrMSF.min);
                 if(strlen (buffer) == 2)
                 {
                     dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
@@ -1317,7 +1324,7 @@ void ProcessIO(void)
                     dataDSPY1._byte[10] = d_0;//digit 1/4
                     dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
                 }
-                sprintf (buffer, "%u", CurrentRelAddrMSF.sec);
+                //sprintf (buffer, "%u", CurrentRelAddrMSF.sec);
                 if(strlen (buffer) == 2)
                 {
                     dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4

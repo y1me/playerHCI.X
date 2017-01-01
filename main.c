@@ -80,7 +80,7 @@
 #include "./h/pic_init.h"
 #include "./h/hwprofile.h"
 #include "./h/user_interface.h"
-#include <delays.h>
+//#include <delays.h>
 #include "./h/spi_ide.h"
 #include "./h/user.h"
 
@@ -143,7 +143,7 @@ volatile int count_spi;
 volatile int count_info;
 unsigned char *p_spi;
 
-
+/*
 void int_flag_high  (void);
 void int_flag_low (void);
 
@@ -160,8 +160,8 @@ void interrupt_vector_low (void)
 	_asm GOTO int_flag_low _endasm
 }
 #pragma code
-
-#pragma interruptlow int_flag_high
+*/
+//#pragma interruptlow int_flag_high
 void int_flag_high(void)
 {
         
@@ -627,7 +627,7 @@ unsigned char AMSF[4],RMSF[4];
 void main(void)
 {
 
-	ram unsigned char *ptest;
+	unsigned char *ptest;
 	int i;
 
 
@@ -669,13 +669,13 @@ void main(void)
 
 	for(i=0;i<2;i++)
 	{
-		Delay10KTCYx(0);
+		//Delay10KTCYx(0);
 	}
-	Reset_Hard();
+	//Reset_Hard();
 
 	for(i=0;i<40;i++)
 	{
-		Delay10KTCYx(0);
+		//Delay10KTCYx(0);
 	}
 
 	while(1)

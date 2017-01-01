@@ -1,6 +1,6 @@
 #include "./h/hwprofile.h"
 #include <xc.h>
-#include <spi.h>
+//#include <spi.h>
 
 extern volatile struct chbits{
 						unsigned spi:1; 
