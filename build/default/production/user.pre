@@ -6331,8 +6331,8 @@ unsigned char ConvertDigit2(unsigned char );
 void InitMCP23S17(void)
 {
 
-RC0=1;
-RC0 = 0;
+PORTCbits.RC0=1;
+PORTCbits.RC0 = 0;
 spi_out(0x40);
 spi_out(0x00);
 spi_out(0xE0);
@@ -6355,10 +6355,10 @@ spi_out(0x00);
 spi_out(0x00);
 spi_out(0x1F);
 spi_out(0x00);
-RC0 = 1;
+PORTCbits.RC0 = 1;
 
-RC0 = 1;
-RC0 = 0;
+PORTCbits.RC0 = 1;
+PORTCbits.RC0 = 0;
 spi_out(0x42);
 spi_out(0x00);
 spi_out(0x00);
@@ -6381,10 +6381,10 @@ spi_out(0x00);
 spi_out(0x00);
 spi_out(0x00);
 spi_out(0x00);
-RC0 = 1;
+PORTCbits.RC0 = 1;
 
-RC0 = 1;
-RC0 = 0;
+PORTCbits.RC0 = 1;
+PORTCbits.RC0 = 0;
 spi_out(0x44);
 spi_out(0x00);
 spi_out(0xF0);
@@ -6407,7 +6407,7 @@ spi_out(0x00);
 spi_out(0x00);
 spi_out(0x00);
 spi_out(0x00);
-RC0 = 1;
+PORTCbits.RC0 = 1;
 
 # 195
 }
@@ -6416,91 +6416,91 @@ void InitSRC4392(void)
 {
 
 
-RB4 = 1;
+PORTBbits.RB4 = 1;
 
-RB4 = 0;
+PORTBbits.RB4 = 0;
 
-RB4 = 1;
+PORTBbits.RB4 = 1;
 
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x01);
 spi_out(0x00);
 spi_out(0x33);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x0D);
 spi_out(0x00);
 spi_out(0x08);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x0E);
 spi_out(0x00);
 spi_out(0x01);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x0F);
 spi_out(0x00);
 spi_out(0x22);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x10);
 spi_out(0x00);
 spi_out(0x00);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x11);
 spi_out(0x00);
 spi_out(0x00);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 # 262
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x2D);
 spi_out(0x00);
 spi_out(0x06);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x2E);
 spi_out(0x00);
 spi_out(0x04);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x2F);
 spi_out(0x00);
 spi_out(0x00);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x03);
 spi_out(0x00);
 spi_out(0x3F);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
-RD6 = 0;
+PORTDbits.RD6 = 0;
 spi_out(0x04);
 spi_out(0x00);
 spi_out(0x00);
-RD6 = 1;
+PORTDbits.RD6 = 1;
 
 
 }
@@ -6509,32 +6509,32 @@ void InitPCM1792(void)
 {
 
 
-RB5 = 1;
+PORTBbits.RB5 = 1;
 
-RB5 = 0;
+PORTBbits.RB5 = 0;
 
-RB5 = 1;
+PORTBbits.RB5 = 1;
 
 
 RightVol = 195;
 LeftVol = 195;
 
-RD7 = 0;
+PORTDbits.RD7 = 0;
 spi_out(0x10);
 spi_out(LeftVol);
-RD7 = 1;
+PORTDbits.RD7 = 1;
 
 
-RD7 = 0;
+PORTDbits.RD7 = 0;
 spi_out(0x11);
 spi_out(RightVol);
-RD7 = 1;
+PORTDbits.RD7 = 1;
 
 
-RD7 = 0;
+PORTDbits.RD7 = 0;
 spi_out(0x12);
 spi_out(0xA0);
-RD7 = 1;
+PORTDbits.RD7 = 1;
 }
 
 void InitDSPY(void)

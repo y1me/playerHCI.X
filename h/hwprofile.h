@@ -24,14 +24,14 @@
         #define KEY11	0x0AF5CE30	//Select Left
 
 /**Code commande CD***************************/
-        #define CD_PLAY	0x100
+        #define CD_PLAY     0x100
         #define CD_PAUSE	0x200
-        #define CD_STOP	0x300
+        #define CD_STOP     0x300
 
 
 /** DEBUG ***********************************************************/
 	#define	TRIS_PORTTEST		TRISC7
-	#define PORTTEST            RC7
+	#define PORTTEST            PORTCbits.RC7
 
 /** TRIS ***********************************************************/
 	#define INPUT_PIN           1
@@ -41,11 +41,11 @@
 
     
     /** SPI ************************************************************/
-	#define RST_DRCV		RB4
-	#define RST_DAC			RB5
-	#define S_DRCV			RD6
-	#define S_DAC			RD7
-	#define S_DISPLAY       RC0
+	#define RST_DRCV		PORTBbits.RB4
+	#define RST_DAC			PORTBbits.RB5
+	#define S_DRCV			PORTDbits.RD6
+	#define S_DAC			PORTDbits.RD7
+	#define S_DISPLAY       PORTCbits.RC0
 	#define SPI_BUFF		SSP1BUF
 	#define SPI_INT_F		SSP1IF
    
@@ -73,7 +73,7 @@
     /** External Int1 ****************************************************/
 
  	#define INT1_INT_F		INT1IF
-	#define INPUT_IR		RB1
+	#define INPUT_IR		PORTBbits.RB1
 	#define EN_INT1			INT1IE
 
     /** Display **********************************************************/

@@ -172,7 +172,7 @@ void int_flag_high(void)
 
             if (flagspi.bit4)
             {
-                PORTTEST = ~PORTTEST;
+                 PORTTEST = ~PORTTEST;
                 *p_spi = SPI_BUFF;
                 dataSRC.DataRead++;
                 *p_spi++;
@@ -606,7 +606,7 @@ void int_flag_high(void)
 	}
 }
 
-#pragma interruptlow int_flag_low
+
 void int_flag_low(void)
 {
 	if(TIMSUB_INT_F)
