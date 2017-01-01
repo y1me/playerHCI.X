@@ -143,28 +143,8 @@ volatile int count_spi;
 volatile int count_info;
 unsigned char *p_spi;
 
-/*
-void int_flag_high  (void);
-void int_flag_low (void);
-
-#pragma code high_vector=0x8
-void interrupt_vector_high (void)
-{
-	_asm GOTO int_flag_high _endasm
-}
-#pragma code
-
-#pragma code low_vector=0x18
-void interrupt_vector_low (void)
-{
-	_asm GOTO int_flag_low _endasm
-}
-#pragma code
-*/
-//#pragma interruptlow int_flag_high
-void int_flag_high(void)
-{
-        
+void interrupt high_int(void)
+{      
 	if(SPI_INT_F)
 	{
             flag.spi = 1;
@@ -270,6 +250,7 @@ void int_flag_high(void)
             }
 
 	}
+
 
     if(TIMDSPY_INT_F)
 	{
@@ -550,7 +531,8 @@ void int_flag_high(void)
             TIMERDSPY_REG = 0;
             TIMDSPY_INT_F = 0;
 	}
-        
+    
+
 	if(INT1_INT_F)
 	{
             if (flag.bit7)
@@ -572,8 +554,8 @@ void int_flag_high(void)
             EN_TIMIR = 1;
             INT1_INT_F = 0;
 	}
-
-        if(TIMIR_INT_F)
+    
+    if(TIMIR_INT_F)
 	{
             if (count_IR < 32)
             {
@@ -607,7 +589,7 @@ void int_flag_high(void)
 }
 
 
-void int_flag_low(void)
+void interrupt low_priority low_int(void)
 {
 	if(TIMSUB_INT_F)
 	{

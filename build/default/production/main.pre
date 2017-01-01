@@ -6295,10 +6295,8 @@ volatile int count_spi;
 volatile int count_info;
 unsigned char *p_spi;
 
-# 165
-void int_flag_high(void)
+void interrupt high_int(void)
 {
-
 if(SSP1IF)
 {
 flag.spi = 1;
@@ -6404,6 +6402,7 @@ flagspi.bit1 = 0;
 }
 
 }
+
 
 if(TMR2IF)
 {
@@ -6685,6 +6684,7 @@ TMR2 = 0;
 TMR2IF = 0;
 }
 
+
 if(INT1IF)
 {
 if (flag.bit7)
@@ -6741,7 +6741,7 @@ TMR1IF = 0;
 }
 
 
-void int_flag_low(void)
+void interrupt low_priority low_int(void)
 {
 if(TMR0IF)
 {
