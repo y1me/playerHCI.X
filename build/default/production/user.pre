@@ -7316,18 +7316,7 @@ int length;
 
 
 unsigned char ProcessIrCode(long *);
-void EjectLoad(void);
-void LoadTOCInfo(void);
 void HandleSIRSC(void);
-void UpdateCurrentMSF(void);
-void PlayPause(void);
-void NextTrack(void);
-void PreviousTrack(void);
-void VolumeUp(void);
-void VolumeDown(void);
-void SoundLevel(unsigned char);
-void Mute(unsigned char );
-void SetAuxIn(void);
 unsigned char ConvertDigit4(unsigned char );
 unsigned char ConvertDigit2(unsigned char );
 
@@ -7412,10 +7401,7 @@ spi_out(0x00);
 spi_out(0x00);
 PORTCbits.RC0 = 1;
 
-# 195
 }
-
-
 
 void InitDSPY(void)
 {
@@ -7621,7 +7607,7 @@ unsigned char ProcessIrCode(long *trameToProcess)
 switch ( *trameToProcess )
 {
 case 0x0AF5E816:
-if (!flagspi.aux) EjectLoad();
+if (!flagspi.aux)
 return 1;
 
 case 0x0AF508F6:
@@ -7632,7 +7618,7 @@ return 1;
 break;
 
 case 0x0AF5CA34:
-if (!flagspi.aux) PlayPause();
+if (!flagspi.aux)
 return 1;
 break;
 
@@ -7662,41 +7648,41 @@ return 1;
 break;
 
 case 0x0AF54EB0:
-if (!flagspi.aux && CDStatus != 0x200) NextTrack();
+if (!flagspi.aux && CDStatus != 0x200)
 return 1;
 break;
 
 case 0x0AF5CE30:
-if (!flagspi.aux && CDStatus != 0x200) PreviousTrack();
+if (!flagspi.aux && CDStatus != 0x200)
 return 1;
 break;
 
 case 0x0AF5D02E:
 if(!MuteState)
 {
-Mute(MuteState);
+
 MuteState = 1;
 }
 else
 {
-Mute(MuteState);
+
 MuteState = 0;
 }
 return 1;
 break;
 
 case 0x0AF5A856:
-VolumeDown();
+
 return 1;
 break;
 
 case 0x0AF548B6:
-VolumeUp();
+
 return 1;
 break;
 
 case 0x0AF5906E:
-SetAuxIn();
+
 return 1;
 break;
 
@@ -7706,388 +7692,6 @@ return 0;
 }
 return 0;
 }
-
-void EjectLoad(void)
-{
-if ( 1 )
-{
-
-flag.mech = 1;
-CDStatus = 0x300;
-TrackToPlay = 1;
-dataDSPY2._byte[11] = 255;
-dataDSPY1._byte[11] = 255;
-dataDSPY1._byte[10] = 221;
-dataDSPY2._byte[10] = 144;
-dataDSPY3._byte[10] = 136;
-dataDSPY4._byte[10] = 196;
-dataDSPY5._byte[10] = 255;
-LoadTOCInfo();
-}
-else
-{
-
-flag.mech = 0;
-flag.nodisc = 1;
-dataDSPY2._byte[11] = 255;
-dataDSPY1._byte[11] = 255;
-dataDSPY1._byte[10] = 197;
-dataDSPY2._byte[10] = 152;
-dataDSPY3._byte[10] = 144;
-dataDSPY4._byte[10] = 205;
-dataDSPY5._byte[10] = 255;
-
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA1;
-}
-}
-
-void PlayPause(void)
-{
-
-
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA1;
-
-if ( 1 )
-{
-
-}
-
-if ( flag.mech == 0)
-{
-LoadTOCInfo();
-flag.mech = 1;
-CDStatus = 0x300;
-TrackToPlay = 1;
-}
-
-if (!flag.nodisc)
-{
-switch ( CDStatus )
-{
-case 0x300:
-
-CDStatus = 0x100;
-
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA0;
-
-dataDSPY2_info._byte[11] = 255;
-dataDSPY1_info._byte[11] = 255;
-dataDSPY1_info._byte[10] = 152;
-dataDSPY2_info._byte[10] = 151;
-dataDSPY3_info._byte[10] = 136;
-dataDSPY4_info._byte[10] = 164;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-break;
-
-case 0x100:
-
-CDStatus = 0x200;
-
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA1;
-
-dataDSPY2_info._byte[11] = 255;
-dataDSPY1_info._byte[11] = 88;
-dataDSPY1_info._byte[10] = 136;
-dataDSPY2_info._byte[10] = 199;
-dataDSPY3_info._byte[10] = 161;
-dataDSPY4_info._byte[10] = 144;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-break;
-
-case 0x200:
-
-
-CDStatus = 0x100;
-
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA0;
-
-dataDSPY2_info._byte[11] = 255;
-dataDSPY1_info._byte[11] = 255;
-dataDSPY1_info._byte[10] = 152;
-dataDSPY2_info._byte[10] = 151;
-dataDSPY3_info._byte[10] = 136;
-dataDSPY4_info._byte[10] = 164;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-break;
-}
-}
-}
-
-void NextTrack(void)
-{
-
-# 659
-}
-void PreviousTrack(void)
-{
-if ( flag.mech && !flag.nodisc)
-{
-
-# 706
-}
-}
-
-void LoadTOCInfo(void)
-{
-
-# 764
-}
-
-void UpdateCurrentMSF(void)
-{
-
-# 790
-}
-
-void VolumeUp(void)
-{
-if(RightVol != 255)
-{
-RightVol += 2;
-LeftVol += 2;
-}
-
-dataDAC.DataToWrite = 4;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x10;
-dataDAC._byte[5] = LeftVol;
-dataDAC._byte[6] = 0x11;
-dataDAC._byte[7] = RightVol;
-
-SoundLevel(RightVol);
-}
-
-void VolumeDown(void)
-{
-if(RightVol > 14)
-{
-RightVol -= 2;
-LeftVol -= 2;
-}
-
-dataDAC.DataToWrite = 4;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x10;
-dataDAC._byte[5] = LeftVol;
-dataDAC._byte[6] = 0x11;
-dataDAC._byte[7] = RightVol;
-
-SoundLevel(RightVol);
-}
-
-void SoundLevel(unsigned char Level)
-{
-
-if(Level == 255)
-{
-dataDSPY2_info._byte[11] = 229;
-dataDSPY1_info._byte[11] = 228;
-dataDSPY1_info._byte[10] = 151;
-dataDSPY2_info._byte[10] = 138;
-dataDSPY3_info._byte[10] = 136;
-dataDSPY4_info._byte[10] = 140;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-return;
-}
-
-if(Level <= 14)
-{
-dataDSPY2_info._byte[11] = 229;
-dataDSPY1_info._byte[11] = 228;
-dataDSPY1_info._byte[10] = 151;
-dataDSPY2_info._byte[10] = 138;
-dataDSPY3_info._byte[10] = 239;
-dataDSPY4_info._byte[10] = 205;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-return;
-}
-
-Level = (255 - Level)/2;
-sprintf (buffer, "%u", Level);
-
-if(strlen (buffer) == 1)
-{
-dataDSPY2_info._byte[11] = 100;
-dataDSPY1_info._byte[11] = 224;
-dataDSPY1_info._byte[10] = 253;
-dataDSPY2_info._byte[10] = ConvertDigit4(buffer[0]);
-dataDSPY3_info._byte[10] = 255;
-dataDSPY4_info._byte[10] = 255;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-return;
-}
-if(strlen (buffer) == 2)
-{
-dataDSPY2_info._byte[11] = 100;
-dataDSPY1_info._byte[11] = 224;
-dataDSPY1_info._byte[10] = 253;
-dataDSPY2_info._byte[10] = ConvertDigit4(buffer[0]);
-dataDSPY3_info._byte[10] = ConvertDigit4(buffer[1]);
-dataDSPY4_info._byte[10] = 255;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-return;
-}
-else
-{
-dataDSPY2_info._byte[11] = 100;
-dataDSPY1_info._byte[11] = 224;
-dataDSPY1_info._byte[10] = 253;
-dataDSPY2_info._byte[10] = ConvertDigit4(buffer[0]);
-dataDSPY3_info._byte[10] = ConvertDigit4(buffer[1]);
-dataDSPY4_info._byte[10] = ConvertDigit4(buffer[2]);
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-return;
-}
-}
-void Mute(unsigned char State)
-{
-if (State)
-{
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA1;
-
-dataDSPY2_info._byte[11] = 255;
-dataDSPY1_info._byte[11] = 255;
-dataDSPY1_info._byte[10] = 138;
-dataDSPY2_info._byte[10] = 199;
-dataDSPY3_info._byte[10] = 149;
-dataDSPY4_info._byte[10] = 144;
-dataDSPY5_info._byte[10] = 255;
-}
-else
-{
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA0;
-
-dataDSPY2_info._byte[11] = 255;
-dataDSPY1_info._byte[11] = 194;
-dataDSPY1_info._byte[10] = 197;
-dataDSPY2_info._byte[10] = 199;
-dataDSPY3_info._byte[10] = 205;
-dataDSPY4_info._byte[10] = 196;
-dataDSPY5_info._byte[10] = 255;
-}
-flagspi.info = 1;
-}
-
-void SetAuxIn(void)
-{
-if (!flagspi.aux)
-{
-
-TrackToPlay = 1;
-CDStatus = 0x300;
-
-
-
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA0;
-dataDAC.DataToWrite = 2;
-
-flagspi.aux = 1;
-dataSRC.DataRead = 0;
-dataSRC.DataWrite = 0;
-dataSRC.CSTiming = 2;
-dataSRC._byte[4] = 0x0D;
-dataSRC._byte[5] = 0x00;
-dataSRC._byte[6] = 0x09;
-dataSRC.DataToWrite = 3;
-
-dataDSPY2._byte[11] = 255;
-dataDSPY1._byte[11] = 255;
-dataDSPY1._byte[10] = 136;
-dataDSPY2._byte[10] = 199;
-dataDSPY3._byte[10] = 140;
-dataDSPY4._byte[10] = 255;
-dataDSPY5._byte[10] = 255;
-}
-else
-{
-
-
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA1;
-
-flagspi.aux = 0;
-dataSRC.DataToWrite = 3;
-dataSRC.DataRead = 0;
-dataSRC.DataWrite = 0;
-dataSRC.CSTiming = 2;
-dataSRC._byte[4] = 0x0D;
-dataSRC._byte[5] = 0x00;
-dataSRC._byte[6] = 0x08;
-
-if (!flag.mech) EjectLoad();
-else
-{
-flag.mech = 1;
-CDStatus = 0x300;
-TrackToPlay = 1;
-dataDSPY2._byte[11] = 255;
-dataDSPY1._byte[11] = 255;
-dataDSPY1._byte[10] = 221;
-dataDSPY2._byte[10] = 144;
-dataDSPY3._byte[10] = 136;
-dataDSPY4._byte[10] = 196;
-dataDSPY5._byte[10] = 255;
-LoadTOCInfo();
-}
-}
-
-}
-
 
 unsigned char ConvertDigit4(unsigned char letter)
 {
@@ -8131,6 +7735,110 @@ break;
 
 case '9':
 return 160;
+break;
+
+case 'a':
+return 136;
+break;
+
+case 'b':
+return 133;
+break;
+
+case 'c':
+return 147;
+break;
+
+case 'd':
+return 196;
+break;
+
+case 'e':
+return 144;
+break;
+
+case 'f':
+return 153;
+break;
+
+case 'g':
+return 160;
+break;
+
+case 'h':
+return 141;
+break;
+
+case 'i':
+return 239;
+break;
+
+case 'j':
+return 230;
+break;
+
+case 'k':
+return 140;
+break;
+
+case 'l':
+return 151;
+break;
+
+case 'm':
+return 138;
+break;
+
+case 'n':
+return 205;
+break;
+
+case 'o':
+return 197;
+break;
+
+case 'p':
+return 152;
+break;
+
+case 'q':
+return 168;
+break;
+
+case 'r':
+return 221;
+break;
+
+case 's':
+return 161;
+break;
+
+case 't':
+return 149;
+break;
+
+case 'u':
+return 199;
+break;
+
+case 'v':
+return 134;
+break;
+
+case 'w':
+return 134;
+break;
+
+case 'x':
+return 140;
+break;
+
+case 'y':
+return 164;
+break;
+
+case 'z':
+return 208;
 break;
 
 default:
@@ -8183,6 +7891,110 @@ case '9':
 return 66;
 break;
 
+case 'a':
+return 72;
+break;
+
+case 'b':
+return 224;
+break;
+
+case 'c':
+return 208;
+break;
+
+case 'd':
+return 100;
+break;
+
+case 'e':
+return 80;
+break;
+
+case 'f':
+return 216;
+break;
+
+case 'g':
+return 66;
+break;
+
+case 'h':
+return 232;
+break;
+
+case 'i':
+return 239;
+break;
+
+case 'j':
+return 103;
+break;
+
+case 'k':
+return 104;
+break;
+
+case 'l':
+return 241;
+break;
+
+case 'm':
+return 73;
+break;
+
+case 'n':
+return 236;
+break;
+
+case 'o':
+return 228;
+break;
+
+case 'p':
+return 88;
+break;
+
+case 'q':
+return 74;
+break;
+
+case 'r':
+return 252;
+break;
+
+case 's':
+return 194;
+break;
+
+case 't':
+return 240;
+break;
+
+case 'u':
+return 97;
+break;
+
+case 'v':
+return 229;
+break;
+
+case 'w':
+return 229;
+break;
+
+case 'x':
+return 104;
+break;
+
+case 'y':
+return 98;
+break;
+
+case 'z':
+return 84;
+break;
+
 default:
 return 255;
 
@@ -8195,15 +8007,14 @@ if(!flag.first) HandleSIRSC();
 
 if (flag.first)
 {
-LoadTOCInfo();
-flag.mech = 1;
+
+
 CDStatus = 0x300;
-TrackToPlay = 1;
+
 flag.first = 0;
 }
 if (!flag.nodisc && !flagspi.aux)
 {
-UpdateCurrentMSF();
 
 if (CDStatus == 0x300)
 {

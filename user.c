@@ -11,28 +11,28 @@
 
 /** V A R I A B L E S ********************************************************/
 volatile struct chbits{
-						unsigned spi:1; 
-						unsigned tim0:1; 
-						unsigned int1:1; 
-						unsigned tim1:1; 
-						unsigned mech:1; 
-						unsigned first:1; 
-						unsigned nodisc:1; 
-						unsigned bit7:1;
-		
-					}flag ;
+	unsigned spi:1; 
+	unsigned tim0:1; 
+	unsigned int1:1; 
+	unsigned tim1:1; 
+	unsigned mech:1; 
+	unsigned first:1; 
+	unsigned nodisc:1; 
+	unsigned bit7:1;
+
+}flag ;
 
 volatile struct flagspi{
-						unsigned bit0:1;
-						unsigned bit1:1;
-						unsigned info:1;
-						unsigned aux:1;
-						unsigned bit4:1;
-						unsigned bit5:1;
-						unsigned ready:1;
-						unsigned bit7:1;
+	unsigned bit0:1;
+	unsigned bit1:1;
+	unsigned info:1;
+	unsigned aux:1;
+	unsigned bit4:1;
+	unsigned bit5:1;
+	unsigned ready:1;
+	unsigned bit7:1;
 
-					}flagspi ;
+}flagspi ;
 
 
 volatile   DATA_SPI        dataDAC;
@@ -65,1144 +65,782 @@ int length;
 
 /** P R I V A T E  P R O T O T Y P E S ***************************************/
 unsigned char ProcessIrCode(long *);
-void EjectLoad(void);
-void LoadTOCInfo(void);
 void HandleSIRSC(void);
-void UpdateCurrentMSF(void);
-void PlayPause(void);
-void NextTrack(void);
-void PreviousTrack(void);
-void VolumeUp(void);
-void VolumeDown(void);
-void SoundLevel(unsigned char);
-void Mute(unsigned char );
-void SetAuxIn(void);
 unsigned char ConvertDigit4(unsigned char );
 unsigned char ConvertDigit2(unsigned char );
 /*****************************************************************************/
 void InitMCP23S17(void)
 {   
-	
-        S_DISPLAY=1;
+
+	S_DISPLAY=1;
 	S_DISPLAY = 0;
 	spi_out(0x40);
 	spi_out(0x00);
 	spi_out(0xE0);
-        spi_out(0xF0);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0xF0);
-        spi_out(0x00);
-        spi_out(0xF0);
-        spi_out(0x00);
-        spi_out(0xF0);
-        spi_out(0x08);
-        spi_out(0x08);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x1F);
-        spi_out(0x00);
+	spi_out(0xF0);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0xF0);
+	spi_out(0x00);
+	spi_out(0xF0);
+	spi_out(0x00);
+	spi_out(0xF0);
+	spi_out(0x08);
+	spi_out(0x08);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x1F);
+	spi_out(0x00);
 	S_DISPLAY = 1;
 
-        S_DISPLAY = 1;
+	S_DISPLAY = 1;
 	S_DISPLAY = 0;
 	spi_out(0x42);
 	spi_out(0x00);
 	spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x08);
-        spi_out(0x08);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x08);
+	spi_out(0x08);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
 	S_DISPLAY = 1;
 
-        S_DISPLAY = 1;
+	S_DISPLAY = 1;
 	S_DISPLAY = 0;
 	spi_out(0x44);
 	spi_out(0x00);
 	spi_out(0xF0);//0x00
-        spi_out(0xFF);//0x01
-        spi_out(0x00);//0x02
-        spi_out(0x00);//0x03
-        spi_out(0x00);//0x04
-        spi_out(0x0F);//0x05
-        spi_out(0x00);//0x06
-        spi_out(0x0F);//0x07
-        spi_out(0x00);//0x08
-        spi_out(0x0F);//0x09
-        spi_out(0x08);//0x0A
-        spi_out(0x08);//0x0B
-        spi_out(0x00);//0x0C
-        spi_out(0x00);//0x0D
-        spi_out(0x00);//0x0E
-        spi_out(0x00);//0x0F
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
-        spi_out(0x00);
+	spi_out(0xFF);//0x01
+	spi_out(0x00);//0x02
+	spi_out(0x00);//0x03
+	spi_out(0x00);//0x04
+	spi_out(0x0F);//0x05
+	spi_out(0x00);//0x06
+	spi_out(0x0F);//0x07
+	spi_out(0x00);//0x08
+	spi_out(0x0F);//0x09
+	spi_out(0x08);//0x0A
+	spi_out(0x08);//0x0B
+	spi_out(0x00);//0x0C
+	spi_out(0x00);//0x0D
+	spi_out(0x00);//0x0E
+	spi_out(0x00);//0x0F
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
+	spi_out(0x00);
 	S_DISPLAY = 1;
 
-        /*
-        S_DISPLAY = 1;
-	S_DISPLAY = 0;
-	spi_out(0x45);
-	spi_out(0x00);
-	spi_in(&dataDSPY1._byte[4]);
-	spi_in(&dataDSPY1._byte[5]);
-        spi_in(&dataDSPY1._byte[6]);
-	spi_in(&dataDSPY1._byte[7]);
-        spi_in(&dataDSPY1._byte[8]);
-	spi_in(&dataDSPY1._byte[9]);
-        spi_in(&dataDSPY1._byte[10]);
-	spi_in(&dataDSPY1._byte[11]);
-        spi_in(&dataDSPY1._byte[12]);
-	spi_in(&dataDSPY1._byte[13]);
-        spi_in(&dataDSPY1._byte[14]);
-	spi_in(&dataDSPY1._byte[15]);
-        spi_in(&dataDSPY1._byte[16]);
-	spi_in(&dataDSPY1._byte[17]);
-        spi_in(&dataDSPY1._byte[18]);
-	spi_in(&dataDSPY1._byte[19]);
-        spi_in(&dataDSPY1._byte[20]);
-	spi_in(&dataDSPY1._byte[21]);
-        spi_in(&dataDSPY1._byte[22]);
-        spi_in(&dataDSPY1._byte[23]);
-        spi_in(&dataDSPY1._byte[24]);
-        spi_in(&dataDSPY1._byte[25]);
-	S_DRCV = 1;
-        S_DRCV = 1;
-        */
-
 }
-
-
 
 void InitDSPY(void)
 {
-        dataDSPY1.DataToWrite = 8;
-        dataDSPY1.DataRead = 0;
-        dataDSPY1.DataWrite = 0;
-        dataDSPY1._byte[4] = 0x40;
-        dataDSPY1._byte[5] = 0x12;
-        dataDSPY1._byte[6] = 0xFE;// supply digit
-        dataDSPY1._byte[7] = 0x00;// switch & diode
-        dataDSPY1._byte[8] = 0x42;
-        dataDSPY1._byte[9] = 0x12;
-        dataDSPY1._byte[10] = 0xEE;//digit 1/4
-        dataDSPY1._byte[11] = 0xE4;//digit 2/2
+	dataDSPY1.DataToWrite = 8;
+	dataDSPY1.DataRead = 0;
+	dataDSPY1.DataWrite = 0;
+	dataDSPY1._byte[4] = 0x40;
+	dataDSPY1._byte[5] = 0x12;
+	dataDSPY1._byte[6] = 0xFE;// supply digit
+	dataDSPY1._byte[7] = 0x00;// switch & diode
+	dataDSPY1._byte[8] = 0x42;
+	dataDSPY1._byte[9] = 0x12;
+	dataDSPY1._byte[10] = 0xEE;//digit 1/4
+	dataDSPY1._byte[11] = 0xE4;//digit 2/2
 
-        dataDSPY2.DataToWrite = 8;
-        dataDSPY2.DataRead = 0;
-        dataDSPY2.DataWrite = 0;
-        dataDSPY2._byte[4] = 0x40;
-        dataDSPY2._byte[5] = 0x12;
-        dataDSPY2._byte[6] = 0xFD;// supply digit
-        dataDSPY2._byte[7] = 0x00;// switch & diode
-        dataDSPY2._byte[8] = 0x42;
-        dataDSPY2._byte[9] = 0x12;
-        dataDSPY2._byte[10] = 0xCD;//digit 2/4
-        dataDSPY2._byte[11] = 0x5A;//digit 1/2
+	dataDSPY2.DataToWrite = 8;
+	dataDSPY2.DataRead = 0;
+	dataDSPY2.DataWrite = 0;
+	dataDSPY2._byte[4] = 0x40;
+	dataDSPY2._byte[5] = 0x12;
+	dataDSPY2._byte[6] = 0xFD;// supply digit
+	dataDSPY2._byte[7] = 0x00;// switch & diode
+	dataDSPY2._byte[8] = 0x42;
+	dataDSPY2._byte[9] = 0x12;
+	dataDSPY2._byte[10] = 0xCD;//digit 2/4
+	dataDSPY2._byte[11] = 0x5A;//digit 1/2
 
-        dataDSPY3.DataToWrite = 8;
-        dataDSPY3.DataRead = 0;
-        dataDSPY3.DataWrite = 0;
-        dataDSPY3._byte[4] = 0x40;
-        dataDSPY3._byte[5] = 0x12;
-        dataDSPY3._byte[6] = 0xF7;// supply digit
-        dataDSPY3._byte[7] = 0x00;// switch & diode
-        dataDSPY3._byte[8] = 0x42;
-        dataDSPY3._byte[9] = 0x12;
-        dataDSPY3._byte[10] = 0xEF;//digit 3/4
-        dataDSPY3._byte[11] = 0x45;
+	dataDSPY3.DataToWrite = 8;
+	dataDSPY3.DataRead = 0;
+	dataDSPY3.DataWrite = 0;
+	dataDSPY3._byte[4] = 0x40;
+	dataDSPY3._byte[5] = 0x12;
+	dataDSPY3._byte[6] = 0xF7;// supply digit
+	dataDSPY3._byte[7] = 0x00;// switch & diode
+	dataDSPY3._byte[8] = 0x42;
+	dataDSPY3._byte[9] = 0x12;
+	dataDSPY3._byte[10] = 0xEF;//digit 3/4
+	dataDSPY3._byte[11] = 0x45;
 
-        dataDSPY4.DataToWrite = 8;
-        dataDSPY4.DataRead = 0;
-        dataDSPY4.DataWrite = 0;
-        dataDSPY4._byte[4] = 0x40;
-        dataDSPY4._byte[5] = 0x12;
-        dataDSPY4._byte[6] = 0x0F;// supply digit
-        dataDSPY4._byte[7] = 0x00;// switch & diode
-        dataDSPY4._byte[8] = 0x42;
-        dataDSPY4._byte[9] = 0x12;
-        dataDSPY4._byte[10] = d_p;//0x95;//digit 4/4
-        dataDSPY4._byte[11] = 0xA2;
+	dataDSPY4.DataToWrite = 8;
+	dataDSPY4.DataRead = 0;
+	dataDSPY4.DataWrite = 0;
+	dataDSPY4._byte[4] = 0x40;
+	dataDSPY4._byte[5] = 0x12;
+	dataDSPY4._byte[6] = 0x0F;// supply digit
+	dataDSPY4._byte[7] = 0x00;// switch & diode
+	dataDSPY4._byte[8] = 0x42;
+	dataDSPY4._byte[9] = 0x12;
+	dataDSPY4._byte[10] = d_p;//0x95;//digit 4/4
+	dataDSPY4._byte[11] = 0xA2;
 
-        dataDSPY5.DataToWrite = 8;
-        dataDSPY5.DataRead = 0;
-        dataDSPY5.DataWrite = 0;
-        dataDSPY5._byte[4] = 0x40;
-        dataDSPY5._byte[5] = 0x12;
-        dataDSPY5._byte[6] = 0xFB;// supply digit
-        dataDSPY5._byte[7] = 0x00;// switch & diode
-        dataDSPY5._byte[8] = 0x42;
-        dataDSPY5._byte[9] = 0x12;
-        dataDSPY5._byte[10] = 0xFF;//digit dp/4
-        dataDSPY5._byte[11] = 0x22;
+	dataDSPY5.DataToWrite = 8;
+	dataDSPY5.DataRead = 0;
+	dataDSPY5.DataWrite = 0;
+	dataDSPY5._byte[4] = 0x40;
+	dataDSPY5._byte[5] = 0x12;
+	dataDSPY5._byte[6] = 0xFB;// supply digit
+	dataDSPY5._byte[7] = 0x00;// switch & diode
+	dataDSPY5._byte[8] = 0x42;
+	dataDSPY5._byte[9] = 0x12;
+	dataDSPY5._byte[10] = 0xFF;//digit dp/4
+	dataDSPY5._byte[11] = 0x22;
 
-        dataDSPY1_info.DataToWrite = 8;
-        dataDSPY1_info.DataRead = 0;
-        dataDSPY1_info.DataWrite = 0;
-        dataDSPY1_info._byte[4] = 0x40;
-        dataDSPY1_info._byte[5] = 0x12;
-        dataDSPY1_info._byte[6] = 0xFE;// supply digit
-        dataDSPY1_info._byte[7] = 0x00;// switch & diode
-        dataDSPY1_info._byte[8] = 0x42;
-        dataDSPY1_info._byte[9] = 0x12;
-        dataDSPY1_info._byte[10] = 0xEE;//digit 1/4
-        dataDSPY1_info._byte[11] = 0xE4;//digit 2/2
+	dataDSPY1_info.DataToWrite = 8;
+	dataDSPY1_info.DataRead = 0;
+	dataDSPY1_info.DataWrite = 0;
+	dataDSPY1_info._byte[4] = 0x40;
+	dataDSPY1_info._byte[5] = 0x12;
+	dataDSPY1_info._byte[6] = 0xFE;// supply digit
+	dataDSPY1_info._byte[7] = 0x00;// switch & diode
+	dataDSPY1_info._byte[8] = 0x42;
+	dataDSPY1_info._byte[9] = 0x12;
+	dataDSPY1_info._byte[10] = 0xEE;//digit 1/4
+	dataDSPY1_info._byte[11] = 0xE4;//digit 2/2
 
-        dataDSPY2_info.DataToWrite = 8;
-        dataDSPY2_info.DataRead = 0;
-        dataDSPY2_info.DataWrite = 0;
-        dataDSPY2_info._byte[4] = 0x40;
-        dataDSPY2_info._byte[5] = 0x12;
-        dataDSPY2_info._byte[6] = 0xFD;// supply digit
-        dataDSPY2_info._byte[7] = 0x00;// switch & diode
-        dataDSPY2_info._byte[8] = 0x42;
-        dataDSPY2_info._byte[9] = 0x12;
-        dataDSPY2_info._byte[10] = 0xCD;//digit 2/4
-        dataDSPY2_info._byte[11] = 0x5A;//digit 1/2
+	dataDSPY2_info.DataToWrite = 8;
+	dataDSPY2_info.DataRead = 0;
+	dataDSPY2_info.DataWrite = 0;
+	dataDSPY2_info._byte[4] = 0x40;
+	dataDSPY2_info._byte[5] = 0x12;
+	dataDSPY2_info._byte[6] = 0xFD;// supply digit
+	dataDSPY2_info._byte[7] = 0x00;// switch & diode
+	dataDSPY2_info._byte[8] = 0x42;
+	dataDSPY2_info._byte[9] = 0x12;
+	dataDSPY2_info._byte[10] = 0xCD;//digit 2/4
+	dataDSPY2_info._byte[11] = 0x5A;//digit 1/2
 
-        dataDSPY3_info.DataToWrite = 8;
-        dataDSPY3_info.DataRead = 0;
-        dataDSPY3_info.DataWrite = 0;
-        dataDSPY3_info._byte[4] = 0x40;
-        dataDSPY3_info._byte[5] = 0x12;
-        dataDSPY3_info._byte[6] = 0xF7;// supply digit
-        dataDSPY3_info._byte[7] = 0x00;// switch & diode
-        dataDSPY3_info._byte[8] = 0x42;
-        dataDSPY3_info._byte[9] = 0x12;
-        dataDSPY3_info._byte[10] = 0xEF;//digit 3/4
-        dataDSPY3_info._byte[11] = 0x45;
+	dataDSPY3_info.DataToWrite = 8;
+	dataDSPY3_info.DataRead = 0;
+	dataDSPY3_info.DataWrite = 0;
+	dataDSPY3_info._byte[4] = 0x40;
+	dataDSPY3_info._byte[5] = 0x12;
+	dataDSPY3_info._byte[6] = 0xF7;// supply digit
+	dataDSPY3_info._byte[7] = 0x00;// switch & diode
+	dataDSPY3_info._byte[8] = 0x42;
+	dataDSPY3_info._byte[9] = 0x12;
+	dataDSPY3_info._byte[10] = 0xEF;//digit 3/4
+	dataDSPY3_info._byte[11] = 0x45;
 
-        dataDSPY4_info.DataToWrite = 8;
-        dataDSPY4_info.DataRead = 0;
-        dataDSPY4_info.DataWrite = 0;
-        dataDSPY4_info._byte[4] = 0x40;
-        dataDSPY4_info._byte[5] = 0x12;
-        dataDSPY4_info._byte[6] = 0x0F;// supply digit
-        dataDSPY4_info._byte[7] = 0x00;// switch & diode
-        dataDSPY4_info._byte[8] = 0x42;
-        dataDSPY4_info._byte[9] = 0x12;
-        dataDSPY4_info._byte[10] = 0x95;//digit 4/4
-        dataDSPY4_info._byte[11] = 0xA2;
+	dataDSPY4_info.DataToWrite = 8;
+	dataDSPY4_info.DataRead = 0;
+	dataDSPY4_info.DataWrite = 0;
+	dataDSPY4_info._byte[4] = 0x40;
+	dataDSPY4_info._byte[5] = 0x12;
+	dataDSPY4_info._byte[6] = 0x0F;// supply digit
+	dataDSPY4_info._byte[7] = 0x00;// switch & diode
+	dataDSPY4_info._byte[8] = 0x42;
+	dataDSPY4_info._byte[9] = 0x12;
+	dataDSPY4_info._byte[10] = 0x95;//digit 4/4
+	dataDSPY4_info._byte[11] = 0xA2;
 
-        dataDSPY5_info.DataToWrite = 8;
-        dataDSPY5_info.DataRead = 0;
-        dataDSPY5_info.DataWrite = 0;
-        dataDSPY5_info._byte[4] = 0x40;
-        dataDSPY5_info._byte[5] = 0x12;
-        dataDSPY5_info._byte[6] = 0xFB;// supply digit
-        dataDSPY5_info._byte[7] = 0x00;// switch & diode
-        dataDSPY5_info._byte[8] = 0x42;
-        dataDSPY5_info._byte[9] = 0x12;
-        dataDSPY5_info._byte[10] = 0xFF;//digit dp/4
-        dataDSPY5_info._byte[11] = 0x22;
+	dataDSPY5_info.DataToWrite = 8;
+	dataDSPY5_info.DataRead = 0;
+	dataDSPY5_info.DataWrite = 0;
+	dataDSPY5_info._byte[4] = 0x40;
+	dataDSPY5_info._byte[5] = 0x12;
+	dataDSPY5_info._byte[6] = 0xFB;// supply digit
+	dataDSPY5_info._byte[7] = 0x00;// switch & diode
+	dataDSPY5_info._byte[8] = 0x42;
+	dataDSPY5_info._byte[9] = 0x12;
+	dataDSPY5_info._byte[10] = 0xFF;//digit dp/4
+	dataDSPY5_info._byte[11] = 0x22;
 
-        dataBlank.DataToWrite = 8;
-        dataBlank.DataRead = 0;
-        dataBlank.DataWrite = 0;
-        dataBlank._byte[4] = 0x40;
-        dataBlank._byte[5] = 0x12;
-        dataBlank._byte[6] = 0xFF;// supply digit
-        dataBlank._byte[7] = 0x00;// switch & diode
-        dataBlank._byte[8] = 0x42;
-        dataBlank._byte[9] = 0x12;
-        dataBlank._byte[10] = 0xFF;//digit dp/4
-        dataBlank._byte[11] = 0xFF;
+	dataBlank.DataToWrite = 8;
+	dataBlank.DataRead = 0;
+	dataBlank.DataWrite = 0;
+	dataBlank._byte[4] = 0x40;
+	dataBlank._byte[5] = 0x12;
+	dataBlank._byte[6] = 0xFF;// supply digit
+	dataBlank._byte[7] = 0x00;// switch & diode
+	dataBlank._byte[8] = 0x42;
+	dataBlank._byte[9] = 0x12;
+	dataBlank._byte[10] = 0xFF;//digit dp/4
+	dataBlank._byte[11] = 0xFF;
 
-        dataREAD.DataToWrite = 8;
-        dataREAD.DataRead = 0;
-        dataREAD.DataWrite = 0;
-        dataREAD._byte[4] = 0x45;
-        dataREAD._byte[5] = 0x0E;
-        dataREAD._byte[6] = 0x00;
-        dataREAD._byte[7] = 0x00;
-        dataREAD._byte[8] = 0x45;
-        dataREAD._byte[9] = 0x10;
-        dataREAD._byte[10] = 0x00;
-        dataREAD._byte[11] = 0x00;
+	dataREAD.DataToWrite = 8;
+	dataREAD.DataRead = 0;
+	dataREAD.DataWrite = 0;
+	dataREAD._byte[4] = 0x45;
+	dataREAD._byte[5] = 0x0E;
+	dataREAD._byte[6] = 0x00;
+	dataREAD._byte[7] = 0x00;
+	dataREAD._byte[8] = 0x45;
+	dataREAD._byte[9] = 0x10;
+	dataREAD._byte[10] = 0x00;
+	dataREAD._byte[11] = 0x00;
 }
- 
+
 void HandleSIRSC(void)
 {
-    switch ( keypad )
-        {
-            case 1:
-                trameok = KEY1;
-                keypad = 0;
-            break;
+	switch ( keypad )
+	{
+		case 1:
+			trameok = KEY1;
+			keypad = 0;
+			break;
 
-            case 2:
-                trameok = KEY9;
-                keypad = 0;
-            break;
+		case 2:
+			trameok = KEY9;
+			keypad = 0;
+			break;
 
-            case 4:
-                trameok = KEY10;
-                keypad = 0;
-            break;
+		case 4:
+			trameok = KEY10;
+			keypad = 0;
+			break;
 
-            case 8:
-                trameok = KEY11;
-                keypad = 0;
-            break;
+		case 8:
+			trameok = KEY11;
+			keypad = 0;
+			break;
 
-            case 16:
-                trameok = KEY3;
-                keypad = 0;
-            break;
+		case 16:
+			trameok = KEY3;
+			keypad = 0;
+			break;
 
-            case 32:
-                trameok = KEY6;
-                keypad = 0;
-            break;
+		case 32:
+			trameok = KEY6;
+			keypad = 0;
+			break;
 
-            case 64:
-                trameok = KEY5;
-                keypad = 0;
-            break;
+		case 64:
+			trameok = KEY5;
+			keypad = 0;
+			break;
 
-            case 128:
-                trameok = KEY7;
-                keypad = 0;
-            break;
+		case 128:
+			trameok = KEY7;
+			keypad = 0;
+			break;
 
-            default:
-                keypad = keypad;
-        }
+		default:
+			keypad = keypad;
+	}
 
-    if (ProcessIrCode(&trameok) == 1) trameok = 0;
+	if (ProcessIrCode(&trameok) == 1) trameok = 0;
 }
 
 unsigned char ProcessIrCode(long *trameToProcess)
 {		
 
 	switch ( *trameToProcess )
-		{
-			case KEY1:
-                            if (!flagspi.aux)   EjectLoad();
-                        return 1;
+	{
+		case KEY1:
+			if (!flagspi.aux)   
+				return 1;
 
-                        case KEY2:
-                            //Reset_Hard();
-                            CDStatus = CD_STOP;
-                        return 1;
+		case KEY2:
+			//Reset_Hard();
+			CDStatus = CD_STOP;
+			return 1;
 
 			break;
 
-			case KEY7:
-                            if (!flagspi.aux)   PlayPause();
-                        return 1;
+		case KEY7:
+			if (!flagspi.aux)   
+				return 1;
 			break;
 
-			case KEY9:
-                            if (!flagspi.aux)
-                            {
-                                //Mute
-                                dataDAC.DataToWrite = 2;
-                                dataDAC.DataRead = 0;
-                                dataDAC.DataWrite = 0;
-                                dataDAC.CSTiming = 2;
-                                dataDAC._byte[4] = 0x12;
-                                dataDAC._byte[5] = 0xA1;
+		case KEY9:
+			if (!flagspi.aux)
+			{
+				//Mute
+				dataDAC.DataToWrite = 2;
+				dataDAC.DataRead = 0;
+				dataDAC.DataWrite = 0;
+				dataDAC.CSTiming = 2;
+				dataDAC._byte[4] = 0x12;
+				dataDAC._byte[5] = 0xA1;
 
 				TrackToPlay = 1;
 				CDStatus = CD_STOP;
-                                dataDSPY2_info._byte[11] = D_void;//digit 1/2 
-                                dataDSPY1_info._byte[11] = D_void;//digit 2/2 
-                                dataDSPY1_info._byte[10] = d_s;//digit 1/4 
-                                dataDSPY2_info._byte[10] = d_t;//digit 2/4
-                                dataDSPY3_info._byte[10] = d_o;//digit 3/4
-                                dataDSPY4_info._byte[10] = d_p;//digit 4/4
-                                dataDSPY5_info._byte[10] = d_void;//digit dp/4
-                                flagspi.info = 1;
-                            }
-                            return 1;
-			break;
-
-			case KEY10:
-                            if (!flagspi.aux && CDStatus != CD_PAUSE)   NextTrack();
-                            return 1;
-			break;
-
-			case KEY11:
-                            if (!flagspi.aux && CDStatus != CD_PAUSE)   PreviousTrack();
-                            return 1;
-			break;
-
-			case KEY4:
-                            if(!MuteState)
-                            {
-                                Mute(MuteState);
-                                MuteState = 1;
-                            }
-                            else
-                            {
-                                Mute(MuteState);
-                                MuteState = 0;
-                            }
-                            return 1;
-			break;
-
-			case KEY6:
-                            VolumeDown();
-                            return 1;
-			break;
-
-			case KEY5:
-                            VolumeUp();
-                            return 1;
-			break;
-
-                        case KEY3:
-                            SetAuxIn();
-                            return 1;
-                        break;
-
-			default: 
-                            *trameToProcess = *trameToProcess;
-                        return 0;
-		}
-return 0;
-}
-
-void EjectLoad(void)
-{   
-	if ( /*Mech_Stat(dataBUFFER_ide) ==*/ 1 )
-	{
-          
-            flag.mech = 1;
-            CDStatus = CD_STOP;
-            TrackToPlay = 1;
-            dataDSPY2._byte[11] = D_void;//digit 1/2 r
-            dataDSPY1._byte[11] = D_void;//digit 2/2 e
-            dataDSPY1._byte[10] = d_r;//digit 1/4 a
-            dataDSPY2._byte[10] = d_e;//digit 2/4 d
-            dataDSPY3._byte[10] = d_a;//digit 3/4 c
-            dataDSPY4._byte[10] = d_d;//digit 4/4 d
-            dataDSPY5._byte[10] = d_void;//digit dp/4
-            LoadTOCInfo();
-	}
-	else 
-	{
-
-            flag.mech = 0;
-            flag.nodisc = 1;
-            dataDSPY2._byte[11] = D_void;//digit 1/2 r
-            dataDSPY1._byte[11] = D_void;//digit 2/2 e
-            dataDSPY1._byte[10] = d_o;//digit 1/4 a
-            dataDSPY2._byte[10] = d_p;//digit 2/4 d
-            dataDSPY3._byte[10] = d_e;//digit 3/4 c
-            dataDSPY4._byte[10] = d_n;//digit 4/4 d
-            dataDSPY5._byte[10] = d_void;//digit dp/4
-            //Mute
-            dataDAC.DataToWrite = 2;
-            dataDAC.DataRead = 0;
-            dataDAC.DataWrite = 0;
-            dataDAC.CSTiming = 2;
-            dataDAC._byte[4] = 0x12;
-            dataDAC._byte[5] = 0xA1;
-	}
-}
-
-void PlayPause(void)
-{   
-
-    //Mute
-    dataDAC.DataToWrite = 2;
-    dataDAC.DataRead = 0;
-    dataDAC.DataWrite = 0;
-    dataDAC.CSTiming = 2;
-    dataDAC._byte[4] = 0x12;
-    dataDAC._byte[5] = 0xA1;
-
-    if ( /* Mech_Stat(dataBUFFER_ide) == */1 )
-    {
-        //Load(dataBUFFER_ide);
-    }
-
-    if ( flag.mech == 0)
-    {
-        LoadTOCInfo();
-        flag.mech = 1;
-        CDStatus = CD_STOP;
-        TrackToPlay = 1;
-    }
-
-    if (!flag.nodisc)
-    {
-        switch ( CDStatus )
-            {
-            case  CD_STOP:
-                //Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-                CDStatus = CD_PLAY;
-                //Sound
-                dataDAC.DataToWrite = 2;
-                dataDAC.DataRead = 0;
-                dataDAC.DataWrite = 0;
-                dataDAC.CSTiming = 2;
-                dataDAC._byte[4] = 0x12;
-                dataDAC._byte[5] = 0xA0;
-
-                dataDSPY2_info._byte[11] = D_void;//digit 1/2 V
-                dataDSPY1_info._byte[11] = D_void;//digit 2/2 o
-                dataDSPY1_info._byte[10] = d_p;//digit 1/4 l
-                dataDSPY2_info._byte[10] = d_l;//digit 2/4
-                dataDSPY3_info._byte[10] = d_a;//digit 3/4
-                dataDSPY4_info._byte[10] = d_y;//digit 4/4
-                dataDSPY5_info._byte[10] = d_void;//digit dp/4
-                flagspi.info = 1;
-            break;
-
-            case  CD_PLAY:
-                //Pause(dataBUFFER_ide);
-                CDStatus = CD_PAUSE;
-                //Mute
-                dataDAC.DataToWrite = 2;
-                dataDAC.DataRead = 0;
-                dataDAC.DataWrite = 0;
-                dataDAC.CSTiming = 2;
-                dataDAC._byte[4] = 0x12;
-                dataDAC._byte[5] = 0xA1;
-
-                dataDSPY2_info._byte[11] = D_void;//digit 1/2 V
-                dataDSPY1_info._byte[11] = D_p;//digit 2/2 o
-                dataDSPY1_info._byte[10] = d_a;//digit 1/4 l
-                dataDSPY2_info._byte[10] = d_u;//digit 2/4
-                dataDSPY3_info._byte[10] = d_s;//digit 3/4
-                dataDSPY4_info._byte[10] = d_e;//digit 4/4
-                dataDSPY5_info._byte[10] = d_void;//digit dp/4
-                flagspi.info = 1;
-            break;
-
-            case  CD_PAUSE:
-                //Resume();
-                //Play_MSF_address(&CurrentAbsAddrMSF.track, &TOC[0],dataBUFFER_ide);
-                CDStatus = CD_PLAY;
-                //Sound
-                dataDAC.DataToWrite = 2;
-                dataDAC.DataRead = 0;
-                dataDAC.DataWrite = 0;
-                dataDAC.CSTiming = 2;
-                dataDAC._byte[4] = 0x12;
-                dataDAC._byte[5] = 0xA0;
-
-                dataDSPY2_info._byte[11] = D_void;//digit 1/2 
-                dataDSPY1_info._byte[11] = D_void;//digit 2/2 
-                dataDSPY1_info._byte[10] = d_p;//digit 1/4 
-                dataDSPY2_info._byte[10] = d_l;//digit 2/4
-                dataDSPY3_info._byte[10] = d_a;//digit 3/4
-                dataDSPY4_info._byte[10] = d_y;//digit 4/4
-                dataDSPY5_info._byte[10] = d_void;//digit dp/4
-                flagspi.info = 1;
-            break;
-            }
-    }
-}
-
-void NextTrack(void)
-{   
-    /*
-	if ( flag.mech && !flag.nodisc)
-	{	
-		if ( (EndAddrMSF.track - 1) > TrackToPlay )	TrackToPlay += 1;
-
-		else	TrackToPlay = 1;
-                
-		if (CDStatus != CD_STOP)
-		{
-			Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-			CDStatus = CD_PLAY;
-		}
-                else
-                {
-                    sprintf (buffer, "%u", TrackToPlay);
-                    if(strlen (buffer) == 2)
-                    {
-                        dataDSPY2_info._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
-                        dataDSPY1_info._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
-                    }
-                    else
-                    {
-                        dataDSPY2_info._byte[11] = D_0;//digit 1/2
-                        dataDSPY1_info._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
-                    }
-                    dataDSPY1_info._byte[10] = d_void;//digit 1/4 s
-                    dataDSPY2_info._byte[10] = d_void;//digit 2/4 c
-                    dataDSPY3_info._byte[10] = d_void;//digit 3/4 o
-                    dataDSPY4_info._byte[10] = d_void;//digit 4/4 k
-                    dataDSPY5_info._byte[10] = d_pp;//digit dp/4
-                    flagspi.info = 1;
-                }
-	}
-     */
-}
-void PreviousTrack(void)
-{   
-	if ( flag.mech && !flag.nodisc)
-	{
-        /*
-         
-		if (CDStatus != CD_STOP)
-		{
-                    if ( CurrentRelAddrMSF.min == 0 && CurrentRelAddrMSF.sec < 3 )
-                    {
-                            if ( TrackToPlay == 1 )	TrackToPlay = EndAddrMSF.track - 1;
-                            else	TrackToPlay -= 1;
-                            Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-                            CDStatus = CD_PLAY;
-
-                    }
-                    else
-                    {
-                            Play_MSF(TrackToPlay, &TOC[0],dataBUFFER_ide);
-                            CDStatus = CD_PLAY;
-                    }
-		}
-		else
-		{
-                    if ( TrackToPlay == 1 )	TrackToPlay = EndAddrMSF.track - 1;
-                    else	TrackToPlay -= 1;
-                    sprintf (buffer, "%u", TrackToPlay);
-                    if(strlen (buffer) == 2)
-                    {
-                        dataDSPY2_info._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
-                        dataDSPY1_info._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
-                    }
-                    else
-                    {
-                        dataDSPY2_info._byte[11] = D_0;//digit 1/2
-                        dataDSPY1_info._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
-                    }
-                    dataDSPY1_info._byte[10] = d_void;//digit 1/4 s
-                    dataDSPY2_info._byte[10] = d_void;//digit 2/4 c
-                    dataDSPY3_info._byte[10] = d_void;//digit 3/4 o
-                    dataDSPY4_info._byte[10] = d_void;//digit 4/4 k
-                    dataDSPY5_info._byte[10] = d_pp;//digit dp/4
-                    flagspi.info = 1;
-		}
-         */
-	
-	}
-}
-
-void LoadTOCInfo(void)
-{ 
-    /*
-	long i=0,k=1;
-	
-        dataDSPY2._byte[11] = D_void;//digit 1/2 r
-        dataDSPY1._byte[11] = D_void;//digit 2/2 e
-        dataDSPY1._byte[10] = d_r;//digit 1/4 a
-        dataDSPY2._byte[10] = d_e;//digit 2/4 d
-        dataDSPY3._byte[10] = d_a;//digit 3/4 c
-        dataDSPY4._byte[10] = d_d;//digit 4/4 d
-        dataDSPY5._byte[10] = d_void;//digit dp/4
-	
-	while( k !=0 && i < 50 )
-	{
-		k = Read_TOC(&TOC[0],dataBUFFER_ide);
-		i++;
-	}
-	if( TOC[2] == 1 )
-	{
-	flag.nodisc = 0;
-	NumbOfTrack = TOC[3];
-	k = NumbOfTrack;
-	k *= 8;
-	k += 9;
-	EndAddrMSF.min = TOC[k];
-	EndAddrMSF.sec = TOC[k+1];
-	EndAddrMSF.frame = TOC[k+2];
-	EndAddrMSF.track = NumbOfTrack + 1;
-	}
-	else flag.nodisc = 1;
-	
-	if (flag.nodisc)
-	{
-            dataDSPY2._byte[11] = D_n;//digit 1/2 n
-            dataDSPY1._byte[11] = D_o;//digit 2/2 o
-            dataDSPY1._byte[10] = d_d;//digit 1/4 d
-            dataDSPY2._byte[10] = d_i;//digit 2/4 i
-            dataDSPY3._byte[10] = d_s;//digit 3/4 s
-            dataDSPY4._byte[10] = d_c;//digit 4/4 c
-            dataDSPY5._byte[10] = d_void;//digit dp/4
-	}
-	else
-	{
-            dataDSPY2_info._byte[11] = D_d;//digit 1/2 d
-            dataDSPY1_info._byte[11] = D_i;//digit 2/2 i
-            dataDSPY1_info._byte[10] = d_s;//digit 1/4 s
-            dataDSPY2_info._byte[10] = d_c;//digit 2/4 c
-            dataDSPY3_info._byte[10] = d_o;//digit 3/4 o
-            dataDSPY4_info._byte[10] = d_k;//digit 4/4 k
-            dataDSPY5_info._byte[10] = d_void;//digit dp/4
-
-            flagspi.info = 1;
-	}
-*/
-}
-
-void UpdateCurrentMSF(void)
-{ 
-    /*
-	if (flag.tim0)
-	{
-		flag.tim0 = 0;
-		if ( flag.mech )
-		{	
-			AudioStatus = Read_AbsMSF_SubCh(&CurrentAbsAddrMSF.track,dataBUFFER_ide);
-			Read_RelMSF_SubCh(&CurrentRelAddrMSF.track,dataBUFFER_ide);
-			if (CDStatus == CD_PLAY)
-			{	
-				TrackToPlay = CurrentRelAddrMSF.track;
-				if (AudioStatus == 0x13 || AudioStatus == 0x14 || AudioStatus == 0x15)
-				{
-					Stop(dataBUFFER_ide);
-					TrackToPlay = 1;
-					CDStatus = CD_STOP;
-				}
+				dataDSPY2_info._byte[11] = D_void;//digit 1/2 
+				dataDSPY1_info._byte[11] = D_void;//digit 2/2 
+				dataDSPY1_info._byte[10] = d_s;//digit 1/4 
+				dataDSPY2_info._byte[10] = d_t;//digit 2/4
+				dataDSPY3_info._byte[10] = d_o;//digit 3/4
+				dataDSPY4_info._byte[10] = d_p;//digit 4/4
+				dataDSPY5_info._byte[10] = d_void;//digit dp/4
+				flagspi.info = 1;
 			}
+			return 1;
+			break;
 
-		}
+		case KEY10:
+			if (!flagspi.aux && CDStatus != CD_PAUSE)   
+				return 1;
+			break;
+
+		case KEY11:
+			if (!flagspi.aux && CDStatus != CD_PAUSE)   
+				return 1;
+			break;
+
+		case KEY4:
+			if(!MuteState)
+			{
+
+				MuteState = 1;
+			}
+			else
+			{
+
+				MuteState = 0;
+			}
+			return 1;
+			break;
+
+		case KEY6:
+
+			return 1;
+			break;
+
+		case KEY5:
+
+			return 1;
+			break;
+
+		case KEY3:
+
+			return 1;
+			break;
+
+		default: 
+			*trameToProcess = *trameToProcess;
+			return 0;
 	}
-*/
+	return 0;
 }
-
-void VolumeUp(void)
-{
-    if(RightVol != 255)
-    {
-	RightVol += 2;
-	LeftVol += 2;
-    }
-    
-    dataDAC.DataToWrite = 4;
-    dataDAC.DataRead = 0;
-    dataDAC.DataWrite = 0;
-    dataDAC.CSTiming = 2;
-    dataDAC._byte[4] = 0x10;
-    dataDAC._byte[5] = LeftVol;
-    dataDAC._byte[6] = 0x11;
-    dataDAC._byte[7] = RightVol;
-
-    SoundLevel(RightVol);
-}
-
-void VolumeDown(void)
-{ 
-    if(RightVol > 14)
-    {
-	RightVol -= 2;
-	LeftVol -= 2;
-    }
-
-    dataDAC.DataToWrite = 4;
-    dataDAC.DataRead = 0;
-    dataDAC.DataWrite = 0;
-    dataDAC.CSTiming = 2;
-    dataDAC._byte[4] = 0x10;
-    dataDAC._byte[5] = LeftVol;
-    dataDAC._byte[6] = 0x11;
-    dataDAC._byte[7] = RightVol;
-
-    SoundLevel(RightVol);
-}
-
-void SoundLevel(unsigned char Level)
-{ 
-
-    if(Level == 255)
-    {
-        dataDSPY2_info._byte[11] = D_v;//digit 1/2 V
-        dataDSPY1_info._byte[11] = D_o;//digit 2/2 o
-        dataDSPY1_info._byte[10] = d_l;//digit 1/4 l
-        dataDSPY2_info._byte[10] = d_m;//digit 2/4 m
-        dataDSPY3_info._byte[10] = d_a;//digit 3/4 a
-        dataDSPY4_info._byte[10] = d_x;//digit 4/4 x
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-        flagspi.info = 1;
-        return;
-    }
-
-    if(Level <= 14)
-    {
-        dataDSPY2_info._byte[11] = D_v;//digit 1/2 V
-        dataDSPY1_info._byte[11] = D_o;//digit 2/2 o
-        dataDSPY1_info._byte[10] = d_l;//digit 1/4 l
-        dataDSPY2_info._byte[10] = d_m;//digit 2/4 m
-        dataDSPY3_info._byte[10] = d_i;//digit 3/4 i
-        dataDSPY4_info._byte[10] = d_n;//digit 4/4 n
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-        flagspi.info = 1;
-        return;
-    }
-
-    Level = (255 - Level)/2;
-    sprintf (buffer, "%u", Level);
-
-    if(strlen (buffer) == 1)
-    {
-        dataDSPY2_info._byte[11] = D_d;//digit 1/2 
-        dataDSPY1_info._byte[11] = D_b;//digit 2/2 
-        dataDSPY1_info._byte[10] = d_minus;//digit 1/4 
-        dataDSPY2_info._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4 
-        dataDSPY3_info._byte[10] = d_void;//digit 3/4
-        dataDSPY4_info._byte[10] = d_void;//digit 4/4
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-        flagspi.info = 1;
-        return;
-    }
-    if(strlen (buffer) == 2)
-    {
-        dataDSPY2_info._byte[11] = D_d;//digit 1/2 
-        dataDSPY1_info._byte[11] = D_b;//digit 2/2 
-        dataDSPY1_info._byte[10] = d_minus;//digit 1/4 
-        dataDSPY2_info._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4 
-        dataDSPY3_info._byte[10] = ConvertDigit4(buffer[1]);//digit 3/4
-        dataDSPY4_info._byte[10] = d_void;//digit 4/4
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-        flagspi.info = 1;
-        return;
-    }
-    else
-    {
-        dataDSPY2_info._byte[11] = D_d;//digit 1/2 
-        dataDSPY1_info._byte[11] = D_b;//digit 2/2 
-        dataDSPY1_info._byte[10] = d_minus;//digit 1/4 
-        dataDSPY2_info._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4 
-        dataDSPY3_info._byte[10] = ConvertDigit4(buffer[1]);//digit 3/4
-        dataDSPY4_info._byte[10] = ConvertDigit4(buffer[2]);//digit 4/4
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-        flagspi.info = 1;
-        return;
-    }
-}
-void Mute(unsigned char State)
-{ 
-    if (State)
-    {
-        dataDAC.DataToWrite = 2;
-        dataDAC.DataRead = 0;
-        dataDAC.DataWrite = 0;
-        dataDAC.CSTiming = 2;
-        dataDAC._byte[4] = 0x12;
-        dataDAC._byte[5] = 0xA1;
-
-        dataDSPY2_info._byte[11] = D_void;//digit 1/2 V
-        dataDSPY1_info._byte[11] = D_void;//digit 2/2 o
-        dataDSPY1_info._byte[10] = d_m;//digit 1/4 l
-        dataDSPY2_info._byte[10] = d_u;//digit 2/4
-        dataDSPY3_info._byte[10] = d_t;//digit 3/4
-        dataDSPY4_info._byte[10] = d_e;//digit 4/4
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-    }
-    else
-    {
-        dataDAC.DataToWrite = 2;
-        dataDAC.DataRead = 0;
-        dataDAC.DataWrite = 0;
-        dataDAC.CSTiming = 2;
-        dataDAC._byte[4] = 0x12;
-        dataDAC._byte[5] = 0xA0;
-
-        dataDSPY2_info._byte[11] = D_void;//digit 1/2 V
-        dataDSPY1_info._byte[11] = D_s;//digit 2/2 o
-        dataDSPY1_info._byte[10] = d_o;//digit 1/4 l
-        dataDSPY2_info._byte[10] = d_u;//digit 2/4
-        dataDSPY3_info._byte[10] = d_n;//digit 3/4
-        dataDSPY4_info._byte[10] = d_d;//digit 4/4
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-    }
-    flagspi.info = 1;
-}
-
-void SetAuxIn(void)
-{
-    if (!flagspi.aux)
-    {
-        //Stop(dataBUFFER_ide);
-        TrackToPlay = 1;
-        CDStatus = CD_STOP;
-
-        //Sound
-        
-        dataDAC.DataRead = 0;
-        dataDAC.DataWrite = 0;
-        dataDAC.CSTiming = 2;
-        dataDAC._byte[4] = 0x12;
-        dataDAC._byte[5] = 0xA0;
-        dataDAC.DataToWrite = 2;
-
-        flagspi.aux = 1; 
-        dataSRC.DataRead = 0;
-        dataSRC.DataWrite = 0;
-        dataSRC.CSTiming = 2;
-        dataSRC._byte[4] = 0x0D;
-        dataSRC._byte[5] = 0x00;
-        dataSRC._byte[6] = 0x09;
-        dataSRC.DataToWrite = 3;
-
-        dataDSPY2._byte[11] = D_void;//digit 1/2 n
-        dataDSPY1._byte[11] = D_void;//digit 2/2 o
-        dataDSPY1._byte[10] = d_a;//digit 1/4 d
-        dataDSPY2._byte[10] = d_u;//digit 2/4 i
-        dataDSPY3._byte[10] = d_x;//digit 3/4 s
-        dataDSPY4._byte[10] = d_void;//digit 4/4 c
-        dataDSPY5._byte[10] = d_void;//digit dp/4
-    }
-    else
-    {
-        //Mute
-       
-        dataDAC.DataToWrite = 2;
-        dataDAC.DataRead = 0;
-        dataDAC.DataWrite = 0;
-        dataDAC.CSTiming = 2;
-        dataDAC._byte[4] = 0x12;
-        dataDAC._byte[5] = 0xA1;
-
-        flagspi.aux = 0;
-        dataSRC.DataToWrite = 3;
-        dataSRC.DataRead = 0;
-        dataSRC.DataWrite = 0;
-        dataSRC.CSTiming = 2;
-        dataSRC._byte[4] = 0x0D;
-        dataSRC._byte[5] = 0x00;
-        dataSRC._byte[6] = 0x08;
-
-        if (!flag.mech)  EjectLoad();
-        else
-        {
-            flag.mech = 1;
-            CDStatus = CD_STOP;
-            TrackToPlay = 1;
-            dataDSPY2._byte[11] = D_void;//digit 1/2 r
-            dataDSPY1._byte[11] = D_void;//digit 2/2 e
-            dataDSPY1._byte[10] = d_r;//digit 1/4 a
-            dataDSPY2._byte[10] = d_e;//digit 2/4 d
-            dataDSPY3._byte[10] = d_a;//digit 3/4 c
-            dataDSPY4._byte[10] = d_d;//digit 4/4 d
-            dataDSPY5._byte[10] = d_void;//digit dp/4
-            LoadTOCInfo();
-        }
-    }
-
-}
-
 
 unsigned char ConvertDigit4(unsigned char letter)
 {
 	switch ( letter )
-		{
+	{
 		case  '0':
-                    return d_0;
-		break;
+			return d_0;
+			break;
 
 		case  '1':
-                    return d_1;
-		break;
+			return d_1;
+			break;
 
-                case  '2':
-                    return d_2;
-		break;
+		case  '2':
+			return d_2;
+			break;
 
-                case  '3':
-                    return d_3;
-		break;
+		case  '3':
+			return d_3;
+			break;
 
-                case  '4':
-                    return d_4;
-		break;
+		case  '4':
+			return d_4;
+			break;
 
-                case  '5':
-                    return d_5;
-		break;
+		case  '5':
+			return d_5;
+			break;
 
-                case  '6':
-                    return d_6;
-		break;
+		case  '6':
+			return d_6;
+			break;
 
-                case  '7':
-                    return d_7;
-		break;
+		case  '7':
+			return d_7;
+			break;
 
-                case  '8':
-                    return d_8;
-		break;
+		case  '8':
+			return d_8;
+			break;
 
-                case  '9':
-                    return d_9;
-		break;
+		case  '9':
+			return d_9;
+			break;
+
+		case  'a':
+			return d_a;
+			break;
+
+		case  'b':
+			return d_b;
+			break;
+
+		case  'c':
+			return d_c;
+			break;
+
+		case  'd':
+			return d_d;
+			break;
+
+		case  'e':
+			return d_e;
+			break;
+
+		case  'f':
+			return d_f;
+			break;
+
+		case  'g':
+			return d_g;
+			break;
+
+		case  'h':
+			return d_h;
+			break;
+
+		case  'i':
+			return d_i;
+			break;
+
+		case  'j':
+			return d_j;
+			break;
+
+		case  'k':
+			return d_k;
+			break;
+
+		case  'l':
+			return d_l;
+			break;
+
+		case  'm':
+			return d_m;
+			break;
+
+		case  'n':
+			return d_n;
+			break;
+
+		case  'o':
+			return d_o;
+			break;
+
+		case  'p':
+			return d_p;
+			break;
+
+		case  'q':
+			return d_q;
+			break;
+
+		case  'r':
+			return d_r;
+			break;
+
+		case  's':
+			return d_s;
+			break;
+
+		case  't':
+			return d_t;
+			break;
+
+		case  'u':
+			return d_u;
+			break;
+
+		case  'v':
+			return d_v;
+			break;
+
+		case  'w':
+			return d_w;
+			break;
+
+		case  'x':
+			return d_x;
+			break;
+
+		case  'y':
+			return d_y;
+			break;
+
+		case  'z':
+			return d_z;
+			break;
 
 		default:
-                    return 255;
+			return 255;
 
-		}
+	}
 }
 
 unsigned char ConvertDigit2(unsigned char letter)
 {
 	switch ( letter )
-		{
+	{
 		case  '0':
-                    return D_0;
-		break;
+			return D_0;
+			break;
 
 		case  '1':
-                    return D_1;
-		break;
+			return D_1;
+			break;
 
-                case  '2':
-                    return D_2;
-		break;
+		case  '2':
+			return D_2;
+			break;
 
-                case  '3':
-                    return D_3;
-		break;
+		case  '3':
+			return D_3;
+			break;
 
-                case  '4':
-                    return D_4;
-		break;
+		case  '4':
+			return D_4;
+			break;
 
-                case  '5':
-                    return D_5;
-		break;
+		case  '5':
+			return D_5;
+			break;
 
-                case  '6':
-                    return D_6;
-		break;
+		case  '6':
+			return D_6;
+			break;
 
-                case  '7':
-                    return D_7;
-		break;
+		case  '7':
+			return D_7;
+			break;
 
-                case  '8':
-                    return D_8;
-		break;
+		case  '8':
+			return D_8;
+			break;
 
-                case  '9':
-                    return D_9;
-		break;
+		case  '9':
+			return D_9;
+			break;
+
+		case  'a':
+			return D_a;
+			break;
+
+		case  'b':
+			return D_b;
+			break;
+
+		case  'c':
+			return D_c;
+			break;
+
+		case  'd':
+			return D_d;
+			break;
+
+		case  'e':
+			return D_e;
+			break;
+
+		case  'f':
+			return D_f;
+			break;
+
+		case  'g':
+			return D_g;
+			break;
+
+		case  'h':
+			return D_h;
+			break;
+
+		case  'i':
+			return D_i;
+			break;
+
+		case  'j':
+			return D_j;
+			break;
+
+		case  'k':
+			return D_k;
+			break;
+
+		case  'l':
+			return D_l;
+			break;
+
+		case  'm':
+			return D_m;
+			break;
+
+		case  'n':
+			return D_n;
+			break;
+
+		case  'o':
+			return D_o;
+			break;
+
+		case  'p':
+			return D_p;
+			break;
+
+		case  'q':
+			return D_q;
+			break;
+
+		case  'r':
+			return D_r;
+			break;
+
+		case  's':
+			return D_s;
+			break;
+
+		case  't':
+			return D_t;
+			break;
+
+		case  'u':
+			return D_u;
+			break;
+
+		case  'v':
+			return D_v;
+			break;
+
+		case  'w':
+			return D_w;
+			break;
+
+		case  'x':
+			return D_x;
+			break;
+
+		case  'y':
+			return D_y;
+			break;
+
+		case  'z':
+			return D_z;
+			break;
 
 		default:
-                    return 255;
+			return 255;
 
-		}
+	}
 }
 
 void ProcessIO(void)
 {   
 	if(!flag.first) HandleSIRSC();
 
-        if (flag.first)
-        {
-            LoadTOCInfo();
-            flag.mech = 1;
-            CDStatus = CD_STOP;
-            TrackToPlay = 1;
-            flag.first = 0;
+	if (flag.first)
+	{
+		//LoadTOCInfo();
+		//flag.mech = 1;
+		CDStatus = CD_STOP;
+		//TrackToPlay = 1;
+		flag.first = 0;
 	}
 	if (!flag.nodisc && !flagspi.aux)
-        {
-            UpdateCurrentMSF();
+	{
 
-            if (CDStatus == CD_STOP)
-            {
+		if (CDStatus == CD_STOP)
+		{
 
-                sprintf (buffer, "%u", NumbOfTrack);
-                if(strlen (buffer) == 2)
-                {
-                    dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
-                    dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
-                }
-                else
-                {
-                    dataDSPY2._byte[11] = D_0;//digit 1/2
-                    dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
-                }
+			sprintf (buffer, "%u", NumbOfTrack);
+			if(strlen (buffer) == 2)
+			{
+				dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
+				dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
+			}
+			else
+			{
+				dataDSPY2._byte[11] = D_0;//digit 1/2
+				dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
+			}
 
-                //sprintf (buffer, "%u", EndAddrMSF.min);
-                if(strlen (buffer) == 2)
-                {
-                    dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
-                    dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);//digit 2/4
-                }
-                else
-                {
-                    dataDSPY1._byte[10] = d_0;//digit 1/4
-                    dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
-                }
-                //sprintf (buffer, "%u", EndAddrMSF.sec);
-                if(strlen (buffer) == 2)
-                {
-                    dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4
-                    dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);//digit 4/4
-                }
-                else
-                {
-                    dataDSPY3._byte[10] = d_0;//digit 3/4
-                    dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);//digit 4/4
-                }
-                dataDSPY5._byte[10] = d_pp;//digit dp/4
-            }
-            else
-            {
-                //sprintf (buffer, "%u", CurrentRelAddrMSF.track);
-                if(strlen (buffer) == 2)
-                {
-                    dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
-                    dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
-                }
-                else
-                {
-                    dataDSPY2._byte[11] = D_0;//digit 1/2
-                    dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
-                }
-                //sprintf (buffer, "%u", CurrentRelAddrMSF.min);
-                if(strlen (buffer) == 2)
-                {
-                    dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
-                    dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);//digit 2/4
-                }
-                else
-                {
-                    dataDSPY1._byte[10] = d_0;//digit 1/4
-                    dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
-                }
-                //sprintf (buffer, "%u", CurrentRelAddrMSF.sec);
-                if(strlen (buffer) == 2)
-                {
-                    dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4
-                    dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);//digit 4/4
-                }
-                else
-                {
-                    dataDSPY3._byte[10] = d_0;//digit 3/4
-                    dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);//digit 4/4
-                }
-                dataDSPY5._byte[10] = d_pp;//digit dp/4
-            }
+			//sprintf (buffer, "%u", EndAddrMSF.min);
+			if(strlen (buffer) == 2)
+			{
+				dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
+				dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);//digit 2/4
+			}
+			else
+			{
+				dataDSPY1._byte[10] = d_0;//digit 1/4
+				dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
+			}
+			//sprintf (buffer, "%u", EndAddrMSF.sec);
+			if(strlen (buffer) == 2)
+			{
+				dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4
+				dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);//digit 4/4
+			}
+			else
+			{
+				dataDSPY3._byte[10] = d_0;//digit 3/4
+				dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);//digit 4/4
+			}
+			dataDSPY5._byte[10] = d_pp;//digit dp/4
+		}
+		else
+		{
+			//sprintf (buffer, "%u", CurrentRelAddrMSF.track);
+			if(strlen (buffer) == 2)
+			{
+				dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
+				dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
+			}
+			else
+			{
+				dataDSPY2._byte[11] = D_0;//digit 1/2
+				dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
+			}
+			//sprintf (buffer, "%u", CurrentRelAddrMSF.min);
+			if(strlen (buffer) == 2)
+			{
+				dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
+				dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);//digit 2/4
+			}
+			else
+			{
+				dataDSPY1._byte[10] = d_0;//digit 1/4
+				dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
+			}
+			//sprintf (buffer, "%u", CurrentRelAddrMSF.sec);
+			if(strlen (buffer) == 2)
+			{
+				dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4
+				dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);//digit 4/4
+			}
+			else
+			{
+				dataDSPY3._byte[10] = d_0;//digit 3/4
+				dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);//digit 4/4
+			}
+			dataDSPY5._byte[10] = d_pp;//digit dp/4
+		}
 
-        }
+	}
 }
