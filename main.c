@@ -14,7 +14,7 @@
 #pragma config BORV = 3         // Brown-out Voltage bits (Minimum setting)
 
 // CONFIG2H
-#pragma config WDT = ON         // Watchdog Timer (WDT enabled)
+#pragma config WDT = OFF        // Watchdog Timer (WDT enabled)
 #pragma config WDTPS = 32768    // Watchdog Timer Postscale Select bits (1:32768)
 
 // CONFIG3L
@@ -26,7 +26,7 @@
 
 // CONFIG4L
 #pragma config STVREN = ON      // Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
-#pragma config LVP = ON         // Single-Supply ICSP Enable bit (Single-Supply ICSP enabled)
+#pragma config LVP = OFF        // Single-Supply ICSP Enable bit (Single-Supply ICSP enabled)
 #pragma config BBSIZ = BB2K     // Boot Block Size Select bits (1K word (2 Kbytes) Boot Block size)
 #pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled (Legacy mode))
 
@@ -640,8 +640,6 @@ void main(void)
 	S_DISPLAY = 1;
 	count_spi = 0;
 	count_info = Time_info;
-	InitSRC4392();
-	InitPCM1792();
 	InitMCP23S17();
 	Timer2_Init();
 	trameok = 0;

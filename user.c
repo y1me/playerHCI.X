@@ -194,141 +194,7 @@ void InitMCP23S17(void)
 
 }
 
-void InitSRC4392(void)
-{   
-	//config receiv
-	
-	RST_DRCV = 1;
-	//Delay10TCYx(3); //wait 1탎*x
-	RST_DRCV = 0;
-	//Delay10TCYx(3); //wait 1탎*x
-	RST_DRCV = 1;
-	//Delay10KTCYx(10);//wait 1ms*x
-	
-	// config power_on perif
-	S_DRCV = 0;
-	spi_out(0x01);
-	spi_out(0x00); //dummy
-	spi_out(0x33);
-	S_DRCV = 1;
-	
-	// config RCV Ctr Reg 1
-	S_DRCV = 0;
-	spi_out(0x0D);
-	spi_out(0x00);//dummy
-	spi_out(0x08);
-	S_DRCV = 1;
-	
-	// config RCV Ctr Reg 2
-	S_DRCV = 0;
-	spi_out(0x0E);
-	spi_out(0x00);//dummy
-	spi_out(0x01);
-	S_DRCV = 1;
-	
-	// config RCV PLL1 Ctr Reg 1
-	S_DRCV = 0;
-	spi_out(0x0F);
-	spi_out(0x00);//dummy
-	spi_out(0x22);
-	S_DRCV = 1;
-	
-	// config RCV PLL1 Ctr Reg 2
-	S_DRCV = 0;
-	spi_out(0x10);
-	spi_out(0x00);//dummy
-	spi_out(0x00);
-	S_DRCV = 1;
-	
-	// config RCV PLL1 Ctr Reg 3
-	S_DRCV = 0;
-	spi_out(0x11);
-	spi_out(0x00);//dummy
-	spi_out(0x00);
-	S_DRCV = 1;
-	
-	//lecture registre 0x11
-	/*
-	S_DRCV = 0;
-	spi_out(0x81);
-	spi_out(0x00);//dummy
-	spi_in(&test);
-	S_DRCV = 1;
-	*/	
-	//fin config RCV
-	
-	//config SRC
-	// config SRC Ctr Reg 1
-	S_DRCV = 0;
-	spi_out(0x2D);
-	spi_out(0x00);//dummy
-	spi_out(0x06);
-	S_DRCV = 1;
-	
-	// config SRC Ctr Reg 2
-	S_DRCV = 0;
-	spi_out(0x2E);
-	spi_out(0x00);//dummy 
-	spi_out(0x04);
-	S_DRCV = 1;
-	
-	// config SRC Ctr Reg 2
-	S_DRCV = 0;
-	spi_out(0x2F);
-	spi_out(0x00);//dummy
-	spi_out(0x00);
-	S_DRCV = 1;
-	//fin config SRC
-	
-	//config PORTA
-	// config PORTA Ctr Reg 1
-	S_DRCV = 0;
-	spi_out(0x03);
-	spi_out(0x00);//dummy
-	spi_out(0x3F);
-	S_DRCV = 1;
-	
-	// config PORTA Ctr Reg 2
-	S_DRCV = 0;
-	spi_out(0x04);
-	spi_out(0x00);//dummy
-	spi_out(0x00);
-	S_DRCV = 1;
-	//fin config PORTA
-	//fin config receiv
-}
 
-void InitPCM1792(void)
-{  
-	//config DAC
-	
-	RST_DAC = 1;
-	//Delay10TCYx(3); //wait 1탎*x
-	RST_DAC = 0;
-	//Delay10TCYx(3); //wait 1탎*x
-	RST_DAC = 1;
-	//Delay10KTCYx(10);//wait 1ms*x
-	
-	RightVol = 195;
-	LeftVol = 195;
-	// config DAC Reg 16
-	S_DAC = 0;
-	spi_out(0x10);
-	spi_out(LeftVol);
-	S_DAC = 1;
-	
-	// config DAC Reg 17
-	S_DAC = 0;
-	spi_out(0x11);
-	spi_out(RightVol);
-	S_DAC = 1;
-	
-	// config DAC Reg 18
-	S_DAC = 0;
-	spi_out(0x12);
-	spi_out(0xA0);
-	S_DAC = 1;
-}
 
 void InitDSPY(void)
 {
@@ -377,7 +243,7 @@ void InitDSPY(void)
         dataDSPY4._byte[7] = 0x00;// switch & diode
         dataDSPY4._byte[8] = 0x42;
         dataDSPY4._byte[9] = 0x12;
-        dataDSPY4._byte[10] = 0x95;//digit 4/4
+        dataDSPY4._byte[10] = d_p;//0x95;//digit 4/4
         dataDSPY4._byte[11] = 0xA2;
 
         dataDSPY5.DataToWrite = 8;

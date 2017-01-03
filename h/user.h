@@ -5,8 +5,6 @@
 /** P U B L I C  P R O T O T Y P E S *****************************************/
 void UserInit(void);
 void ProcessIO(void);
-void InitSRC4392(void);
-void InitPCM1792(void);
 void InitMCP23S17(void);
 void InitDSPY(void);
 
