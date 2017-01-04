@@ -7302,6 +7302,8 @@ volatile DATA_DISPLAY dataDSPY3_info;
 volatile DATA_DISPLAY dataDSPY4_info;
 volatile DATA_DISPLAY dataDSPY5_info;
 
+volatile char data[64];
+char *ptest;
 
 char keypad;
 long trameok;
@@ -8013,85 +8015,17 @@ CDStatus = 0x300;
 
 flag.first = 0;
 }
-if (!flag.nodisc && !flagspi.aux)
-{
 
-if (CDStatus == 0x300)
+if (flag.tim0)
 {
-
-sprintf (buffer, "%u", NumbOfTrack);
-if(strlen (buffer) == 2)
-{
-dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);
-dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);
+flag.tim0 = 0;
+*ptest++;
+if ( ptest == &data[27] ) ptest = &data[0];
 }
-else
-{
-dataDSPY2._byte[11] = 65;
-dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);
-}
-
-
-if(strlen (buffer) == 2)
-{
-dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);
-dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);
-}
-else
-{
-dataDSPY1._byte[10] = 130;
-dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);
-}
-
-if(strlen (buffer) == 2)
-{
-dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);
-dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);
-}
-else
-{
-dataDSPY3._byte[10] = 130;
-dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);
-}
-dataDSPY5._byte[10] = 250;
-}
-else
-{
-
-if(strlen (buffer) == 2)
-{
-dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);
-dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);
-}
-else
-{
-dataDSPY2._byte[11] = 65;
-dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);
-}
-
-if(strlen (buffer) == 2)
-{
-dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);
-dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);
-}
-else
-{
-dataDSPY1._byte[10] = 130;
-dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);
-}
-
-if(strlen (buffer) == 2)
-{
-dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);
-dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);
-}
-else
-{
-dataDSPY3._byte[10] = 130;
-dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);
-}
-dataDSPY5._byte[10] = 250;
-}
-
-}
+dataDSPY2._byte[11] = ConvertDigit2( *ptest );
+dataDSPY1._byte[11] = ConvertDigit2( *(ptest+1) );
+dataDSPY1._byte[10] = ConvertDigit4( *(ptest+2) );
+dataDSPY2._byte[10] = ConvertDigit4( *(ptest+3) );
+dataDSPY3._byte[10] = ConvertDigit4( *(ptest+4) );
+dataDSPY4._byte[10] = ConvertDigit4( *(ptest+5) );
 }

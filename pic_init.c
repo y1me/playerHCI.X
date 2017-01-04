@@ -97,7 +97,7 @@ void Timer0_Init(void)  //init timer0
 	T0CONbits.TMR0ON = 1;
 }
 
-void Timer1_Init(void)  //init timer0
+void Timer1_Init(void)  //init timer1
 {
 	
 	T1CONbits.RD16 = 1;
@@ -112,7 +112,7 @@ void Timer1_Init(void)  //init timer0
 	T1CONbits.TMR1ON = 0;
 }
 
-void Timer2_Init(void)  //init timer0
+void Timer2_Init(void)  //init timer2
 {
 
 	T2CONbits.T2OUTPS0 = 1;

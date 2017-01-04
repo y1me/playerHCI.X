@@ -51,6 +51,8 @@ volatile   DATA_DISPLAY    dataDSPY3_info;
 volatile   DATA_DISPLAY    dataDSPY4_info;
 volatile   DATA_DISPLAY    dataDSPY5_info;
 
+volatile char data[64];
+char *ptest;
 
 char keypad;
 long trameok;
@@ -753,7 +755,7 @@ unsigned char ConvertDigit2(unsigned char letter)
 void ProcessIO(void)
 {   
 	if(!flag.first) HandleSIRSC();
-
+    
 	if (flag.first)
 	{
 		//LoadTOCInfo();
@@ -762,85 +764,17 @@ void ProcessIO(void)
 		//TrackToPlay = 1;
 		flag.first = 0;
 	}
-	if (!flag.nodisc && !flagspi.aux)
-	{
-
-		if (CDStatus == CD_STOP)
-		{
-
-			sprintf (buffer, "%u", NumbOfTrack);
-			if(strlen (buffer) == 2)
-			{
-				dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
-				dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
-			}
-			else
-			{
-				dataDSPY2._byte[11] = D_0;//digit 1/2
-				dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
-			}
-
-			//sprintf (buffer, "%u", EndAddrMSF.min);
-			if(strlen (buffer) == 2)
-			{
-				dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
-				dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);//digit 2/4
-			}
-			else
-			{
-				dataDSPY1._byte[10] = d_0;//digit 1/4
-				dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
-			}
-			//sprintf (buffer, "%u", EndAddrMSF.sec);
-			if(strlen (buffer) == 2)
-			{
-				dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4
-				dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);//digit 4/4
-			}
-			else
-			{
-				dataDSPY3._byte[10] = d_0;//digit 3/4
-				dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);//digit 4/4
-			}
-			dataDSPY5._byte[10] = d_pp;//digit dp/4
-		}
-		else
-		{
-			//sprintf (buffer, "%u", CurrentRelAddrMSF.track);
-			if(strlen (buffer) == 2)
-			{
-				dataDSPY2._byte[11] = ConvertDigit2(buffer[0]);//digit 1/2
-				dataDSPY1._byte[11] = ConvertDigit2(buffer[1]);//digit 2/2
-			}
-			else
-			{
-				dataDSPY2._byte[11] = D_0;//digit 1/2
-				dataDSPY1._byte[11] = ConvertDigit2(buffer[0]);//digit 2/2
-			}
-			//sprintf (buffer, "%u", CurrentRelAddrMSF.min);
-			if(strlen (buffer) == 2)
-			{
-				dataDSPY1._byte[10] = ConvertDigit4(buffer[0]);//digit 1/4
-				dataDSPY2._byte[10] = ConvertDigit4(buffer[1]);//digit 2/4
-			}
-			else
-			{
-				dataDSPY1._byte[10] = d_0;//digit 1/4
-				dataDSPY2._byte[10] = ConvertDigit4(buffer[0]);//digit 2/4
-			}
-			//sprintf (buffer, "%u", CurrentRelAddrMSF.sec);
-			if(strlen (buffer) == 2)
-			{
-				dataDSPY3._byte[10] = ConvertDigit4(buffer[0]);//digit 3/4
-				dataDSPY4._byte[10] = ConvertDigit4(buffer[1]);//digit 4/4
-			}
-			else
-			{
-				dataDSPY3._byte[10] = d_0;//digit 3/4
-				dataDSPY4._byte[10] = ConvertDigit4(buffer[0]);//digit 4/4
-			}
-			dataDSPY5._byte[10] = d_pp;//digit dp/4
-		}
-
-	}
+    
+    if (flag.tim0)    
+    {
+        flag.tim0 = 0;
+        *ptest++;
+        if ( ptest == &data[27] ) ptest = &data[0]; 
+    }
+				dataDSPY2._byte[11] = ConvertDigit2( *ptest );//digit 1/2 
+				dataDSPY1._byte[11] = ConvertDigit2( *(ptest+1) );//digit 2/2
+				dataDSPY1._byte[10] = ConvertDigit4( *(ptest+2) );//digit 1/4
+				dataDSPY2._byte[10] = ConvertDigit4( *(ptest+3) );//digit 2/4
+				dataDSPY3._byte[10] = ConvertDigit4( *(ptest+4) );//digit 3/4
+				dataDSPY4._byte[10] = ConvertDigit4( *(ptest+5) );//digit 4/4		
 }

@@ -83,6 +83,8 @@
 //#include <delays.h>
 #include "./h/spi_ide.h"
 #include "./h/user.h"
+#include <stdio.h>
+#include <string.h>
 
 
 
@@ -131,6 +133,9 @@ extern volatile	DATA_DISPLAY    dataDSPY4_info;
 extern volatile	DATA_DISPLAY    dataDSPY5_info;
 
 volatile DATA_DISPLAY    p_dataDSPY;
+
+extern volatile char data[64];
+extern char *ptest;
 
 extern char keypad;
 extern long trameok;
@@ -594,8 +599,8 @@ void interrupt low_priority low_int(void)
 	if(TIMSUB_INT_F)
 	{
 		flag.tim0 = 1;
-		TIMERSUB_REGH = 0xB3;
-		TIMERSUB_REG = 0xB4;
+		TIMERSUB_REGH = 0xA4;
+		TIMERSUB_REG = 0x71;
 		TIMSUB_INT_F =0;
 	}
 }
@@ -609,9 +614,7 @@ unsigned char AMSF[4],RMSF[4];
 void main(void)
 {
 
-	unsigned char *ptest;
 	int i;
-
 
 	Port_Init();
 	Spi_Init();
@@ -644,6 +647,8 @@ void main(void)
 	Timer2_Init();
 	trameok = 0;
 	InitDSPY();
+    strcpy(data,"the pixies where is my mind");
+    ptest = &data[0];
 
         PORTTEST = 0;
 
