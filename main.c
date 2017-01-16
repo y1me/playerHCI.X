@@ -96,7 +96,7 @@ extern volatile struct chbits{
 						unsigned tim0:1; 
 						unsigned int1:1; 
 						unsigned tim1:1; 
-						unsigned mech:1; 
+						unsigned uart:1; 
 						unsigned first:1; 
 						unsigned nodisc:1; 
 						unsigned bit7:1;
@@ -139,6 +139,8 @@ extern char *ptest;
 
 extern char keypad;
 extern long trameok;
+
+
 char keypad_log[3];
 volatile long trame_capt;
 volatile long count_IR;
@@ -603,6 +605,11 @@ void interrupt low_priority low_int(void)
 		TIMERSUB_REG = 0x71;
 		TIMSUB_INT_F =0;
 	}
+    
+    if(UART_INT_F)
+	{ 
+        flag.uart = 1;
+    }
 }
 
 //DATA_PACKET product_id;
@@ -618,10 +625,12 @@ void main(void)
 
 	Port_Init();
 	Spi_Init();
-	Timer0_Init();
+    Timer0_Init();
 	Timer1_Init();
 	INT_Init();
+    USART_Init();
 	flag.spi = 0;
+    flag.uart = 0;
 	flag.tim0 = 0;
 	flag.tim1 = 0;
 	flag.int1 = 0;

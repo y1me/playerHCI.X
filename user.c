@@ -9,13 +9,14 @@
 #include <string.h>
 #include <xc.h>
 
+
 /** V A R I A B L E S ********************************************************/
 volatile struct chbits{
 	unsigned spi:1; 
 	unsigned tim0:1; 
 	unsigned int1:1; 
 	unsigned tim1:1; 
-	unsigned mech:1; 
+	unsigned uart:1; 
 	unsigned first:1; 
 	unsigned nodisc:1; 
 	unsigned bit7:1;
@@ -54,15 +55,20 @@ volatile   DATA_DISPLAY    dataDSPY5_info;
 volatile char data[64];
 char *ptest;
 
+char *DataTX;
+char *DataTXEnd;
+
 char keypad;
 long trameok;
 int CDStatus;
 int TrackToPlay;
 int NumbOfTrack;
+char TXlength;
 unsigned char MuteState, RightVol, LeftVol, AudioStatus;
 unsigned char TimeoutEN;
 char buffer[20];
 int length;
+unsigned char Txdata[] = "MICROCHIP_USART";
 
 
 /** P R I V A T E  P R O T O T Y P E S ***************************************/
@@ -394,6 +400,17 @@ unsigned char ProcessIrCode(long *trameToProcess)
 				dataDSPY4_info._byte[10] = d_p;//digit 4/4
 				dataDSPY5_info._byte[10] = d_void;//digit dp/4
 				flagspi.info = 1;
+                
+                ptest =  &Txdata[0];
+                while(!TXSTA2bits.TRMT); 
+                while (ptest !=  &Txdata[10])
+                {
+                    TXREG2 = *ptest;
+                    *ptest++;
+                    while(!TXSTA2bits.TRMT); 
+                }
+                ptest = &data[0];
+              
 			}
 			return 1;
 			break;
@@ -756,6 +773,12 @@ void ProcessIO(void)
 {   
 	if(!flag.first) HandleSIRSC();
     
+    if (flag.uart)
+    {
+        flag.uart = 0;
+        
+    }
+    
 	if (flag.first)
 	{
 		//LoadTOCInfo();
@@ -769,7 +792,8 @@ void ProcessIO(void)
     {
         flag.tim0 = 0;
         *ptest++;
-        if ( ptest == &data[27] ) ptest = &data[0]; 
+        if ( ptest == &data[23] ) ptest = &data[0]; 
+        
     }
 				dataDSPY2._byte[11] = ConvertDigit2( *ptest );//digit 1/2 
 				dataDSPY1._byte[11] = ConvertDigit2( *(ptest+1) );//digit 2/2

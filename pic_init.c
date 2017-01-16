@@ -1,6 +1,8 @@
 #include "./h/pic_init.h"
 #include "./h/hwprofile.h"
 #include <xc.h>
+#include "i2c.h"
+
 
 
 
@@ -11,6 +13,7 @@
 void Port_Init(void)  //init i/o PIC for enable DAC
 {
 //Device adress pin
+
 	TRISG0 = OUTPUT_PIN;
 	TRISG1 = OUTPUT_PIN;
 	TRISGbits.TRISG2 = OUTPUT_PIN;
@@ -58,6 +61,30 @@ void Spi_Init(void)  //init SPI Bus
 	SSP1STATbits.CKE = 1;
 
 	SSP1CON1bits.SSPEN = 1;
+}
+
+void USART_Init(void)  //init USART
+{
+    TRISGbits.RG2 = 1;
+    TRISGbits.RG1 = 0;
+    
+    TXSTA2bits.TX9 = 0;
+    TXSTA2bits.SYNC = 0;
+    TXSTA2bits.SENDB = 0;
+    TXSTA2bits.BRGH = 1;
+    
+    RCSTA2bits.SPEN = 1;
+    RCSTA2bits.RX9 = 0;
+    BAUDCON2bits.BRG16 = 1;
+    SPBRGH2 = 0x02;
+    SPBRGH = 0x08;
+    
+    PIE3bits.TX2IE = 1;
+    IPR3bits.TX2IP = 0;
+    
+    RCSTA2bits.CREN = 1;
+    TXSTA2bits.TXEN = 1;
+    
 }
 
 void INT_Init(void)  //init Interrupt
