@@ -6,7 +6,6 @@
 void Port_Init(void);
 void Spi_Init(void);
 void INT_Init(void);
-void USART_Init(void);
 void Timer0_Init(void);
 void Timer1_Init(void);
 void Timer2_Init(void);

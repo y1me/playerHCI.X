@@ -4,13 +4,13 @@
         #define HARDWARE_PROFILE_H
 
         #define CLOCK_FREQ          40000000
-        #define Time_info           20000
+	#define Time_info           20000
         #define Scan_time           70 //x * 0.01s
         #define Nb_Retry            50000
         #define SPI_DATA_SIZE       20
         #define DISPLAY_DATA_SIZE   16
 
-    /**Code telecommande HITACHI CP-RD1***************************/
+/**Code telecommande HITACHI CP-RD1***************************/
         #define KEY1	0x0AF5E816	//Power
         #define KEY2	0x0AF508F6	//Recall
         #define KEY3	0x0AF5906E	//RGB/video
@@ -23,17 +23,17 @@
         #define KEY10	0x0AF54EB0	//Select Right
         #define KEY11	0x0AF5CE30	//Select Left
 
-    /**Code commande CD***************************/
+/**Code commande CD***************************/
         #define CD_PLAY     0x100
         #define CD_PAUSE	0x200
         #define CD_STOP     0x300
 
 
-    /** DEBUG ***********************************************************/
+/** DEBUG ***********************************************************/
 	#define	TRIS_PORTTEST		TRISC7
 	#define PORTTEST            PORTCbits.RC7
 
-    /** TRIS ***********************************************************/
+/** TRIS ***********************************************************/
 	#define INPUT_PIN           1
 	#define OUTPUT_PIN          0
 	#define INPUT_PORT          0xFF
@@ -48,11 +48,8 @@
 	#define S_DISPLAY       PORTCbits.RC0
 	#define SPI_BUFF		SSP1BUF
 	#define SPI_INT_F		SSP1IF
- 
-    /** EUSART ************************************************************/   
-    #define UART_INT_F      PIR3bits.TX2IF
-    #define TX_UART_REG     TXREG2
-    
+   
+
     /** Timer telecommande ************************************************************/
 
  	#define TIMIR_INT_F         TMR1IF
