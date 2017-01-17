@@ -15,7 +15,7 @@ volatile struct chbits{
 	unsigned tim0:1; 
 	unsigned int1:1; 
 	unsigned tim1:1; 
-	unsigned mech:1; 
+	unsigned uart:1; 
 	unsigned first:1; 
 	unsigned nodisc:1; 
 	unsigned bit7:1;
@@ -53,6 +53,10 @@ volatile   DATA_DISPLAY    dataDSPY5_info;
 
 volatile char data[64];
 char *ptest;
+
+volatile char DataTX[16];
+char *pDataTX;
+char *pDataTXEnd;
 
 char keypad;
 long trameok;
@@ -358,82 +362,82 @@ unsigned char ProcessIrCode(long *trameToProcess)
 	switch ( *trameToProcess )
 	{
 		case KEY1:
-			if (!flagspi.aux)   
-				return 1;
+			strcpy(DataTX,"EJECT\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[6];
+            TX_UART_INT_E = 1;  
+			return 1;
+            break;
 
 		case KEY2:
-			//Reset_Hard();
-			CDStatus = CD_STOP;
+			strcpy(DataTX,"RESET\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[6];
+            TX_UART_INT_E = 1; 
 			return 1;
-
 			break;
 
 		case KEY7:
-			if (!flagspi.aux)   
-				return 1;
+  			strcpy(DataTX,"PLAY\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[5];
+            TX_UART_INT_E = 1;
+			return 1;
 			break;
 
 		case KEY9:
-			if (!flagspi.aux)
-			{
-				//Mute
-				dataDAC.DataToWrite = 2;
-				dataDAC.DataRead = 0;
-				dataDAC.DataWrite = 0;
-				dataDAC.CSTiming = 2;
-				dataDAC._byte[4] = 0x12;
-				dataDAC._byte[5] = 0xA1;
-
-				TrackToPlay = 1;
-				CDStatus = CD_STOP;
-				dataDSPY2_info._byte[11] = D_void;//digit 1/2 
-				dataDSPY1_info._byte[11] = D_void;//digit 2/2 
-				dataDSPY1_info._byte[10] = d_s;//digit 1/4 
-				dataDSPY2_info._byte[10] = d_t;//digit 2/4
-				dataDSPY3_info._byte[10] = d_o;//digit 3/4
-				dataDSPY4_info._byte[10] = d_p;//digit 4/4
-				dataDSPY5_info._byte[10] = d_void;//digit dp/4
-				flagspi.info = 1;
-			}
+            strcpy(DataTX,"STOP\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[5];
+            TX_UART_INT_E = 1;
 			return 1;
 			break;
 
 		case KEY10:
-			if (!flagspi.aux && CDStatus != CD_PAUSE)   
-				return 1;
+			strcpy(DataTX,"NEXT\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[5];
+            TX_UART_INT_E = 1;  
+			return 1;
 			break;
 
 		case KEY11:
-			if (!flagspi.aux && CDStatus != CD_PAUSE)   
-				return 1;
+            strcpy(DataTX,"PREV\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[5];
+            TX_UART_INT_E = 1;   
+			return 1;
 			break;
 
 		case KEY4:
-			if(!MuteState)
-			{
-
-				MuteState = 1;
-			}
-			else
-			{
-
-				MuteState = 0;
-			}
+			strcpy(DataTX,"MUTE\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[5];
+            TX_UART_INT_E = 1;
 			return 1;
 			break;
 
 		case KEY6:
-
+            strcpy(DataTX,"VOLDW\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[6];
+            TX_UART_INT_E = 1;
 			return 1;
 			break;
 
 		case KEY5:
-
+            strcpy(DataTX,"VOLUP\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[6];
+            TX_UART_INT_E = 1;
 			return 1;
 			break;
 
 		case KEY3:
-
+            strcpy(DataTX,"SOURCE\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[7];
+            TX_UART_INT_E = 1;
 			return 1;
 			break;
 
@@ -754,22 +758,18 @@ unsigned char ConvertDigit2(unsigned char letter)
 
 void ProcessIO(void)
 {   
-	if(!flag.first) HandleSIRSC();
+    HandleSIRSC();
     
-	if (flag.first)
-	{
-		//LoadTOCInfo();
-		//flag.mech = 1;
-		CDStatus = CD_STOP;
-		//TrackToPlay = 1;
-		flag.first = 0;
-	}
+    if (flag.uart)
+    {
+        flag.uart = 0;   
+    }
     
     if (flag.tim0)    
     {
         flag.tim0 = 0;
         *ptest++;
-        if ( ptest == &data[27] ) ptest = &data[0]; 
+        if ( ptest == &data[23] ) ptest = &data[0]; 
     }
 				dataDSPY2._byte[11] = ConvertDigit2( *ptest );//digit 1/2 
 				dataDSPY1._byte[11] = ConvertDigit2( *(ptest+1) );//digit 2/2

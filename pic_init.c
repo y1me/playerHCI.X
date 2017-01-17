@@ -60,12 +60,33 @@ void Spi_Init(void)  //init SPI Bus
 	SSP1CON1bits.SSPEN = 1;
 }
 
+void USART_Init(void)  //init USART
+{
+    RCSTA2bits.SPEN = 1;
+    TRISGbits.RG2 = 1;
+    TRISGbits.RG1 = 0;
+    
+    TXSTA2bits.TX9 = 0;
+    TXSTA2bits.SYNC = 0;
+    TXSTA2bits.SENDB = 0;
+    TXSTA2bits.BRGH = 1;
+    
+    RCSTA2bits.RX9 = 0;
+    BAUDCON2bits.BRG16 = 1;
+    SPBRGH2 = 0x02;
+    SPBRGH = 0x08;
+    
+    //RCSTA2bits.CREN = 1;
+    TXSTA2bits.TXEN = 1;
+    
+}
+
 void INT_Init(void)  //init Interrupt
 {
 	RCONbits.IPEN = 1;
 	
-	INTCONbits.GIEH = 1;
-	INTCONbits.GIEL = 1;
+	INTCONbits.GIE_GIEH = 1;
+	INTCONbits.PEIE_GIEL = 1;
 
 	//INT1 interrupt
 
@@ -78,6 +99,11 @@ void INT_Init(void)  //init Interrupt
 	IPR1bits.SSP1IP = 1;
 	PIR1bits.SSP1IF = 0;
 	PIE1bits.SSP1IE = 1;
+    
+    //UART interrupt
+    
+    PIE3bits.TX2IE = 0;
+    IPR3bits.TX2IP = 0;
 
 }
 

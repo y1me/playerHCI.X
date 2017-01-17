@@ -96,7 +96,7 @@ extern volatile struct chbits{
 						unsigned tim0:1; 
 						unsigned int1:1; 
 						unsigned tim1:1; 
-						unsigned mech:1; 
+						unsigned uart:1; 
 						unsigned first:1; 
 						unsigned nodisc:1; 
 						unsigned bit7:1;
@@ -136,6 +136,9 @@ volatile DATA_DISPLAY    p_dataDSPY;
 
 extern volatile char data[64];
 extern char *ptest;
+
+extern char *pDataTX;
+extern char *pDataTXEnd;
 
 extern char keypad;
 extern long trameok;
@@ -603,6 +606,17 @@ void interrupt low_priority low_int(void)
 		TIMERSUB_REG = 0x71;
 		TIMSUB_INT_F =0;
 	}
+    
+    if(UART_INT_F && TX_UART_INT_E)
+	{ 
+        TX_UART_REG = *pDataTX;
+        *pDataTX++;
+        if (pDataTX > pDataTXEnd )
+        {
+            TX_UART_INT_E = 0;
+        }
+    }
+    
 }
 
 //DATA_PACKET product_id;
@@ -618,6 +632,7 @@ void main(void)
 
 	Port_Init();
 	Spi_Init();
+    USART_Init();
 	Timer0_Init();
 	Timer1_Init();
 	INT_Init();

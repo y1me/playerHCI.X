@@ -49,6 +49,10 @@
 	#define SPI_BUFF		SSP1BUF
 	#define SPI_INT_F		SSP1IF
    
+    /** EUSART ************************************************************/   
+    #define UART_INT_F      PIR3bits.TX2IF
+    #define TX_UART_REG     TXREG2
+    #define TX_UART_INT_E   PIE3bits.TX2IE
 
     /** Timer telecommande ************************************************************/
 
