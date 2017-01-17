@@ -52,11 +52,13 @@ volatile   DATA_DISPLAY    dataDSPY3_info;
 volatile   DATA_DISPLAY    dataDSPY4_info;
 volatile   DATA_DISPLAY    dataDSPY5_info;
 
+volatile char DataTX[16];
+
 volatile char data[64];
 char *ptest;
 
-char *DataTX;
-char *DataTXEnd;
+char *pDataTX;
+char *pDataTXEnd;
 
 char keypad;
 long trameok;
@@ -380,38 +382,10 @@ unsigned char ProcessIrCode(long *trameToProcess)
 			break;
 
 		case KEY9:
-			if (!flagspi.aux)
-			{
-				//Mute
-				dataDAC.DataToWrite = 2;
-				dataDAC.DataRead = 0;
-				dataDAC.DataWrite = 0;
-				dataDAC.CSTiming = 2;
-				dataDAC._byte[4] = 0x12;
-				dataDAC._byte[5] = 0xA1;
-
-				TrackToPlay = 1;
-				CDStatus = CD_STOP;
-				dataDSPY2_info._byte[11] = D_void;//digit 1/2 
-				dataDSPY1_info._byte[11] = D_void;//digit 2/2 
-				dataDSPY1_info._byte[10] = d_s;//digit 1/4 
-				dataDSPY2_info._byte[10] = d_t;//digit 2/4
-				dataDSPY3_info._byte[10] = d_o;//digit 3/4
-				dataDSPY4_info._byte[10] = d_p;//digit 4/4
-				dataDSPY5_info._byte[10] = d_void;//digit dp/4
-				flagspi.info = 1;
-                
-                ptest =  &Txdata[0];
-                while(!TXSTA2bits.TRMT); 
-                while (ptest !=  &Txdata[10])
-                {
-                    TXREG2 = *ptest;
-                    *ptest++;
-                    while(!TXSTA2bits.TRMT); 
-                }
-                ptest = &data[0];
-              
-			}
+            strcpy(DataTX,"STOP");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[3];
+            flag.uart = 1;
 			return 1;
 			break;
 
@@ -776,7 +750,11 @@ void ProcessIO(void)
     if (flag.uart)
     {
         flag.uart = 0;
-        
+        if (pDataTX <= pDataTXEnd )
+        {
+            TX_UART_REG = *pDataTX;
+            *pDataTX++;
+        }
     }
     
 	if (flag.first)

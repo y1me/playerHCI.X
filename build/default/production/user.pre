@@ -7302,11 +7302,13 @@ volatile DATA_DISPLAY dataDSPY3_info;
 volatile DATA_DISPLAY dataDSPY4_info;
 volatile DATA_DISPLAY dataDSPY5_info;
 
-volatile char data[64];
+volatile char DataTX[16];
+
+volatile char data[64]= "The pixies where is my mind";;
 char *ptest;
 
-char *DataTX;
-char *DataTXEnd;
+char *pDataTX;
+char *pDataTXEnd;
 
 char keypad;
 long trameok;
@@ -7630,38 +7632,10 @@ return 1;
 break;
 
 case 0x0AF58E70:
-if (!flagspi.aux)
-{
-
-dataDAC.DataToWrite = 2;
-dataDAC.DataRead = 0;
-dataDAC.DataWrite = 0;
-dataDAC.CSTiming = 2;
-dataDAC._byte[4] = 0x12;
-dataDAC._byte[5] = 0xA1;
-
-TrackToPlay = 1;
-CDStatus = 0x300;
-dataDSPY2_info._byte[11] = 255;
-dataDSPY1_info._byte[11] = 255;
-dataDSPY1_info._byte[10] = 161;
-dataDSPY2_info._byte[10] = 149;
-dataDSPY3_info._byte[10] = 197;
-dataDSPY4_info._byte[10] = 152;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-
-ptest = &Txdata[0];
-while(!TXSTA2bits.TRMT);
-while (ptest != &Txdata[10])
-{
-TXREG2 = *ptest;
-*ptest++;
-while(!TXSTA2bits.TRMT);
-}
-ptest = &data[0];
-
-}
+strcpy(DataTX,"STOP");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[3];
+flag.uart = 1;
 return 1;
 break;
 
@@ -8026,7 +8000,11 @@ if(!flag.first) HandleSIRSC();
 if (flag.uart)
 {
 flag.uart = 0;
-
+if (pDataTX <= pDataTXEnd )
+{
+TXREG2 = *pDataTX;
+*pDataTX++;
+}
 }
 
 if (flag.first)
