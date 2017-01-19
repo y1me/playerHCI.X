@@ -96,7 +96,7 @@ extern volatile struct chbits{
 						unsigned tim0:1; 
 						unsigned int1:1; 
 						unsigned tim1:1; 
-						unsigned uart:1; 
+						unsigned uartrx:1; 
 						unsigned first:1; 
 						unsigned nodisc:1; 
 						unsigned bit7:1;
@@ -622,22 +622,23 @@ void interrupt low_priority low_int(void)
     
     while(UART_RX_INT_F)
     {
-        *(pDataRX +15) = *(pDataRX +14); 
-        *(pDataRX +14) = *(pDataRX +13);
-        *(pDataRX +13) = *(pDataRX +12);
-        *(pDataRX +12) = *(pDataRX +11);
-        *(pDataRX +11) = *(pDataRX +10);
-        *(pDataRX +10) = *(pDataRX +9);
-        *(pDataRX +9) = *(pDataRX +8);
-        *(pDataRX +8) = *(pDataRX +7);
-        *(pDataRX +7) = *(pDataRX +6);
-        *(pDataRX +6) = *(pDataRX +5);
-        *(pDataRX +5) = *(pDataRX +4);
-        *(pDataRX +4) = *(pDataRX +3);
-        *(pDataRX +3) = *(pDataRX +2);
-        *(pDataRX +2) = *(pDataRX +1);
-        *(pDataRX +1) = *pDataRX;
-        *pDataRX = RX_UART_REG;
+        *pDataRX = *(pDataRX +1);
+        *(pDataRX +1) = *(pDataRX +2);
+        *(pDataRX +2) = *(pDataRX +3);
+        *(pDataRX +3) = *(pDataRX +4);
+        *(pDataRX +4) = *(pDataRX +5);
+        *(pDataRX +5) = *(pDataRX +6);
+        *(pDataRX +6) = *(pDataRX +7);
+        *(pDataRX +7) = *(pDataRX +8);
+        *(pDataRX +8) = *(pDataRX +9);
+        *(pDataRX +9) = *(pDataRX +10);
+        *(pDataRX +10) = *(pDataRX +11);
+        *(pDataRX +11) = *(pDataRX +12);
+        *(pDataRX +12) = *(pDataRX +13);
+        *(pDataRX +13) = *(pDataRX +14);
+        *(pDataRX +14) = *(pDataRX +15);
+        *(pDataRX +15) = RX_UART_REG;
+        flag.uartrx = 1;
     }
     
 }
@@ -679,6 +680,7 @@ void main(void)
 	S_DISPLAY = 1;
 	count_spi = 0;
 	count_info = Time_info;
+    INT_Init();
 	InitMCP23S17();
 	Timer2_Init();
 	trameok = 0;
@@ -686,7 +688,7 @@ void main(void)
     strcpy(data,"the pixies where is my mind");
     ptest = &data[0];
     pDataRX = &DataRX[0];
-    INT_Init();
+    
 
         PORTTEST = 0;
 

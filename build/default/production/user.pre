@@ -7266,7 +7266,7 @@ unsigned spi:1;
 unsigned tim0:1;
 unsigned int1:1;
 unsigned tim1:1;
-unsigned uart:1;
+unsigned uartrx:1;
 unsigned first:1;
 unsigned nodisc:1;
 unsigned bit7:1;
@@ -8031,6 +8031,23 @@ __nop();
 RCSTA2bits.CREN = 1;
 
 }
+if (flag.uartrx)
+{
+flag.uartrx = 0;
+if(strstr(DataRX, "test") != (0))
+{
+dataDSPY2_info._byte[11] = 255;
+dataDSPY1_info._byte[11] = 255;
+dataDSPY1_info._byte[10] = 161;
+dataDSPY2_info._byte[10] = 149;
+dataDSPY3_info._byte[10] = 197;
+dataDSPY4_info._byte[10] = 152;
+dataDSPY5_info._byte[10] = 255;
+flagspi.info = 1;
+}
+
+}
+
 
 if (flag.tim0)
 {

@@ -5864,9 +5864,6 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic_init.c: 106: IPR3bits.TX2IP = 0;
 "106
 [e = . . _IPR3bits 0 4 -> -> 0 `i `uc ]
-[; ;pic_init.c: 108: PIE3bits.RC2IE = 1;
-"108
-[e = . . _PIE3bits 0 5 -> -> 1 `i `uc ]
 [; ;pic_init.c: 109: IPR3bits.RC2IP = 0;
 "109
 [e = . . _IPR3bits 0 5 -> -> 0 `i `uc ]

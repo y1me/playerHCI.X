@@ -15,7 +15,7 @@ volatile struct chbits{
 	unsigned tim0:1; 
 	unsigned int1:1; 
 	unsigned tim1:1; 
-	unsigned uart:1; 
+	unsigned uartrx:1; 
 	unsigned first:1; 
 	unsigned nodisc:1; 
 	unsigned bit7:1;
@@ -770,7 +770,7 @@ unsigned char ConvertDigit2(unsigned char letter)
 void ProcessIO(void)
 {   
     HandleSIRSC();
-    /*
+    
     if (UART_RX_OERR)
     {
         UART_RX_EN = 0;
@@ -780,7 +780,26 @@ void ProcessIO(void)
         UART_RX_EN = 1;
         
     }
-    */
+    if (flag.uartrx)
+    {
+        flag.uartrx = 0;
+        if(strstr(DataRX, "test") != NULL)
+        {
+            
+            dataDSPY2_info._byte[11] = D_void;//digit 1/2 
+			dataDSPY1_info._byte[11] = D_void;//digit 2/2 
+			dataDSPY1_info._byte[10] = d_s;//digit 1/4 
+			dataDSPY2_info._byte[10] = d_t;//digit 2/4
+			dataDSPY3_info._byte[10] = d_o;//digit 3/4
+			dataDSPY4_info._byte[10] = d_p;//digit 4/4
+			dataDSPY5_info._byte[10] = d_void;//digit dp/4
+			flagspi.info = 1;
+            strcpy(DataRX, "gggg_gggg_gggg_g");
+            
+        }
+        
+    }
+    
     
     if (flag.tim0)    
     {
