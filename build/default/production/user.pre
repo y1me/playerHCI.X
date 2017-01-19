@@ -7309,6 +7309,9 @@ volatile char DataTX[16];
 char *pDataTX;
 char *pDataTXEnd;
 
+volatile char DataRX[16];
+char *pDataRX;
+
 char keypad;
 long trameok;
 int CDStatus;
@@ -7613,67 +7616,90 @@ unsigned char ProcessIrCode(long *trameToProcess)
 switch ( *trameToProcess )
 {
 case 0x0AF5E816:
-if (!flagspi.aux)
+strcpy(DataTX,"POWER\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[6];
+PIE3bits.TX2IE = 1;
 return 1;
+break;
 
 case 0x0AF508F6:
-
-CDStatus = 0x300;
+strcpy(DataTX,"RESET\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[6];
+PIE3bits.TX2IE = 1;
 return 1;
-
 break;
 
 case 0x0AF5CA34:
-if (!flagspi.aux)
+strcpy(DataTX,"MENU\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[5];
+PIE3bits.TX2IE = 1;
 return 1;
 break;
 
-case 0x0AF58E70:
-
-# 404
-strcpy(DataTX,"STOP");
+case 0x0AF50EF0:
+strcpy(DataTX,"UP\r\n");
 pDataTX = &DataTX[0];
 pDataTXEnd = &DataTX[3];
 PIE3bits.TX2IE = 1;
 return 1;
 break;
 
+case 0x0AF58E70:
+strcpy(DataTX,"DOWN\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[5];
+PIE3bits.TX2IE = 1;
+return 1;
+break;
+
 case 0x0AF54EB0:
-if (!flagspi.aux && CDStatus != 0x200)
+strcpy(DataTX,"RIGHT\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[6];
+PIE3bits.TX2IE = 1;
 return 1;
 break;
 
 case 0x0AF5CE30:
-if (!flagspi.aux && CDStatus != 0x200)
+strcpy(DataTX,"LEFT\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[5];
+PIE3bits.TX2IE = 1;
 return 1;
 break;
 
 case 0x0AF5D02E:
-if(!MuteState)
-{
-
-MuteState = 1;
-}
-else
-{
-
-MuteState = 0;
-}
+strcpy(DataTX,"MUTE\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[5];
+PIE3bits.TX2IE = 1;
 return 1;
 break;
 
 case 0x0AF5A856:
-
+strcpy(DataTX,"VOLDW\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[6];
+PIE3bits.TX2IE = 1;
 return 1;
 break;
 
 case 0x0AF548B6:
-
+strcpy(DataTX,"VOLUP\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[6];
+PIE3bits.TX2IE = 1;
 return 1;
 break;
 
 case 0x0AF5906E:
-
+strcpy(DataTX,"SOURCE\r\n");
+pDataTX = &DataTX[0];
+pDataTXEnd = &DataTX[7];
+PIE3bits.TX2IE = 1;
 return 1;
 break;
 
@@ -7994,18 +8020,23 @@ return 255;
 
 void ProcessIO(void)
 {
-if(!flag.first) HandleSIRSC();
+HandleSIRSC();
 
-if (flag.uart)
+if (RCSTA2bits.OERR)
 {
-flag.uart = 0;
+RCSTA2bits.CREN = 0;
+__nop();
+__nop();
+__nop();
+RCSTA2bits.CREN = 1;
+
 }
 
 if (flag.tim0)
 {
 flag.tim0 = 0;
 *ptest++;
-if ( ptest == &data[27] ) ptest = &data[0];
+if ( ptest == &data[23] ) ptest = &data[0];
 }
 dataDSPY2._byte[11] = ConvertDigit2( *ptest );
 dataDSPY1._byte[11] = ConvertDigit2( *(ptest+1) );

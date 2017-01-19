@@ -5813,6 +5813,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic_init.c: 77: SPBRGH = 0x08;
 "77
 [e = _SPBRGH -> -> 8 `i `uc ]
+[; ;pic_init.c: 79: RCSTA2bits.CREN = 1;
+"79
+[e = . . _RCSTA2bits 0 4 -> -> 1 `i `uc ]
 [; ;pic_init.c: 80: TXSTA2bits.TXEN = 1;
 "80
 [e = . . _TXSTA2bits 0 5 -> -> 1 `i `uc ]
@@ -5861,121 +5864,127 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic_init.c: 106: IPR3bits.TX2IP = 0;
 "106
 [e = . . _IPR3bits 0 4 -> -> 0 `i `uc ]
-[; ;pic_init.c: 108: }
+[; ;pic_init.c: 108: PIE3bits.RC2IE = 1;
 "108
+[e = . . _PIE3bits 0 5 -> -> 1 `i `uc ]
+[; ;pic_init.c: 109: IPR3bits.RC2IP = 0;
+"109
+[e = . . _IPR3bits 0 5 -> -> 0 `i `uc ]
+[; ;pic_init.c: 111: }
+"111
 [e :UE 507 ]
 }
-"110
+"113
 [v _Timer0_Init `(v ~T0 @X0 1 ef ]
-"111
+"114
 {
-[; ;pic_init.c: 110: void Timer0_Init(void)
-[; ;pic_init.c: 111: {
+[; ;pic_init.c: 113: void Timer0_Init(void)
+[; ;pic_init.c: 114: {
 [e :U _Timer0_Init ]
 [f ]
-[; ;pic_init.c: 113: T0CONbits.T08BIT = 0;
-"113
-[e = . . _T0CONbits 0 4 -> -> 0 `i `uc ]
-[; ;pic_init.c: 114: T0CONbits.T0CS = 0;
-"114
-[e = . . _T0CONbits 0 3 -> -> 0 `i `uc ]
-[; ;pic_init.c: 115: T0CONbits.PSA = 0;
-"115
-[e = . . _T0CONbits 0 1 -> -> 0 `i `uc ]
-[; ;pic_init.c: 116: T0CONbits.T0PS0 = 1;
+[; ;pic_init.c: 116: T0CONbits.T08BIT = 0;
 "116
-[e = . . _T0CONbits 1 0 -> -> 1 `i `uc ]
-[; ;pic_init.c: 117: T0CONbits.T0PS1 = 1;
+[e = . . _T0CONbits 0 4 -> -> 0 `i `uc ]
+[; ;pic_init.c: 117: T0CONbits.T0CS = 0;
 "117
-[e = . . _T0CONbits 1 1 -> -> 1 `i `uc ]
-[; ;pic_init.c: 118: T0CONbits.T0PS2 = 1;
+[e = . . _T0CONbits 0 3 -> -> 0 `i `uc ]
+[; ;pic_init.c: 118: T0CONbits.PSA = 0;
 "118
-[e = . . _T0CONbits 1 2 -> -> 1 `i `uc ]
-[; ;pic_init.c: 120: INTCONbits.TMR0IE = 1;
+[e = . . _T0CONbits 0 1 -> -> 0 `i `uc ]
+[; ;pic_init.c: 119: T0CONbits.T0PS0 = 1;
+"119
+[e = . . _T0CONbits 1 0 -> -> 1 `i `uc ]
+[; ;pic_init.c: 120: T0CONbits.T0PS1 = 1;
 "120
-[e = . . _INTCONbits 0 5 -> -> 1 `i `uc ]
-[; ;pic_init.c: 121: INTCON2bits.TMR0IP = 0;
+[e = . . _T0CONbits 1 1 -> -> 1 `i `uc ]
+[; ;pic_init.c: 121: T0CONbits.T0PS2 = 1;
 "121
-[e = . . _INTCON2bits 1 2 -> -> 0 `i `uc ]
-[; ;pic_init.c: 123: T0CONbits.TMR0ON = 1;
+[e = . . _T0CONbits 1 2 -> -> 1 `i `uc ]
+[; ;pic_init.c: 123: INTCONbits.TMR0IE = 1;
 "123
-[e = . . _T0CONbits 0 5 -> -> 1 `i `uc ]
-[; ;pic_init.c: 124: }
+[e = . . _INTCONbits 0 5 -> -> 1 `i `uc ]
+[; ;pic_init.c: 124: INTCON2bits.TMR0IP = 0;
 "124
+[e = . . _INTCON2bits 1 2 -> -> 0 `i `uc ]
+[; ;pic_init.c: 126: T0CONbits.TMR0ON = 1;
+"126
+[e = . . _T0CONbits 0 5 -> -> 1 `i `uc ]
+[; ;pic_init.c: 127: }
+"127
 [e :UE 508 ]
 }
-"126
+"129
 [v _Timer1_Init `(v ~T0 @X0 1 ef ]
-"127
+"130
 {
-[; ;pic_init.c: 126: void Timer1_Init(void)
-[; ;pic_init.c: 127: {
+[; ;pic_init.c: 129: void Timer1_Init(void)
+[; ;pic_init.c: 130: {
 [e :U _Timer1_Init ]
 [f ]
-[; ;pic_init.c: 129: T1CONbits.RD16 = 1;
-"129
-[e = . . _T1CONbits 1 6 -> -> 1 `i `uc ]
-[; ;pic_init.c: 130: T1CONbits.TMR1CS = 0;
-"130
-[e = . . _T1CONbits 1 1 -> -> 0 `i `uc ]
-[; ;pic_init.c: 131: T1CONbits.T1CKPS1 = 0;
-"131
-[e = . . _T1CONbits 2 4 -> -> 0 `i `uc ]
-[; ;pic_init.c: 132: T1CONbits.T1CKPS0 = 0;
+[; ;pic_init.c: 132: T1CONbits.RD16 = 1;
 "132
-[e = . . _T1CONbits 2 3 -> -> 0 `i `uc ]
-[; ;pic_init.c: 135: PIE1bits.TMR1IE = 1;
+[e = . . _T1CONbits 1 6 -> -> 1 `i `uc ]
+[; ;pic_init.c: 133: T1CONbits.TMR1CS = 0;
+"133
+[e = . . _T1CONbits 1 1 -> -> 0 `i `uc ]
+[; ;pic_init.c: 134: T1CONbits.T1CKPS1 = 0;
+"134
+[e = . . _T1CONbits 2 4 -> -> 0 `i `uc ]
+[; ;pic_init.c: 135: T1CONbits.T1CKPS0 = 0;
 "135
-[e = . . _PIE1bits 0 0 -> -> 1 `i `uc ]
-[; ;pic_init.c: 136: IPR1bits.TMR1IP = 1;
-"136
-[e = . . _IPR1bits 0 0 -> -> 1 `i `uc ]
-[; ;pic_init.c: 138: T1CONbits.TMR1ON = 0;
+[e = . . _T1CONbits 2 3 -> -> 0 `i `uc ]
+[; ;pic_init.c: 138: PIE1bits.TMR1IE = 1;
 "138
-[e = . . _T1CONbits 1 0 -> -> 0 `i `uc ]
-[; ;pic_init.c: 139: }
+[e = . . _PIE1bits 0 0 -> -> 1 `i `uc ]
+[; ;pic_init.c: 139: IPR1bits.TMR1IP = 1;
 "139
+[e = . . _IPR1bits 0 0 -> -> 1 `i `uc ]
+[; ;pic_init.c: 141: T1CONbits.TMR1ON = 0;
+"141
+[e = . . _T1CONbits 1 0 -> -> 0 `i `uc ]
+[; ;pic_init.c: 142: }
+"142
 [e :UE 509 ]
 }
-"141
+"144
 [v _Timer2_Init `(v ~T0 @X0 1 ef ]
-"142
+"145
 {
-[; ;pic_init.c: 141: void Timer2_Init(void)
-[; ;pic_init.c: 142: {
+[; ;pic_init.c: 144: void Timer2_Init(void)
+[; ;pic_init.c: 145: {
 [e :U _Timer2_Init ]
 [f ]
-[; ;pic_init.c: 144: T2CONbits.T2OUTPS0 = 1;
-"144
-[e = . . _T2CONbits 1 3 -> -> 1 `i `uc ]
-[; ;pic_init.c: 145: T2CONbits.T2OUTPS1 = 0;
-"145
-[e = . . _T2CONbits 1 4 -> -> 0 `i `uc ]
-[; ;pic_init.c: 146: T2CONbits.T2OUTPS2 = 0;
-"146
-[e = . . _T2CONbits 1 5 -> -> 0 `i `uc ]
-[; ;pic_init.c: 147: T2CONbits.T2OUTPS3 = 0;
+[; ;pic_init.c: 147: T2CONbits.T2OUTPS0 = 1;
 "147
-[e = . . _T2CONbits 1 6 -> -> 0 `i `uc ]
-[; ;pic_init.c: 148: T2CONbits.T2CKPS = 1;
+[e = . . _T2CONbits 1 3 -> -> 1 `i `uc ]
+[; ;pic_init.c: 148: T2CONbits.T2OUTPS1 = 0;
 "148
-[e = . . _T2CONbits 0 0 -> -> 1 `i `uc ]
-[; ;pic_init.c: 150: PR2 = 125;
+[e = . . _T2CONbits 1 4 -> -> 0 `i `uc ]
+[; ;pic_init.c: 149: T2CONbits.T2OUTPS2 = 0;
+"149
+[e = . . _T2CONbits 1 5 -> -> 0 `i `uc ]
+[; ;pic_init.c: 150: T2CONbits.T2OUTPS3 = 0;
 "150
-[e = _PR2 -> -> 125 `i `uc ]
-[; ;pic_init.c: 151: TMR2 = 0;
+[e = . . _T2CONbits 1 6 -> -> 0 `i `uc ]
+[; ;pic_init.c: 151: T2CONbits.T2CKPS = 1;
 "151
-[e = _TMR2 -> -> 0 `i `uc ]
-[; ;pic_init.c: 153: PIE1bits.TMR2IE = 1;
+[e = . . _T2CONbits 0 0 -> -> 1 `i `uc ]
+[; ;pic_init.c: 153: PR2 = 125;
 "153
-[e = . . _PIE1bits 0 1 -> -> 1 `i `uc ]
-[; ;pic_init.c: 154: IPR1bits.TMR2IP = 1;
+[e = _PR2 -> -> 125 `i `uc ]
+[; ;pic_init.c: 154: TMR2 = 0;
 "154
-[e = . . _IPR1bits 0 1 -> -> 1 `i `uc ]
-[; ;pic_init.c: 156: T2CONbits.TMR2ON = 1;
+[e = _TMR2 -> -> 0 `i `uc ]
+[; ;pic_init.c: 156: PIE1bits.TMR2IE = 1;
 "156
+[e = . . _PIE1bits 0 1 -> -> 1 `i `uc ]
+[; ;pic_init.c: 157: IPR1bits.TMR2IP = 1;
+"157
+[e = . . _IPR1bits 0 1 -> -> 1 `i `uc ]
+[; ;pic_init.c: 159: T2CONbits.TMR2ON = 1;
+"159
 [e = . . _T2CONbits 0 1 -> -> 1 `i `uc ]
-[; ;pic_init.c: 158: }
-"158
+[; ;pic_init.c: 161: }
+"161
 [e :UE 510 ]
 }

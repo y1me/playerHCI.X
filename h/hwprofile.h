@@ -50,9 +50,13 @@
 	#define SPI_INT_F		SSP1IF
    
     /** EUSART ************************************************************/   
-    #define UART_INT_F      PIR3bits.TX2IF
+    #define UART_TX_INT_F   PIR3bits.TX2IF
     #define TX_UART_REG     TXREG2
     #define TX_UART_INT_E   PIE3bits.TX2IE
+    #define UART_RX_INT_F   PIR3bits.RC2IF
+    #define RX_UART_REG     RCREG2
+    #define UART_RX_OERR    RCSTA2bits.OERR
+    #define UART_RX_EN      RCSTA2bits.CREN
 
     /** Timer telecommande ************************************************************/
 

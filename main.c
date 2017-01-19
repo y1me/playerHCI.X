@@ -140,6 +140,9 @@ extern char *ptest;
 extern char *pDataTX;
 extern char *pDataTXEnd;
 
+extern volatile char DataRX[16];
+extern char *pDataRX;
+
 extern char keypad;
 extern long trameok;
 char keypad_log[3];
@@ -607,7 +610,7 @@ void interrupt low_priority low_int(void)
 		TIMSUB_INT_F =0;
 	}
     
-    if(UART_INT_F && TX_UART_INT_E)
+    if(UART_TX_INT_F && TX_UART_INT_E)
 	{ 
         TX_UART_REG = *pDataTX;
         *pDataTX++;
@@ -617,11 +620,30 @@ void interrupt low_priority low_int(void)
         }
     }
     
+    while(UART_RX_INT_F)
+    {
+        *(pDataRX +15) = *(pDataRX +14); 
+        *(pDataRX +14) = *(pDataRX +13);
+        *(pDataRX +13) = *(pDataRX +12);
+        *(pDataRX +12) = *(pDataRX +11);
+        *(pDataRX +11) = *(pDataRX +10);
+        *(pDataRX +10) = *(pDataRX +9);
+        *(pDataRX +9) = *(pDataRX +8);
+        *(pDataRX +8) = *(pDataRX +7);
+        *(pDataRX +7) = *(pDataRX +6);
+        *(pDataRX +6) = *(pDataRX +5);
+        *(pDataRX +5) = *(pDataRX +4);
+        *(pDataRX +4) = *(pDataRX +3);
+        *(pDataRX +3) = *(pDataRX +2);
+        *(pDataRX +2) = *(pDataRX +1);
+        *(pDataRX +1) = *pDataRX;
+        *pDataRX = RX_UART_REG;
+    }
+    
 }
+    
 
-//DATA_PACKET product_id;
 
-unsigned char AMSF[4],RMSF[4];
 
 
 
@@ -635,7 +657,6 @@ void main(void)
     USART_Init();
 	Timer0_Init();
 	Timer1_Init();
-	INT_Init();
 	flag.spi = 0;
 	flag.tim0 = 0;
 	flag.tim1 = 0;
@@ -664,19 +685,10 @@ void main(void)
 	InitDSPY();
     strcpy(data,"the pixies where is my mind");
     ptest = &data[0];
+    pDataRX = &DataRX[0];
+    INT_Init();
 
         PORTTEST = 0;
-
-	for(i=0;i<2;i++)
-	{
-		//Delay10KTCYx(0);
-	}
-	//Reset_Hard();
-
-	for(i=0;i<40;i++)
-	{
-		//Delay10KTCYx(0);
-	}
 
 	while(1)
 	{

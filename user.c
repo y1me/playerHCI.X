@@ -58,6 +58,9 @@ volatile char DataTX[16];
 char *pDataTX;
 char *pDataTXEnd;
 
+volatile char DataRX[16];
+char *pDataRX;
+
 char keypad;
 long trameok;
 int CDStatus;
@@ -362,7 +365,7 @@ unsigned char ProcessIrCode(long *trameToProcess)
 	switch ( *trameToProcess )
 	{
 		case KEY1:
-			strcpy(DataTX,"EJECT\r\n");
+			strcpy(DataTX,"POWER\r\n");
             pDataTX = &DataTX[0];
             pDataTXEnd = &DataTX[6];
             TX_UART_INT_E = 1;  
@@ -378,15 +381,23 @@ unsigned char ProcessIrCode(long *trameToProcess)
 			break;
 
 		case KEY7:
-  			strcpy(DataTX,"PLAY\r\n");
+  			strcpy(DataTX,"MENU\r\n");
             pDataTX = &DataTX[0];
             pDataTXEnd = &DataTX[5];
             TX_UART_INT_E = 1;
 			return 1;
 			break;
+            
+        case KEY8:
+  			strcpy(DataTX,"UP\r\n");
+            pDataTX = &DataTX[0];
+            pDataTXEnd = &DataTX[3];
+            TX_UART_INT_E = 1;
+			return 1;
+			break;
 
 		case KEY9:
-            strcpy(DataTX,"STOP\r\n");
+            strcpy(DataTX,"DOWN\r\n");
             pDataTX = &DataTX[0];
             pDataTXEnd = &DataTX[5];
             TX_UART_INT_E = 1;
@@ -394,15 +405,15 @@ unsigned char ProcessIrCode(long *trameToProcess)
 			break;
 
 		case KEY10:
-			strcpy(DataTX,"NEXT\r\n");
+			strcpy(DataTX,"RIGHT\r\n");
             pDataTX = &DataTX[0];
-            pDataTXEnd = &DataTX[5];
+            pDataTXEnd = &DataTX[6];
             TX_UART_INT_E = 1;  
 			return 1;
 			break;
 
 		case KEY11:
-            strcpy(DataTX,"PREV\r\n");
+            strcpy(DataTX,"LEFT\r\n");
             pDataTX = &DataTX[0];
             pDataTXEnd = &DataTX[5];
             TX_UART_INT_E = 1;   
@@ -759,11 +770,17 @@ unsigned char ConvertDigit2(unsigned char letter)
 void ProcessIO(void)
 {   
     HandleSIRSC();
-    
-    if (flag.uart)
+    /*
+    if (UART_RX_OERR)
     {
-        flag.uart = 0;   
+        UART_RX_EN = 0;
+        Nop();
+        Nop();
+        Nop();
+        UART_RX_EN = 1;
+        
     }
+    */
     
     if (flag.tim0)    
     {
