@@ -17,7 +17,7 @@ volatile struct chbits{
 	unsigned tim1:1; 
 	unsigned Dtime:1; 
 	unsigned Data1:1; 
-	unsigned free5:1; 
+	unsigned Data2:1; 
 	unsigned bit7:1;
 
 }flag ;
@@ -52,6 +52,8 @@ volatile   DATA_DISPLAY    dataDSPY4_info;
 volatile   DATA_DISPLAY    dataDSPY5_info;
 
 volatile char data[8];
+volatile char datainfo[64];
+char *pdata;
 char *ptest;
 
 volatile char DataTX[16];

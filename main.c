@@ -98,7 +98,7 @@ extern volatile struct chbits{
 						unsigned tim1:1; 
 						unsigned Dtime:1; 
 						unsigned Data1:1; 
-						unsigned free5:1; 
+						unsigned Data2:1; 
 						unsigned bit7:1;
 		
 					}flag ;
@@ -135,6 +135,8 @@ extern volatile	DATA_DISPLAY    dataDSPY5_info;
 volatile DATA_DISPLAY    p_dataDSPY;
 
 extern volatile char data[8];
+extern volatile char datainfo[64];
+extern char *pdata;
 extern char *ptest;
 
 extern char *pDataTX;
@@ -664,14 +666,14 @@ void interrupt low_priority low_int(void)
                 data[5] = *(pDataRX +9);
                 flag.Data1 = 1;
             }
-            /*
+            
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
             {
                 flag.Data2 = 1;
                 pdata = &datainfo[0];
                 *pdata = *(pDataRX +4); 
             }
-            */
+            
             if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
             {
                 count_info = *(pDataRX +4);
