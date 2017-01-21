@@ -26,7 +26,7 @@ volatile struct flagspi{
 	unsigned bit0:1;
 	unsigned bit1:1;
 	unsigned info:1;
-	unsigned free2:1;
+	unsigned strinfo:1;
 	unsigned bit4:1;
 	unsigned bit5:1;
 	unsigned free3:1;
@@ -55,6 +55,7 @@ volatile char data[8];
 volatile char datainfo[64];
 char *pdata;
 char *pdataInfoEnd;
+char *pdataInfo;
 char *ptest;
 
 volatile char DataTX[16];
@@ -813,23 +814,27 @@ void ProcessIO(void)
         dataDSPY4._byte[10] = ConvertDigit4( data[5] );//digit 4/4
         dataDSPY5._byte[10] = d_void;//digit dp/4
     }
-    /*        
+            
     if (flag.tim0)    
     {
         flag.tim0 = 0;
 
-        if ( pdatainfo == pdatainfoEnd || flagspi.strinfo) pdatainfo = &datainfo[0]; 
+        if ( pdataInfo == pdataInfoEnd || flagspi.strinfo)
+        {
+            flagspi.strinfo = 0;
+            pdataInfo = &datainfo[0];
+        }
    
-        dataDSPY2_info._byte[11] = ConvertDigit2( *pdatainfo );
-        dataDSPY1_info._byte[11] = ConvertDigit2( *(pdatainfo +1) ); 
-        dataDSPY1_info._byte[10] = ConvertDigit4( *(pdatainfo +2) );
-        dataDSPY2_info._byte[10] = ConvertDigit4( *(pdatainfo +3) );
-        dataDSPY3_info._byte[10] = ConvertDigit4( *(pdatainfo +4) );
-        dataDSPY4_info._byte[10] = ConvertDigit4( *(pdatainfo +5) );
+        dataDSPY2_info._byte[11] = ConvertDigit2( *pdataInfo );
+        dataDSPY1_info._byte[11] = ConvertDigit2( *(pdataInfo +1) ); 
+        dataDSPY1_info._byte[10] = ConvertDigit4( *(pdataInfo +2) );
+        dataDSPY2_info._byte[10] = ConvertDigit4( *(pdataInfo +3) );
+        dataDSPY3_info._byte[10] = ConvertDigit4( *(pdataInfo +4) );
+        dataDSPY4_info._byte[10] = ConvertDigit4( *(pdataInfo +5) );
         dataDSPY5_info._byte[10] = d_void;//digit dp/4
-        *pdatainfo++;
+        *pdataInfo++;
     }
-         */
+         
 
 	
 }

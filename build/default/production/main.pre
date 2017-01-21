@@ -7355,7 +7355,7 @@ extern volatile struct flagspi{
 unsigned bit0:1;
 unsigned bit1:1;
 unsigned info:1;
-unsigned free2:1;
+unsigned strinfo:1;
 unsigned bit4:1;
 unsigned bit5:1;
 unsigned free3:1;
@@ -7519,6 +7519,7 @@ if(TMR2IF)
 {
 if (flagspi.info)
 {
+flagspi.strinfo = 0;
 count_info = 0;
 flagspi.info = 0;
 }
@@ -7919,6 +7920,7 @@ flag.Data1 = 1;
 
 if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
 {
+
 flag.Data2 = 1;
 pdata = &datainfo[0];
 *pdata = *(pDataRX +4);
@@ -7926,12 +7928,14 @@ pdata = &datainfo[0];
 
 if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
 {
+
 count_info = *(pDataRX +4);
 count_info = count_info << 8;
 count_info |= *(pDataRX +5);
 }
 if (*(pDataRX +2) == 'E' && *(pDataRX +3) == '=')
 {
+
 flagspi.info = 1;
 }
 }
@@ -7965,7 +7969,7 @@ if (pdata == &datainfo[53]) flag.Data2 = 0;
 
 }
 
-# 724
+# 728
 void main(void)
 {
 
@@ -7989,7 +7993,7 @@ flag.bit7 = 0;
 flagspi.bit0 = 0;
 flagspi.bit1 = 0;
 flagspi.info = 0;
-flagspi.free2 = 0;
+flagspi.strinfo = 0;
 flagspi.bit4 = 0;
 flagspi.bit5 = 0;
 flagspi.free3 = 0;

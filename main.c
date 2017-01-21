@@ -106,7 +106,7 @@ extern volatile struct flagspi{
 						unsigned bit0:1;
 						unsigned bit1:1;
 						unsigned info:1;
-						unsigned free2:1;
+						unsigned strinfo:1;
 						unsigned bit4:1;
 						unsigned bit5:1;
 						unsigned free3:1;
@@ -270,8 +270,9 @@ void interrupt high_int(void)
 	{
             if (flagspi.info)
             {
-                    count_info = 0;
-                    flagspi.info = 0;
+                flagspi.strinfo = 0;
+                count_info = 0;
+                flagspi.info = 0;
             }
             count_spi++;
             count_info++;
@@ -670,6 +671,7 @@ void interrupt low_priority low_int(void)
             
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
             {
+                // command : ~#C=XXXXXX info data 64 lettres 
                 flag.Data2 = 1;
                 pdata = &datainfo[0];
                 *pdata = *(pDataRX +4); 
@@ -677,12 +679,14 @@ void interrupt low_priority low_int(void)
             
             if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
             {
+                // command : ~#D=XXXXXX temps info data
                 count_info = *(pDataRX +4);
                 count_info = count_info << 8;
                 count_info |= *(pDataRX +5);
             }
             if (*(pDataRX +2) == 'E' && *(pDataRX +3) == '=')
             {
+                // command : ~#E=XXXXXX montrer info data
                 flagspi.info = 1;
             }
         }
@@ -744,7 +748,7 @@ void main(void)
 	flagspi.bit0 = 0;
 	flagspi.bit1 = 0;
 	flagspi.info = 0;
-	flagspi.free2 = 0;
+	flagspi.strinfo = 0;
 	flagspi.bit4 = 0;
 	flagspi.bit5 = 0;
 	flagspi.free3 = 0;
