@@ -54,6 +54,7 @@ volatile   DATA_DISPLAY    dataDSPY5_info;
 volatile char data[8];
 volatile char datainfo[64];
 char *pdata;
+char *pdataInfoEnd;
 char *ptest;
 
 volatile char DataTX[16];

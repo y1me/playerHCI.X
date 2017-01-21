@@ -137,6 +137,7 @@ volatile DATA_DISPLAY    p_dataDSPY;
 extern volatile char data[8];
 extern volatile char datainfo[64];
 extern char *pdata;
+extern char *pdataInfoEnd;
 extern char *ptest;
 
 extern char *pDataTX;
@@ -685,7 +686,6 @@ void interrupt low_priority low_int(void)
                 flagspi.info = 1;
             }
         }
-            /*
         else
         {
             if (flag.Data2 && pdata < &datainfo[53])
@@ -704,14 +704,14 @@ void interrupt low_priority low_int(void)
                     *(pdata +8) = *(pDataRX +11);
                     *(pdata +9) = *(pDataRX +12);
                     *(pdata +10) = *(pDataRX +13);
-                    pdatainfoEnd = pdata +10;
+                    pdataInfoEnd = pdata +10;
                     flag.Data2 = 0;
                 }
                 else *pdata = *(pDataRX +4);    
                 if (pdata == &datainfo[53]) flag.Data2 = 0;
             }
         }
-        */
+
     }
     
 }

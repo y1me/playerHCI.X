@@ -7305,6 +7305,7 @@ volatile DATA_DISPLAY dataDSPY5_info;
 volatile char data[8];
 volatile char datainfo[64];
 char *pdata;
+char *pdataInfoEnd;
 char *ptest;
 
 volatile char DataTX[16];
@@ -8064,5 +8065,5 @@ dataDSPY4._byte[10] = ConvertDigit4( data[5] );
 dataDSPY5._byte[10] = 255;
 }
 
-# 834
+# 835
 }
