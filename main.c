@@ -97,16 +97,16 @@ extern volatile struct chbits{
 						unsigned int1:1; 
 						unsigned tim1:1; 
 						unsigned uartrx:1; 
-						unsigned first:1; 
-						unsigned nodisc:1; 
-						unsigned bit7:1;
+						unsigned Dtime:1; 
+						unsigned Data1:1; 
+						unsigned Data2:1;
 		
 					}flag ;
 extern volatile struct flagspi{
-						unsigned bit0:1;
+						unsigned strinfo:1;
 						unsigned bit1:1;
 						unsigned info:1;
-						unsigned aux:1;
+						unsigned bit0:1;
 						unsigned bit4:1;
 						unsigned bit5:1;
 						unsigned ready:1;
@@ -135,6 +135,10 @@ extern volatile	DATA_DISPLAY    dataDSPY5_info;
 volatile DATA_DISPLAY    p_dataDSPY;
 
 extern volatile char data[64];
+extern volatile char datainfo[64];
+extern char *pdatainfo;
+extern char *pdatainfoEnd;
+extern char *pdata;
 extern char *ptest;
 
 extern char *pDataTX;
@@ -269,6 +273,7 @@ void interrupt high_int(void)
             {
                     count_info = 0;
                     flagspi.info = 0;
+                    flagspi.strinfo = 1;
             }
             count_spi++;
             count_info++;
@@ -546,7 +551,7 @@ void interrupt high_int(void)
 
 	if(INT1_INT_F)
 	{
-            if (flag.bit7)
+            if (flagspi.bit7)
             {
                 if(start_IR_MSB > 3) trame_capt |= 1;
                 trame_capt = trame_capt << 1;
@@ -554,7 +559,7 @@ void interrupt high_int(void)
                 if (count_IR_BIT == 32)
                 {
                     trameok = trame_capt;
-                    flag.bit7 = 0;
+                    flagspi.bit7 = 0;
                 }
             }
 
@@ -579,17 +584,17 @@ void interrupt high_int(void)
                 start_IR_LSB |= INPUT_IR;      
             }
             count_IR++;
-            if (count_IR > 40 && !flag.bit7)
+            if (count_IR > 40 && !flagspi.bit7)
             {
                  EN_TIMIR = 0;
                  if (start_IR_MSB < 16 && start_IR_LSB > 500)
                  {
-                     flag.bit7 = 1;
+                     flagspi.bit7 = 1;
                      count_IR_BIT = 0;
                      trame_capt = 0;
                  }
             }
-            //if (count_IR > 40 && !flag.bit7)
+            //if (count_IR > 40 && !flagspi.bit7)
 		flag.tim1 = 1;
 		TIMERIR_REGH = 0xF4;
 		TIMERIR_REG = 0x47;
@@ -639,6 +644,76 @@ void interrupt low_priority low_int(void)
         *(pDataRX +14) = *(pDataRX +15);
         *(pDataRX +15) = RX_UART_REG;
         flag.uartrx = 1;
+        /*
+        if (*pDataRX == '~' && *(pDataRX +1) == '#')
+        {
+            if (*(pDataRX +2) == 'A' && *(pDataRX +3) == '=')
+            {
+                // command : ~#A=XXXXXX time info 6 digit
+                data[0] = *(pDataRX +4);
+                data[1] = *(pDataRX +5);
+                data[2] = *(pDataRX +6);
+                data[3] = *(pDataRX +7);
+                data[4] = *(pDataRX +8);
+                data[5] = *(pDataRX +9);
+                flag.Dtime = 1;
+            }
+            if (*(pDataRX +2) == 'B' && *(pDataRX +3) == '=')
+            {
+                // command : ~#B=XXXXXX info 6 lettres
+                data[0] = *(pDataRX +4);
+                data[1] = *(pDataRX +5);
+                data[2] = *(pDataRX +6);
+                data[3] = *(pDataRX +7);
+                data[4] = *(pDataRX +8);
+                data[5] = *(pDataRX +9);
+                flag.Data1 = 1;
+            }
+            if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
+            {
+                flag.Data2 = 1;
+                pdata = &datainfo[0];
+                *pdata = *(pDataRX +4); 
+            }
+            if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
+            {
+                count_info = *(pDataRX +4);
+                count_info = count_info << 8;
+                count_info |= *(pDataRX +5);
+            }
+            if (*(pDataRX +2) == 'E' && *(pDataRX +3) == '=')
+            {
+                flagspi.info = 1;
+            }
+        }
+        else
+        {
+            if (flag.Data2 && pdata < &datainfo[53])
+            {
+                *pdata++;
+                if (*(pDataRX +15) == '#' && *(pDataRX +14) == '~')
+                {
+                    *pdata = *(pDataRX +4);
+                    *(pdata +1) = *(pDataRX +4);
+                    *(pdata +2) = *(pDataRX +5);
+                    *(pdata +3) = *(pDataRX +6);
+                    *(pdata +4) = *(pDataRX +7);
+                    *(pdata +5) = *(pDataRX +8);
+                    *(pdata +6) = *(pDataRX +9);
+                    *(pdata +7) = *(pDataRX +10);
+                    *(pdata +8) = *(pDataRX +11);
+                    *(pdata +9) = *(pDataRX +12);
+                    *(pdata +10) = *(pDataRX +13);
+                    pdatainfoEnd = pdata +10;
+                    flag.Data2 = 0;
+                }
+                else *pdata = *(pDataRX +4);    
+                if (pdata == &datainfo[53]) flag.Data2 = 0;
+            }
+            
+
+        }
+         */
     }
     
 }
@@ -662,14 +737,14 @@ void main(void)
 	flag.tim0 = 0;
 	flag.tim1 = 0;
 	flag.int1 = 0;
-	flag.first = 1;
-	flag.nodisc = 1;
-	flag.bit7 = 0;
+	flag.Dtime = 0;
+	flag.Data1 = 0;
+	flag.Data2 = 0;
 	flagspi.info = 0;
-        flagspi.bit0 = 0;
-        flagspi.aux = 0;
-        flagspi.bit4 = 0;
-        dataSRC.DataToWrite = 0;
+    flagspi.bit0 = 0;
+    flagspi.bit0 = 0;
+    flagspi.bit4 = 0;
+    dataSRC.DataToWrite = 0;
 	dataDAC.DataToWrite = 0;
 	dataDSPY1.DataToWrite = 0;
 	dataDSPY2.DataToWrite = 0;

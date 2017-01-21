@@ -7237,16 +7237,6 @@ void ProcessIO(void);
 void InitMCP23S17(void);
 void InitDSPY(void);
 
-
-typedef struct DataMSF DataMSF;
-struct DataMSF
-{
-unsigned char track;
-unsigned char min;
-unsigned char sec;
-unsigned char frame;
-};
-
 # 7 "/opt/microchip/xc8/v1.40/include/stdarg.h"
 typedef void * va_list[1];
 
@@ -7346,16 +7336,16 @@ unsigned tim0:1;
 unsigned int1:1;
 unsigned tim1:1;
 unsigned uartrx:1;
-unsigned first:1;
-unsigned nodisc:1;
-unsigned bit7:1;
+unsigned Dtime:1;
+unsigned Data1:1;
+unsigned Data2:1;
 
 }flag ;
 extern volatile struct flagspi{
-unsigned bit0:1;
+unsigned strinfo:1;
 unsigned bit1:1;
 unsigned info:1;
-unsigned aux:1;
+unsigned bit0:1;
 unsigned bit4:1;
 unsigned bit5:1;
 unsigned ready:1;
@@ -7384,6 +7374,10 @@ extern volatile DATA_DISPLAY dataDSPY5_info;
 volatile DATA_DISPLAY p_dataDSPY;
 
 extern volatile char data[64];
+extern volatile char datainfo[64];
+extern char *pdatainfo;
+extern char *pdatainfoEnd;
+extern char *pdata;
 extern char *ptest;
 
 extern char *pDataTX;
@@ -7518,6 +7512,7 @@ if (flagspi.info)
 {
 count_info = 0;
 flagspi.info = 0;
+flagspi.strinfo = 1;
 }
 count_spi++;
 count_info++;
@@ -7795,7 +7790,7 @@ TMR2IF = 0;
 
 if(INT1IF)
 {
-if (flag.bit7)
+if (flagspi.bit7)
 {
 if(start_IR_MSB > 3) trame_capt |= 1;
 trame_capt = trame_capt << 1;
@@ -7803,7 +7798,7 @@ count_IR_BIT++;
 if (count_IR_BIT == 32)
 {
 trameok = trame_capt;
-flag.bit7 = 0;
+flagspi.bit7 = 0;
 }
 }
 
@@ -7828,12 +7823,12 @@ start_IR_LSB = start_IR_LSB << 1;
 start_IR_LSB |= PORTBbits.RB1;
 }
 count_IR++;
-if (count_IR > 40 && !flag.bit7)
+if (count_IR > 40 && !flagspi.bit7)
 {
 TMR1ON = 0;
 if (start_IR_MSB < 16 && start_IR_LSB > 500)
 {
-flag.bit7 = 1;
+flagspi.bit7 = 1;
 count_IR_BIT = 0;
 trame_capt = 0;
 }
@@ -7888,11 +7883,13 @@ while(PIR3bits.RC2IF)
 *(pDataRX +14) = *(pDataRX +15);
 *(pDataRX +15) = RCREG2;
 flag.uartrx = 1;
+
+# 717
 }
 
 }
 
-# 651
+# 726
 void main(void)
 {
 
@@ -7907,12 +7904,12 @@ flag.spi = 0;
 flag.tim0 = 0;
 flag.tim1 = 0;
 flag.int1 = 0;
-flag.first = 1;
-flag.nodisc = 1;
-flag.bit7 = 0;
+flag.Dtime = 0;
+flag.Data1 = 0;
+flag.Data2 = 0;
 flagspi.info = 0;
 flagspi.bit0 = 0;
-flagspi.aux = 0;
+flagspi.bit0 = 0;
 flagspi.bit4 = 0;
 dataSRC.DataToWrite = 0;
 dataDAC.DataToWrite = 0;

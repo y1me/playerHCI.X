@@ -7,16 +7,6 @@ void ProcessIO(void);
 void InitMCP23S17(void);
 void InitDSPY(void);
 
-
-typedef struct DataMSF DataMSF;
-struct DataMSF
-{
-unsigned char track;
-unsigned char min;
-unsigned char sec;
-unsigned char frame;
-};
-
 # 5 "./h/spi_ide.h"
 void spi_out(unsigned char);
 void spi_in(unsigned char *);
@@ -7267,17 +7257,17 @@ unsigned tim0:1;
 unsigned int1:1;
 unsigned tim1:1;
 unsigned uartrx:1;
-unsigned first:1;
-unsigned nodisc:1;
-unsigned bit7:1;
+unsigned Dtime:1;
+unsigned Data1:1;
+unsigned Data2:1;
 
 }flag ;
 
 volatile struct flagspi{
-unsigned bit0:1;
+unsigned strinfo:1;
 unsigned bit1:1;
 unsigned info:1;
-unsigned aux:1;
+unsigned bit0:1;
 unsigned bit4:1;
 unsigned bit5:1;
 unsigned ready:1;
@@ -7303,7 +7293,9 @@ volatile DATA_DISPLAY dataDSPY4_info;
 volatile DATA_DISPLAY dataDSPY5_info;
 
 volatile char data[64];
-char *ptest;
+volatile char datainfo[64];
+char *pdatainfo;
+char *pdatainfoEnd;
 
 volatile char DataTX[16];
 char *pDataTX;
@@ -7862,6 +7854,7 @@ default:
 return 255;
 
 }
+return 255;
 }
 
 unsigned char ConvertDigit2(unsigned char letter)
@@ -8014,8 +8007,8 @@ break;
 
 default:
 return 255;
-
 }
+return 255;
 }
 
 void ProcessIO(void)
@@ -8031,34 +8024,6 @@ __nop();
 RCSTA2bits.CREN = 1;
 
 }
-if (flag.uartrx)
-{
-flag.uartrx = 0;
-if(strstr(DataRX, "test") != (0))
-{
-dataDSPY2_info._byte[11] = 255;
-dataDSPY1_info._byte[11] = 255;
-dataDSPY1_info._byte[10] = 161;
-dataDSPY2_info._byte[10] = 149;
-dataDSPY3_info._byte[10] = 197;
-dataDSPY4_info._byte[10] = 152;
-dataDSPY5_info._byte[10] = 255;
-flagspi.info = 1;
-}
 
-}
-
-
-if (flag.tim0)
-{
-flag.tim0 = 0;
-*ptest++;
-if ( ptest == &data[23] ) ptest = &data[0];
-}
-dataDSPY2._byte[11] = ConvertDigit2( *ptest );
-dataDSPY1._byte[11] = ConvertDigit2( *(ptest+1) );
-dataDSPY1._byte[10] = ConvertDigit4( *(ptest+2) );
-dataDSPY2._byte[10] = ConvertDigit4( *(ptest+3) );
-dataDSPY3._byte[10] = ConvertDigit4( *(ptest+4) );
-dataDSPY4._byte[10] = ConvertDigit4( *(ptest+5) );
+# 826
 }

@@ -16,17 +16,17 @@ volatile struct chbits{
 	unsigned int1:1; 
 	unsigned tim1:1; 
 	unsigned uartrx:1; 
-	unsigned first:1; 
-	unsigned nodisc:1; 
-	unsigned bit7:1;
+	unsigned Dtime:1; 
+	unsigned Data1:1; 
+	unsigned Data2:1;
 
 }flag ;
 
 volatile struct flagspi{
-	unsigned bit0:1;
+	unsigned strinfo:1;
 	unsigned bit1:1;
 	unsigned info:1;
-	unsigned aux:1;
+	unsigned bit0:1;
 	unsigned bit4:1;
 	unsigned bit5:1;
 	unsigned ready:1;
@@ -52,7 +52,9 @@ volatile   DATA_DISPLAY    dataDSPY4_info;
 volatile   DATA_DISPLAY    dataDSPY5_info;
 
 volatile char data[64];
-char *ptest;
+volatile char datainfo[64];
+char *pdatainfo;
+char *pdatainfoEnd;
 
 volatile char DataTX[16];
 char *pDataTX;
@@ -611,6 +613,7 @@ unsigned char ConvertDigit4(unsigned char letter)
 			return 255;
 
 	}
+    return 255;
 }
 
 unsigned char ConvertDigit2(unsigned char letter)
@@ -763,8 +766,8 @@ unsigned char ConvertDigit2(unsigned char letter)
 
 		default:
 			return 255;
-
 	}
+    return 255;
 }
 
 void ProcessIO(void)
@@ -778,39 +781,46 @@ void ProcessIO(void)
         Nop();
         Nop();
         UART_RX_EN = 1;
-        
+      
     }
-    if (flag.uartrx)
+    /*
+    if (flag.Dtime)
     {
-        flag.uartrx = 0;
-        if(strstr(DataRX, "test") != NULL)
-        {
-            
-            dataDSPY2_info._byte[11] = D_void;//digit 1/2 
-			dataDSPY1_info._byte[11] = D_void;//digit 2/2 
-			dataDSPY1_info._byte[10] = d_s;//digit 1/4 
-			dataDSPY2_info._byte[10] = d_t;//digit 2/4
-			dataDSPY3_info._byte[10] = d_o;//digit 3/4
-			dataDSPY4_info._byte[10] = d_p;//digit 4/4
-			dataDSPY5_info._byte[10] = d_void;//digit dp/4
-			flagspi.info = 1;
-            strcpy(DataRX, "gggg_gggg_gggg_g");
-            
-        }
-        
+        flag.Dtime = 0;
+        dataDSPY2._byte[11] = ConvertDigit2( data[0] );//digit 1/2 
+		dataDSPY1._byte[11] = ConvertDigit2( data[1] );//digit 2/2
+		dataDSPY1._byte[10] = ConvertDigit4( data[2] );//digit 1/4
+		dataDSPY2._byte[10] = ConvertDigit4( data[3] );//digit 2/4
+		dataDSPY3._byte[10] = ConvertDigit4( data[4] );//digit 3/4
+		dataDSPY4._byte[10] = ConvertDigit4( data[5] );//digit 4/4
+        dataDSPY5._byte[10] = d_pp;//digit dp/4
     }
-    
-    
+        if (flag.Data1)
+    {
+        flag.Data1 = 0;
+        dataDSPY2._byte[11] = ConvertDigit2( data[0] );//digit 1/2 
+		dataDSPY1._byte[11] = ConvertDigit2( data[1] );//digit 2/2
+		dataDSPY1._byte[10] = ConvertDigit4( data[2] );//digit 1/4
+		dataDSPY2._byte[10] = ConvertDigit4( data[3] );//digit 2/4
+		dataDSPY3._byte[10] = ConvertDigit4( data[4] );//digit 3/4
+		dataDSPY4._byte[10] = ConvertDigit4( data[5] );//digit 4/4
+        dataDSPY5._byte[10] = d_void;//digit dp/4
+    }
+        
     if (flag.tim0)    
     {
         flag.tim0 = 0;
-        *ptest++;
-        if ( ptest == &data[23] ) ptest = &data[0]; 
+
+        if ( pdatainfo == pdatainfoEnd || flagspi.strinfo) pdatainfo = &datainfo[0]; 
+   
+        dataDSPY2_info._byte[11] = ConvertDigit2( *pdatainfo );
+        dataDSPY1_info._byte[11] = ConvertDigit2( *(pdatainfo +1) ); 
+        dataDSPY1_info._byte[10] = ConvertDigit4( *(pdatainfo +2) );
+        dataDSPY2_info._byte[10] = ConvertDigit4( *(pdatainfo +3) );
+        dataDSPY3_info._byte[10] = ConvertDigit4( *(pdatainfo +4) );
+        dataDSPY4_info._byte[10] = ConvertDigit4( *(pdatainfo +5) );
+        dataDSPY5_info._byte[10] = d_void;//digit dp/4
+        *pdatainfo++;
     }
-				dataDSPY2._byte[11] = ConvertDigit2( *ptest );//digit 1/2 
-				dataDSPY1._byte[11] = ConvertDigit2( *(ptest+1) );//digit 2/2
-				dataDSPY1._byte[10] = ConvertDigit4( *(ptest+2) );//digit 1/4
-				dataDSPY2._byte[10] = ConvertDigit4( *(ptest+3) );//digit 2/4
-				dataDSPY3._byte[10] = ConvertDigit4( *(ptest+4) );//digit 3/4
-				dataDSPY4._byte[10] = ConvertDigit4( *(ptest+5) );//digit 4/4		
+         */
 }

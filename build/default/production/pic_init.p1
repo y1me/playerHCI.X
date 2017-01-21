@@ -204,8 +204,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _BAUDCON2bits `VS83 ~T0 @X0 0 e@3964 ]
 "2167
 [v _SPBRGH2 `Vuc ~T0 @X0 0 e@3965 ]
-"2603
-[v _SPBRGH `Vuc ~T0 @X0 0 e@3967 ]
+"1652
+[v _SPBRG2 `Vuc ~T0 @X0 0 e@3951 ]
 "10784
 [s S423 :1 `uc 1 ]
 [n S423 . NOT_BOR ]
@@ -5807,12 +5807,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic_init.c: 75: BAUDCON2bits.BRG16 = 1;
 "75
 [e = . . _BAUDCON2bits 0 3 -> -> 1 `i `uc ]
-[; ;pic_init.c: 76: SPBRGH2 = 0x02;
+[; ;pic_init.c: 76: SPBRGH2 = 0x00;
 "76
-[e = _SPBRGH2 -> -> 2 `i `uc ]
-[; ;pic_init.c: 77: SPBRGH = 0x08;
+[e = _SPBRGH2 -> -> 0 `i `uc ]
+[; ;pic_init.c: 77: SPBRG2 = 86;
 "77
-[e = _SPBRGH -> -> 8 `i `uc ]
+[e = _SPBRG2 -> -> 86 `i `uc ]
 [; ;pic_init.c: 79: RCSTA2bits.CREN = 1;
 "79
 [e = . . _RCSTA2bits 0 4 -> -> 1 `i `uc ]
@@ -5864,6 +5864,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic_init.c: 106: IPR3bits.TX2IP = 0;
 "106
 [e = . . _IPR3bits 0 4 -> -> 0 `i `uc ]
+[; ;pic_init.c: 108: PIE3bits.RC2IE = 1;
+"108
+[e = . . _PIE3bits 0 5 -> -> 1 `i `uc ]
 [; ;pic_init.c: 109: IPR3bits.RC2IP = 0;
 "109
 [e = . . _IPR3bits 0 5 -> -> 0 `i `uc ]

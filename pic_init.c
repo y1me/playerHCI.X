@@ -73,8 +73,8 @@ void USART_Init(void)  //init USART
     
     RCSTA2bits.RX9 = 0;
     BAUDCON2bits.BRG16 = 1;
-    SPBRGH2 = 0x02;
-    SPBRGH = 0x08;
+    SPBRGH2 = 0x00;
+    SPBRG2 = 86;
     
     RCSTA2bits.CREN = 1;
     TXSTA2bits.TXEN = 1;
@@ -105,7 +105,7 @@ void INT_Init(void)  //init Interrupt
     PIE3bits.TX2IE = 0;
     IPR3bits.TX2IP = 0;
     
-    //PIE3bits.RC2IE = 1;
+    PIE3bits.RC2IE = 1;
     IPR3bits.RC2IP = 0;   
 
 }
