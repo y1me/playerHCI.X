@@ -7976,14 +7976,25 @@ Spi_Init();
 USART_Init();
 Timer0_Init();
 Timer1_Init();
+
 flag.spi = 0;
 flag.tim0 = 0;
-flag.tim1 = 0;
 flag.int1 = 0;
+flag.tim1 = 0;
+flag.Dtime = 0;
+flag.Data1 = 0;
+flag.Data2 = 0;
 flag.bit7 = 0;
-flagspi.info = 0;
+
 flagspi.bit0 = 0;
+flagspi.bit1 = 0;
+flagspi.info = 0;
+flagspi.free2 = 0;
 flagspi.bit4 = 0;
+flagspi.bit5 = 0;
+flagspi.free3 = 0;
+flagspi.bit7 = 0;
+
 dataSRC.DataToWrite = 0;
 dataDAC.DataToWrite = 0;
 dataDSPY1.DataToWrite = 0;
