@@ -38,7 +38,7 @@ void Port_Init(void)  //init i/o PIC for enable DAC
 //Int1 pin
 	TRISBbits.TRISB1 = INPUT_PIN;
 //Test pin
-	TRISCbits.TRISC7 = OUTPUT_PIN;
+	TRISEbits.TRISE0 = OUTPUT_PIN;
 
 }
 

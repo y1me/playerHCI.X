@@ -166,7 +166,6 @@ void interrupt high_int(void)
 
             if (flagspi.bit4)
             {
-                 PORTTEST = ~PORTTEST;
                 *p_spi = SPI_BUFF;
                 dataSRC.DataRead++;
                 *p_spi++;
@@ -276,6 +275,7 @@ void interrupt high_int(void)
             }
             count_spi++;
             count_info++;
+            /*
             switch (count_spi)
             {
                 case 10:
@@ -541,6 +541,7 @@ void interrupt high_int(void)
                     ;
 
             }
+            */
             if (count_spi == 100)           count_spi = 0;
             if (count_info >= Time_info)    count_info--;
             TIMERDSPY_REG = 0;
@@ -608,8 +609,9 @@ void interrupt low_priority low_int(void)
 {
 	if(TIMSUB_INT_F)
 	{
-		flag.tim0 = 1;
-		TIMERSUB_REGH = 0xA4;
+        PORTTEST = ~PORTTEST;
+		flag.tim0 = 1;//0,6s
+		TIMERSUB_REGH = 0xA4; 
 		TIMERSUB_REG = 0x71;
 		TIMSUB_INT_F =0;
 	}

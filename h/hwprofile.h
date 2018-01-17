@@ -30,8 +30,8 @@
 
 
 /** DEBUG ***********************************************************/
-	#define	TRIS_PORTTEST		TRISC7
-	#define PORTTEST            PORTCbits.RC7
+	#define	TRIS_PORTTEST		TRISE0
+	#define PORTTEST            PORTEbits.RE0
 
 /** TRIS ***********************************************************/
 	#define INPUT_PIN           1
