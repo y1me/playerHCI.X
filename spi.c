@@ -1,6 +1,6 @@
 #include "./h/hwprofile.h"
 #include <xc.h>
-//#include <spi.h>
+#include "./h/spi_ide.h"
 
 extern volatile struct chbits{
 						unsigned spi:1; 
@@ -14,19 +14,52 @@ extern volatile struct chbits{
 		
 					}flag ;
 
-void spi_out(unsigned char data)
+char SPI1_Exchange8bit(char data)
 {
-	flag.spi = 0; 
-	SPI_BUFF = data;
-	while(flag.spi != 1);
-	flag.spi = 0;
+    // Clear the Write Collision flag, to allow writing
+    SPI_WCOL = 0;
+
+    SPI_BUF = data;
+
+    while(SPI_BF == SPI_RX_IN_PROGRESS)
+    {
+    }
+
+    return (SPI_BUF);
 }
 
-void spi_in(unsigned char *data)
+char SPI1_Exchange8bitBuffer(char *dataIn, char bufLen, char *dataOut)
 {
-	flag.spi = 0; 
-	SPI_BUFF = 0x00;
-	while(flag.spi != 1);
-	flag.spi = 0;
-	*data = SPI_BUFF;	
+    char bytesWritten = 0;
+    
+    if ( dataOut == NULL || dataIn == NULL)  return bytesWritten;
+
+    if( bufLen != 0 )
+    {
+
+        while(bytesWritten < bufLen)
+        {
+            *dataOut = SPI1_Exchange8bit(*dataIn);
+            *dataIn++;
+            *dataOut++;
+            bytesWritten++;
+        }
+    }
+    return bytesWritten;
+
+}
+
+bool SPI1_IsBufferFull(void)
+{
+    return (SPI_BF);
+}
+
+bool SPI1_HasWriteCollisionOccured(void)
+{
+    return (SPI_WCOL);
+}
+
+void SPI1_ClearWriteCollisionStatus(void)
+{
+    SPI_WCOL = 0;
 }

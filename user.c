@@ -84,31 +84,31 @@ unsigned char ConvertDigit2(unsigned char );
 /*****************************************************************************/
 void InitMCP23S17(void)
 {   
-
+/*
 	S_DISPLAY=1;
 	S_DISPLAY = 0;
 	spi_out(0x40);
 	spi_out(0x00);
-	spi_out(0xE0);
-	spi_out(0xF0);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0xF0);
-	spi_out(0x00);
-	spi_out(0xF0);
-	spi_out(0x00);
-	spi_out(0xF0);
-	spi_out(0x08);
-	spi_out(0x08);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x1F);
-	spi_out(0x00);
+	spi_out(0xE0); //IODIRA
+	spi_out(0xF0); //IODIRB
+	spi_out(0x00); //IPOLA
+	spi_out(0x00); //IPOLB
+	spi_out(0x00); //GPINTENA
+	spi_out(0xF0); //GPINTENB
+	spi_out(0x00); //DEFVALA
+	spi_out(0xF0); //DEFVALB
+	spi_out(0x00); //INTCONA
+	spi_out(0xF0); //INTCONB
+	spi_out(0x08); //IOCON
+	spi_out(0x08); //IOCON
+	spi_out(0x00); //GPPUA
+	spi_out(0x00); //GPPUB
+	spi_out(0x00); //INTFA
+	spi_out(0x00); //INTFB
+	spi_out(0x00); //INTCAPA
+	spi_out(0x00); //INTCAPB
+	spi_out(0x1F); //GPIOA
+	spi_out(0x00); //GPIOB
 	S_DISPLAY = 1;
 
 	S_DISPLAY = 1;
@@ -162,154 +162,11 @@ void InitMCP23S17(void)
 	spi_out(0x00);
 	spi_out(0x00);
 	S_DISPLAY = 1;
-
+*/
 }
 
 void InitDSPY(void)
 {
-	dataDSPY1.DataToWrite = 8;
-	dataDSPY1.DataRead = 0;
-	dataDSPY1.DataWrite = 0;
-	dataDSPY1._byte[4] = 0x40;
-	dataDSPY1._byte[5] = 0x12;
-	dataDSPY1._byte[6] = 0xFE;// supply digit
-	dataDSPY1._byte[7] = 0x00;// switch & diode
-	dataDSPY1._byte[8] = 0x42;
-	dataDSPY1._byte[9] = 0x12;
-	dataDSPY1._byte[10] = 0xEE;//digit 1/4
-	dataDSPY1._byte[11] = 0xE4;//digit 2/2
-
-	dataDSPY2.DataToWrite = 8;
-	dataDSPY2.DataRead = 0;
-	dataDSPY2.DataWrite = 0;
-	dataDSPY2._byte[4] = 0x40;
-	dataDSPY2._byte[5] = 0x12;
-	dataDSPY2._byte[6] = 0xFD;// supply digit
-	dataDSPY2._byte[7] = 0x00;// switch & diode
-	dataDSPY2._byte[8] = 0x42;
-	dataDSPY2._byte[9] = 0x12;
-	dataDSPY2._byte[10] = 0xCD;//digit 2/4
-	dataDSPY2._byte[11] = 0x5A;//digit 1/2
-
-	dataDSPY3.DataToWrite = 8;
-	dataDSPY3.DataRead = 0;
-	dataDSPY3.DataWrite = 0;
-	dataDSPY3._byte[4] = 0x40;
-	dataDSPY3._byte[5] = 0x12;
-	dataDSPY3._byte[6] = 0xF7;// supply digit
-	dataDSPY3._byte[7] = 0x00;// switch & diode
-	dataDSPY3._byte[8] = 0x42;
-	dataDSPY3._byte[9] = 0x12;
-	dataDSPY3._byte[10] = 0xEF;//digit 3/4
-	dataDSPY3._byte[11] = 0x45;
-
-	dataDSPY4.DataToWrite = 8;
-	dataDSPY4.DataRead = 0;
-	dataDSPY4.DataWrite = 0;
-	dataDSPY4._byte[4] = 0x40;
-	dataDSPY4._byte[5] = 0x12;
-	dataDSPY4._byte[6] = 0x0F;// supply digit
-	dataDSPY4._byte[7] = 0x00;// switch & diode
-	dataDSPY4._byte[8] = 0x42;
-	dataDSPY4._byte[9] = 0x12;
-	dataDSPY4._byte[10] = d_p;//0x95;//digit 4/4
-	dataDSPY4._byte[11] = 0xA2;
-
-	dataDSPY5.DataToWrite = 8;
-	dataDSPY5.DataRead = 0;
-	dataDSPY5.DataWrite = 0;
-	dataDSPY5._byte[4] = 0x40;
-	dataDSPY5._byte[5] = 0x12;
-	dataDSPY5._byte[6] = 0xFB;// supply digit
-	dataDSPY5._byte[7] = 0x00;// switch & diode
-	dataDSPY5._byte[8] = 0x42;
-	dataDSPY5._byte[9] = 0x12;
-	dataDSPY5._byte[10] = 0xFF;//digit dp/4
-	dataDSPY5._byte[11] = 0x22;
-
-	dataDSPY1_info.DataToWrite = 8;
-	dataDSPY1_info.DataRead = 0;
-	dataDSPY1_info.DataWrite = 0;
-	dataDSPY1_info._byte[4] = 0x40;
-	dataDSPY1_info._byte[5] = 0x12;
-	dataDSPY1_info._byte[6] = 0xFE;// supply digit
-	dataDSPY1_info._byte[7] = 0x00;// switch & diode
-	dataDSPY1_info._byte[8] = 0x42;
-	dataDSPY1_info._byte[9] = 0x12;
-	dataDSPY1_info._byte[10] = 0xEE;//digit 1/4
-	dataDSPY1_info._byte[11] = 0xE4;//digit 2/2
-
-	dataDSPY2_info.DataToWrite = 8;
-	dataDSPY2_info.DataRead = 0;
-	dataDSPY2_info.DataWrite = 0;
-	dataDSPY2_info._byte[4] = 0x40;
-	dataDSPY2_info._byte[5] = 0x12;
-	dataDSPY2_info._byte[6] = 0xFD;// supply digit
-	dataDSPY2_info._byte[7] = 0x00;// switch & diode
-	dataDSPY2_info._byte[8] = 0x42;
-	dataDSPY2_info._byte[9] = 0x12;
-	dataDSPY2_info._byte[10] = 0xCD;//digit 2/4
-	dataDSPY2_info._byte[11] = 0x5A;//digit 1/2
-
-	dataDSPY3_info.DataToWrite = 8;
-	dataDSPY3_info.DataRead = 0;
-	dataDSPY3_info.DataWrite = 0;
-	dataDSPY3_info._byte[4] = 0x40;
-	dataDSPY3_info._byte[5] = 0x12;
-	dataDSPY3_info._byte[6] = 0xF7;// supply digit
-	dataDSPY3_info._byte[7] = 0x00;// switch & diode
-	dataDSPY3_info._byte[8] = 0x42;
-	dataDSPY3_info._byte[9] = 0x12;
-	dataDSPY3_info._byte[10] = 0xEF;//digit 3/4
-	dataDSPY3_info._byte[11] = 0x45;
-
-	dataDSPY4_info.DataToWrite = 8;
-	dataDSPY4_info.DataRead = 0;
-	dataDSPY4_info.DataWrite = 0;
-	dataDSPY4_info._byte[4] = 0x40;
-	dataDSPY4_info._byte[5] = 0x12;
-	dataDSPY4_info._byte[6] = 0x0F;// supply digit
-	dataDSPY4_info._byte[7] = 0x00;// switch & diode
-	dataDSPY4_info._byte[8] = 0x42;
-	dataDSPY4_info._byte[9] = 0x12;
-	dataDSPY4_info._byte[10] = 0x95;//digit 4/4
-	dataDSPY4_info._byte[11] = 0xA2;
-
-	dataDSPY5_info.DataToWrite = 8;
-	dataDSPY5_info.DataRead = 0;
-	dataDSPY5_info.DataWrite = 0;
-	dataDSPY5_info._byte[4] = 0x40;
-	dataDSPY5_info._byte[5] = 0x12;
-	dataDSPY5_info._byte[6] = 0xFB;// supply digit
-	dataDSPY5_info._byte[7] = 0x00;// switch & diode
-	dataDSPY5_info._byte[8] = 0x42;
-	dataDSPY5_info._byte[9] = 0x12;
-	dataDSPY5_info._byte[10] = 0xFF;//digit dp/4
-	dataDSPY5_info._byte[11] = 0x22;
-
-	dataBlank.DataToWrite = 8;
-	dataBlank.DataRead = 0;
-	dataBlank.DataWrite = 0;
-	dataBlank._byte[4] = 0x40;
-	dataBlank._byte[5] = 0x12;
-	dataBlank._byte[6] = 0xFF;// supply digit
-	dataBlank._byte[7] = 0x00;// switch & diode
-	dataBlank._byte[8] = 0x42;
-	dataBlank._byte[9] = 0x12;
-	dataBlank._byte[10] = 0xFF;//digit dp/4
-	dataBlank._byte[11] = 0xFF;
-
-	dataREAD.DataToWrite = 8;
-	dataREAD.DataRead = 0;
-	dataREAD.DataWrite = 0;
-	dataREAD._byte[4] = 0x45;
-	dataREAD._byte[5] = 0x0E;
-	dataREAD._byte[6] = 0x00;
-	dataREAD._byte[7] = 0x00;
-	dataREAD._byte[8] = 0x45;
-	dataREAD._byte[9] = 0x10;
-	dataREAD._byte[10] = 0x00;
-	dataREAD._byte[11] = 0x00;
 }
 
 void HandleSIRSC(void)
@@ -789,52 +646,5 @@ void ProcessIO(void)
     {
         flag.tim0 = 0;
     }
-    
-    
-    if (flag.Dtime)
-    {
-        flag.Dtime = 0;
-        dataDSPY2._byte[11] = ConvertDigit2( data[0] );//digit 1/2 
-        dataDSPY1._byte[11] = ConvertDigit2( data[1] );//digit 2/2
-        dataDSPY1._byte[10] = ConvertDigit4( data[2] );//digit 1/4
-        dataDSPY2._byte[10] = ConvertDigit4( data[3] );//digit 2/4
-        dataDSPY3._byte[10] = ConvertDigit4( data[4] );//digit 3/4
-        dataDSPY4._byte[10] = ConvertDigit4( data[5] );//digit 4/4
-        dataDSPY5._byte[10] = d_pp;//digit dp/4
-    }
-
-        if (flag.Data1)
-    {
-        flag.Data1 = 0;
-        dataDSPY2._byte[11] = ConvertDigit2( data[0] );//digit 1/2 
-        dataDSPY1._byte[11] = ConvertDigit2( data[1] );//digit 2/2
-        dataDSPY1._byte[10] = ConvertDigit4( data[2] );//digit 1/4
-        dataDSPY2._byte[10] = ConvertDigit4( data[3] );//digit 2/4
-        dataDSPY3._byte[10] = ConvertDigit4( data[4] );//digit 3/4
-        dataDSPY4._byte[10] = ConvertDigit4( data[5] );//digit 4/4
-        dataDSPY5._byte[10] = d_void;//digit dp/4
-    }
-            
-    if (flag.tim0)    
-    {
-        flag.tim0 = 0;
-
-        if ( pdataInfo == pdataInfoEnd || flagspi.strinfo)
-        {
-            flagspi.strinfo = 0;
-            pdataInfo = &datainfo[0];
-        }
-   
-        dataDSPY2_info._byte[11] = ConvertDigit2( *pdataInfo );
-        dataDSPY1_info._byte[11] = ConvertDigit2( *(pdataInfo +1) ); 
-        dataDSPY1_info._byte[10] = ConvertDigit4( *(pdataInfo +2) );
-        dataDSPY2_info._byte[10] = ConvertDigit4( *(pdataInfo +3) );
-        dataDSPY3_info._byte[10] = ConvertDigit4( *(pdataInfo +4) );
-        dataDSPY4_info._byte[10] = ConvertDigit4( *(pdataInfo +5) );
-        dataDSPY5_info._byte[10] = d_void;//digit dp/4
-        *pdataInfo++;
-    }
-         
-
-	
+    	
 }
