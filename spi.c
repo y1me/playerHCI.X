@@ -21,9 +21,7 @@ char SPI1_Exchange8bit(char data)
 
     SPI_BUF = data;
 
-    while(SPI_BF == SPI_RX_IN_PROGRESS)
-    {
-    }
+    while(!SPI_BF);
 
     return (SPI_BUF);
 }

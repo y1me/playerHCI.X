@@ -22,34 +22,6 @@ volatile struct chbits{
 
 }flag ;
 
-volatile struct flagspi{
-	unsigned bit0:1;
-	unsigned bit1:1;
-	unsigned info:1;
-	unsigned strinfo:1;
-	unsigned bit4:1;
-	unsigned bit5:1;
-	unsigned free3:1;
-	unsigned bit7:1;
-
-}flagspi ;
-
-
-volatile   DATA_SPI        dataDAC;
-volatile   DATA_SPI        dataSRC;
-volatile   DATA_DISPLAY    dataDSPY1;
-volatile   DATA_DISPLAY    dataDSPY2;
-volatile   DATA_DISPLAY    dataDSPY3;
-volatile   DATA_DISPLAY    dataDSPY4;
-volatile   DATA_DISPLAY    dataDSPY5;
-volatile   DATA_DISPLAY    dataBlank;
-volatile   DATA_DISPLAY    dataREAD;
-
-volatile   DATA_DISPLAY    dataDSPY1_info;
-volatile   DATA_DISPLAY    dataDSPY2_info;
-volatile   DATA_DISPLAY    dataDSPY3_info;
-volatile   DATA_DISPLAY    dataDSPY4_info;
-volatile   DATA_DISPLAY    dataDSPY5_info;
 
 volatile char data[8];
 volatile char datainfo[64];
@@ -67,13 +39,13 @@ char *pDataRX;
 
 char keypad;
 long trameok;
-int CDStatus;
-int TrackToPlay;
-int NumbOfTrack;
-unsigned char MuteState, RightVol, LeftVol, AudioStatus;
-unsigned char TimeoutEN;
-char buffer[20];
-int length;
+
+char Init23S17_40[25] = { 0x40,0x00,0xE0,0xF0,0x00,0x00,0x00,0xF0,0x00,0xF0,0x00,0xF0,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x1F,0x00 };
+//IODIRA,IODIRB,IPOLA,IPOLB,GPINTENA,GPINTENB,DEFVALA,DEFVALB,INTCONA,INTCONB,IOCON,IOCON,GPPUA,GPPUB,INTFA,INTFB,INTCAPA,INTCAPB,GPIOA,GPIOB
+char Init23S17_42[25] = { 0x42,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x1F,0x00 };
+char Init23S17_44[25] = { 0x44,0x00,0xF0,0xFF,0x00,0x00,0x00,0x0F,0x00,0x0F,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
+char spi_read[25];
+
 
 
 /** P R I V A T E  P R O T O T Y P E S ***************************************/
@@ -84,85 +56,16 @@ unsigned char ConvertDigit2(unsigned char );
 /*****************************************************************************/
 void InitMCP23S17(void)
 {   
-/*
-	S_DISPLAY=1;
-	S_DISPLAY = 0;
-	spi_out(0x40);
-	spi_out(0x00);
-	spi_out(0xE0); //IODIRA
-	spi_out(0xF0); //IODIRB
-	spi_out(0x00); //IPOLA
-	spi_out(0x00); //IPOLB
-	spi_out(0x00); //GPINTENA
-	spi_out(0xF0); //GPINTENB
-	spi_out(0x00); //DEFVALA
-	spi_out(0xF0); //DEFVALB
-	spi_out(0x00); //INTCONA
-	spi_out(0xF0); //INTCONB
-	spi_out(0x08); //IOCON
-	spi_out(0x08); //IOCON
-	spi_out(0x00); //GPPUA
-	spi_out(0x00); //GPPUB
-	spi_out(0x00); //INTFA
-	spi_out(0x00); //INTFB
-	spi_out(0x00); //INTCAPA
-	spi_out(0x00); //INTCAPB
-	spi_out(0x1F); //GPIOA
-	spi_out(0x00); //GPIOB
-	S_DISPLAY = 1;
+    char lenght = 0; 
+    CS_DSPY = 1;
+    CS_DSPY = 0;
+    
+    lenght = SPI1_Exchange8bitBuffer(&Init23S17_40[0], 22, &spi_read[0]);
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    CS_DSPY = 0;
 
-	S_DISPLAY = 1;
-	S_DISPLAY = 0;
-	spi_out(0x42);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x08);
-	spi_out(0x08);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	S_DISPLAY = 1;
-
-	S_DISPLAY = 1;
-	S_DISPLAY = 0;
-	spi_out(0x44);
-	spi_out(0x00);
-	spi_out(0xF0);//0x00
-	spi_out(0xFF);//0x01
-	spi_out(0x00);//0x02
-	spi_out(0x00);//0x03
-	spi_out(0x00);//0x04
-	spi_out(0x0F);//0x05
-	spi_out(0x00);//0x06
-	spi_out(0x0F);//0x07
-	spi_out(0x00);//0x08
-	spi_out(0x0F);//0x09
-	spi_out(0x08);//0x0A
-	spi_out(0x08);//0x0B
-	spi_out(0x00);//0x0C
-	spi_out(0x00);//0x0D
-	spi_out(0x00);//0x0E
-	spi_out(0x00);//0x0F
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	spi_out(0x00);
-	S_DISPLAY = 1;
-*/
 }
 
 void InitDSPY(void)
