@@ -96,9 +96,9 @@ void INT_Init(void)  //init Interrupt
 	
 	//SPI interrupt
 	
-	IPR1bits.SSP1IP = 1;
+	//IPR1bits.SSP1IP = 1;
 	PIR1bits.SSP1IF = 0;
-	PIE1bits.SSP1IE = 1;
+	PIE1bits.SSP1IE = 0;
     
     //UART interrupt
     

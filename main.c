@@ -102,37 +102,7 @@ extern volatile struct chbits{
 						unsigned bit7:1;
 		
 					}flag ;
-extern volatile struct flagspi{
-						unsigned bit0:1;
-						unsigned bit1:1;
-						unsigned info:1;
-						unsigned strinfo:1;
-						unsigned bit4:1;
-						unsigned bit5:1;
-						unsigned free3:1;
-						unsigned bit7:1;
 
-					}flagspi ;
-
-
-
-extern volatile DATA_SPI        dataDAC;
-extern volatile DATA_SPI        dataSRC;
-extern volatile DATA_DISPLAY    dataDSPY1;
-extern volatile DATA_DISPLAY    dataDSPY2;
-extern volatile DATA_DISPLAY    dataDSPY3;
-extern volatile DATA_DISPLAY    dataDSPY4;
-extern volatile DATA_DISPLAY    dataDSPY5;
-extern volatile DATA_DISPLAY    dataBlank;
-extern volatile DATA_DISPLAY    dataREAD;
-
-extern volatile	DATA_DISPLAY    dataDSPY1_info;
-extern volatile	DATA_DISPLAY    dataDSPY2_info;
-extern volatile	DATA_DISPLAY    dataDSPY3_info;
-extern volatile	DATA_DISPLAY    dataDSPY4_info;
-extern volatile	DATA_DISPLAY    dataDSPY5_info;
-
-volatile DATA_DISPLAY    p_dataDSPY;
 
 extern volatile char data[8];
 extern volatile char datainfo[64];
@@ -308,7 +278,7 @@ void interrupt low_priority low_int(void)
             if (*(pDataRX +2) == 'E' && *(pDataRX +3) == '=')
             {
                 // command : ~#E=XXXXXX montrer info data
-                flagspi.info = 1;
+
             }
         }
         else
@@ -365,22 +335,7 @@ void main(void)
 	flag.Data1 = 0; 
 	flag.Data2 = 0; 
 	flag.bit7 = 0;
-
-	flagspi.bit0 = 0;
-	flagspi.bit1 = 0;
-	flagspi.info = 0;
-	flagspi.strinfo = 0;
-	flagspi.bit4 = 0;
-	flagspi.bit5 = 0;
-	flagspi.free3 = 0;
-	flagspi.bit7 = 0;
-    
-    dataSRC.DataToWrite = 0;
-	dataDAC.DataToWrite = 0;
-	dataDSPY1.DataToWrite = 0;
-	dataDSPY2.DataToWrite = 0;
-	dataDSPY3.DataToWrite = 0;
-	dataDSPY4.DataToWrite = 0;
+ 
 
 	CS_DSPY = 1;
 	count_spi = 0;
