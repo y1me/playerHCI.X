@@ -144,9 +144,9 @@ unsigned char ProcessIrCode(long *trameToProcess)
             break;
 
 		case KEY2:
-			strcpy(DataTX,"RESET\r\n");
+			strcpy(DataTX,"RECALL\r\n");
             pDataTX = &DataTX[0];
-            pDataTXEnd = &DataTX[6];
+            pDataTXEnd = &DataTX[7];
             TX_UART_INT_E = 1; 
 			return 1;
 			break;
@@ -216,9 +216,9 @@ unsigned char ProcessIrCode(long *trameToProcess)
 			break;
 
 		case KEY3:
-            strcpy(DataTX,"SOURCE\r\n");
+            strcpy(DataTX,"RGBVIDEO\r\n");
             pDataTX = &DataTX[0];
-            pDataTXEnd = &DataTX[7];
+            pDataTXEnd = &DataTX[9];
             TX_UART_INT_E = 1;
 			return 1;
 			break;

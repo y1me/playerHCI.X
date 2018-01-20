@@ -10,31 +10,15 @@
 ************************************************************************/
 void Port_Init(void)  //init i/o PIC for enable DAC
 {
-//Device adress pin
-	TRISG0 = OUTPUT_PIN;
-	TRISG1 = OUTPUT_PIN;
-	TRISGbits.TRISG2 = OUTPUT_PIN;
+//UART pin
+	TRISGbits.TRISG1 = OUTPUT_PIN;
+	TRISGbits.TRISG2 = INPUT_PIN;
 //Chip select pin
-	TRISGbits.TRISG3 = OUTPUT_PIN;
-	TRISGbits.TRISG4 = OUTPUT_PIN;
-        TRISCbits.TRISC0 = OUTPUT_PIN;
-//Reset pin
-	TRISDbits.TRISD0 = OUTPUT_PIN;
-//DMA pin
-	TRISDbits.TRISD3 = OUTPUT_PIN;
-	TRISDbits.TRISD1 = INPUT_PIN;
-//I/O pin
-	TRISDbits.TRISD2 = INPUT_PIN;
-	TRISDbits.TRISD4 = OUTPUT_PIN;
-	TRISDbits.TRISD5 = OUTPUT_PIN;
+    TRISCbits.TRISC0 = OUTPUT_PIN;
 //Int0 pin
 	TRISBbits.TRISB0 = INPUT_PIN;
 //Disable analog pin
 	ADCON1 = 0x0F;
-//Reset pin DRCV
-	TRISBbits.TRISB4 = OUTPUT_PIN;
-//Reset pin DAC
-	TRISBbits.TRISB5 = OUTPUT_PIN;
 //Int1 pin
 	TRISBbits.TRISB1 = INPUT_PIN;
 //Test pin
@@ -63,9 +47,7 @@ void Spi_Init(void)  //init SPI Bus
 void USART_Init(void)  //init USART
 {
     RCSTA2bits.SPEN = 1;
-    TRISGbits.RG2 = 1;
-    TRISGbits.RG1 = 0;
-    
+
     TXSTA2bits.TX9 = 0;
     TXSTA2bits.SYNC = 0;
     TXSTA2bits.SENDB = 0;
@@ -73,8 +55,8 @@ void USART_Init(void)  //init USART
     
     RCSTA2bits.RX9 = 0;
     BAUDCON2bits.BRG16 = 1;
-    SPBRGH2 = 0x02;
-    SPBRGH = 0x08;
+    SPBRGH2 = 0x00;
+    SPBRG2 = 86;
     
     RCSTA2bits.CREN = 1;
     TXSTA2bits.TXEN = 1;
