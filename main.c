@@ -118,14 +118,11 @@ extern char *pDataRX;
 
 extern char keypad;
 extern long trameok;
-char keypad_log[3];
 volatile long trame_capt;
 volatile long count_IR;
 volatile long count_IR_BIT;
 volatile unsigned long start_IR_MSB, start_IR_LSB;
-volatile int count_spi;
 volatile int count_info;
-unsigned char *p_spi;
 
 void interrupt high_int(void)
 {      
@@ -340,7 +337,6 @@ void main(void)
  
 
 	CS_DSPY = 1;
-	count_spi = 0;
 	count_info = Time_info;
     INT_Init();
 	InitMCP23S17();
