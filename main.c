@@ -227,7 +227,7 @@ void interrupt high_int(void)
             }
             if (*(pDataRX +2) == 'B' && *(pDataRX +3) == '=')
             {
-                // command : ~#B=XXXXXX info 6 lettres
+                // command : ~#B=XXXXXX info 6 letter
                 data[0] = *(pDataRX +4);
                 data[1] = *(pDataRX +5);
                 data[2] = *(pDataRX +6);
@@ -239,7 +239,7 @@ void interrupt high_int(void)
             
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
             {
-                // command : ~#C=XXXXXX info data 64 lettres 
+                // command : ~#C=XXXXXX info data 64 symbols 
                 flag.Data2 = 1;
                 pdata = &datainfo[0];
                 *pdata = *(pDataRX +4); 
@@ -247,14 +247,14 @@ void interrupt high_int(void)
             
             if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
             {
-                // command : ~#D=XXXXXX temps info data
+                // command : ~#D=XXXXXX time info data?
                 count_info = *(pDataRX +4);
                 count_info = count_info << 8;
                 count_info |= *(pDataRX +5);
             }
             if (*(pDataRX +2) == 'E' && *(pDataRX +3) == '=')
             {
-                // command : ~#E=XXXXXX montrer info data
+                // command : ~#E=XXXXXX show info data
 
             }
         }
