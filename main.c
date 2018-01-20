@@ -113,7 +113,7 @@ extern char *ptest;
 extern char *pDataTX;
 extern char *pDataTXEnd;
 
-extern volatile char DataRX[16];
+extern volatile char DataRX[20];
 extern char *pDataRX;
 
 extern char keypad;
@@ -191,29 +191,6 @@ void interrupt high_int(void)
                                        
 
 	}
-}
-
-
-void interrupt low_priority low_int(void)
-{
-	if(TIMSUB_INT_F)
-	{
-        PORTTEST = ~PORTTEST;
-		flag.tim0 = 1;//0,6s
-		TIMERSUB_REGH = 0xA4; 
-		TIMERSUB_REG = 0x71;
-		TIMSUB_INT_F =0;
-	}
-    
-    if(UART_TX_INT_F && TX_UART_INT_E)
-	{ 
-        TX_UART_REG = *pDataTX;
-        *pDataTX++;
-        if (pDataTX > pDataTXEnd )
-        {
-            TX_UART_INT_E = 0;
-        }
-    }
     
     while(UART_RX_INT_F)
     {
@@ -308,6 +285,31 @@ void interrupt low_priority low_int(void)
         }
 
     }
+}
+
+
+void interrupt low_priority low_int(void)
+{
+	if(TIMSUB_INT_F)
+	{
+        PORTTEST = ~PORTTEST;
+		flag.tim0 = 1;//0,6s
+		TIMERSUB_REGH = 0xA4; 
+		TIMERSUB_REG = 0x71;
+		TIMSUB_INT_F =0;
+	}
+    
+    if(UART_TX_INT_F && TX_UART_INT_E)
+	{ 
+        TX_UART_REG = *pDataTX;
+        *pDataTX++;
+        if (pDataTX > pDataTXEnd )
+        {
+            TX_UART_INT_E = 0;
+        }
+    }
+    
+    
     
 }
     
@@ -345,7 +347,7 @@ void main(void)
 	Timer2_Init();
 	trameok = 0;
 	InitDSPY();
-    strcpy(data,"the pixies where is my mind");
+    strcpy(datainfo,"the pixies where is my mind");
     ptest = &data[0];
     pDataRX = &DataRX[0];
     

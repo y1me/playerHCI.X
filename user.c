@@ -30,11 +30,11 @@ char *pdataInfoEnd;
 char *pdataInfo;
 char *ptest;
 
-volatile char DataTX[16];
+volatile char DataTX[20];
 char *pDataTX;
 char *pDataTXEnd;
 
-volatile char DataRX[16];
+volatile char DataRX[20];
 char *pDataRX;
 
 char keypad;

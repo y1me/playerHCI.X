@@ -87,8 +87,8 @@ void INT_Init(void)  //init Interrupt
     PIE3bits.TX2IE = 0;
     IPR3bits.TX2IP = 0;
     
-    //PIE3bits.RC2IE = 1;
-    IPR3bits.RC2IP = 0;   
+    PIE3bits.RC2IE = 1;
+    IPR3bits.RC2IP = 1;   
 
 }
 
