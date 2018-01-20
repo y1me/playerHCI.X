@@ -127,12 +127,12 @@ void Timer2_Init(void)  //init timer2
 {
 
 	T2CONbits.T2OUTPS0 = 1;
-        T2CONbits.T2OUTPS1 = 0;
-        T2CONbits.T2OUTPS2 = 0;
-        T2CONbits.T2OUTPS3 = 0;
+    T2CONbits.T2OUTPS1 = 0;
+    T2CONbits.T2OUTPS2 = 0;
+    T2CONbits.T2OUTPS3 = 0;
 	T2CONbits.T2CKPS = 1;
 
-        PR2 = 125;
+        PR2 = 125; // T = 100µs
         TMR2 = 0;
 
 	PIE1bits.TMR2IE = 1;

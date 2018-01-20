@@ -129,9 +129,9 @@ void interrupt high_int(void)
 	
     if(TIMDSPY_INT_F)
 	{
-            
-            TIMERDSPY_REG = 0;
-            TIMDSPY_INT_F = 0;
+        PORTTEST = ~PORTTEST;
+        TIMERDSPY_REG = 0;
+        TIMDSPY_INT_F = 0;
 	}
     
 
@@ -152,37 +152,34 @@ void interrupt high_int(void)
             count_IR = 0;
             start_IR_MSB = 0;
             start_IR_LSB = 0;
-            flag.int1 = 0;
             EN_TIMIR = 1;
             INT1_INT_F = 0;
 	}
     
     if(TIMIR_INT_F)
 	{
-            if (count_IR < 32)
-            {
-                start_IR_MSB = start_IR_MSB << 1;
-                start_IR_MSB |= INPUT_IR;     
-            }
-            else
-            {
-                start_IR_LSB = start_IR_LSB << 1;
-                start_IR_LSB |= INPUT_IR;      
-            }
-            count_IR++;
-            if (count_IR > 40 && !flag.bit7)
-            {
-                 EN_TIMIR = 0;
-                 if (start_IR_MSB < 16 && start_IR_LSB > 500)
-                 {
-                     flag.bit7 = 1;
-                     count_IR_BIT = 0;
-                     trame_capt = 0;
-                 }
-            }
-            //if (count_IR > 40 && !flag.bit7)
-		flag.tim1 = 1;
-		TIMERIR_REGH = 0xF4;
+        if (count_IR < 32)
+        {
+            start_IR_MSB = start_IR_MSB << 1;
+            start_IR_MSB |= INPUT_IR;     
+        }
+        else
+        {
+            start_IR_LSB = start_IR_LSB << 1;
+            start_IR_LSB |= INPUT_IR;      
+        }
+        count_IR++;
+        if (count_IR > 40 && !flag.bit7)
+        {
+             EN_TIMIR = 0;
+             if (start_IR_MSB < 16 && start_IR_LSB > 500)
+             {
+                 flag.bit7 = 1;
+                 count_IR_BIT = 0;
+                 trame_capt = 0;
+             }
+        }		
+        TIMERIR_REGH = 0xF4;
 		TIMERIR_REG = 0x47;
 		TIMIR_INT_F = 0;
                                        
@@ -220,7 +217,6 @@ void interrupt high_int(void)
                 data[3] = *(pDataRX +7);
                 data[4] = *(pDataRX +8);
                 data[5] = *(pDataRX +9);
-                flag.Dtime = 1;
             }
             if (*(pDataRX +2) == 'B' && *(pDataRX +3) == '=')
             {
@@ -231,7 +227,6 @@ void interrupt high_int(void)
                 data[3] = *(pDataRX +7);
                 data[4] = *(pDataRX +8);
                 data[5] = *(pDataRX +9);
-                flag.Data1 = 1;
             }
             
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
@@ -289,7 +284,7 @@ void interrupt low_priority low_int(void)
 {
 	if(TIMSUB_INT_F)
 	{
-        PORTTEST = ~PORTTEST;
+
 		flag.tim0 = 1;//0,6s
 		TIMERSUB_REGH = 0xA4; 
 		TIMERSUB_REG = 0x71;
@@ -310,11 +305,6 @@ void interrupt low_priority low_int(void)
     
 }
     
-
-
-
-
-
 void main(void)
 {
 
