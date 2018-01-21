@@ -40,11 +40,15 @@ char *pDataRX;
 char keypad;
 long trameok;
 
+volatile int count_100us;
+
 char Init23S17_40[25] = { 0x40,0x00,0xE0,0xF0,0x00,0x00,0x00,0xF0,0x00,0xF0,0x00,0xF0,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x1E,0x0F };
 //IODIRA,IODIRB,IPOLA,IPOLB,GPINTENA,GPINTENB,DEFVALA,DEFVALB,INTCONA,INTCONB,IOCON,IOCON,GPPUA,GPPUB,INTFA,INTFB,INTCAPA,INTCAPB,GPIOA,GPIOB
 char Init23S17_42[25] = { 0x42,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 char Init23S17_44[25] = { 0x44,0x00,0x00,0x0F,0x00,0x00,0x00,0x0F,0x00,0x0F,0x00,0x0F,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x0F,0x00 };
 char spi_read[25];
+
+int test;
 
 
 
@@ -53,6 +57,7 @@ unsigned char ProcessIrCode(long *);
 void HandleSIRSC(void);
 unsigned char ConvertDigit4(unsigned char );
 unsigned char ConvertDigit2(unsigned char );
+void ReadKeypad(void);
 /*****************************************************************************/
 void InitMCP23S17(void)
 {   
@@ -77,6 +82,25 @@ void InitMCP23S17(void)
 
 void InitDSPY(void)
 {
+}
+
+void ReadKeypad(void)
+{
+    char lenght = 0; 
+    char reg[8] = { 0x41,0x0E,0x00,0x00,0x00,0x00,0x00,0x00 };
+    CS_DSPY = 1;
+    CS_DSPY = 0;
+    lenght = SPI1_Exchange8bitBuffer(&reg[0], 8, &spi_read[0]);
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    lenght = 0;
+    reg[0] = 0x45;
+    CS_DSPY = 0;
+    lenght = SPI1_Exchange8bitBuffer(&reg[0], 8, &spi_read[0]);
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    CS_DSPY = 1;
 }
 
 void HandleSIRSC(void)
@@ -541,6 +565,12 @@ unsigned char ConvertDigit2(unsigned char letter)
 void ProcessIO(void)
 {   
     HandleSIRSC();
+    if ( !(count_100us % 1024))
+    {
+        PORTTEST=~PORTTEST;
+        ReadKeypad();
+        count_100us++;
+    }
     
     if (UART_RX_OERR)
     {

@@ -25,11 +25,6 @@
     #define KEY10               0x0AF54EB0	//Select Right
     #define KEY11               0x0AF5CE30	//Select Left
 
-/**Code commande CD***************************/
-    #define CD_PLAY             0x100
-    #define CD_PAUSE            0x200
-    #define CD_STOP             0x300
-
 
 /** DEBUG ***********************************************************/
 	#define	TRIS_PORTTEST		TRISE0
@@ -77,6 +72,7 @@
  	#define TIMDSPY_INT_F       TMR2IF
 	#define TIMERDSPY_REG       TMR2
 	#define EN_TIMDSPY          TMR2ON
+    #define MODULO_16_MASK      0x0010
 
     /** External Int1 ****************************************************/
 

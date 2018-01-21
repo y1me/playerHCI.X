@@ -123,13 +123,14 @@ volatile long count_IR;
 volatile long count_IR_BIT;
 volatile unsigned long start_IR_MSB, start_IR_LSB;
 volatile int count_info;
+extern volatile int count_100us;
 
 void interrupt high_int(void)
 {      
 	
     if(TIMDSPY_INT_F)
 	{
-        PORTTEST = ~PORTTEST;
+        count_100us++;
         TIMERDSPY_REG = 0;
         TIMDSPY_INT_F = 0;
 	}
