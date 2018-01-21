@@ -37,7 +37,7 @@ char *pDataTXEnd;
 volatile char DataRX[20];
 char *pDataRX;
 
-char keypad;
+char keypad, release;
 long trameok;
 
 volatile int count_100us;
@@ -54,10 +54,10 @@ int test;
 
 /** P R I V A T E  P R O T O T Y P E S ***************************************/
 unsigned char ProcessIrCode(long *);
-void HandleSIRSC(void);
+void HandleSIRSC(char);
 unsigned char ConvertDigit4(unsigned char );
 unsigned char ConvertDigit2(unsigned char );
-void ReadKeypad(void);
+char ReadKeypad(void);
 /*****************************************************************************/
 void InitMCP23S17(void)
 {   
@@ -84,9 +84,10 @@ void InitDSPY(void)
 {
 }
 
-void ReadKeypad(void)
+char ReadKeypad(void)
 {
     char lenght = 0; 
+    char key = 0;
     char reg[8] = { 0x41,0x0E,0x00,0x00,0x00,0x00,0x00,0x00 };
     CS_DSPY = 1;
     CS_DSPY = 0;
@@ -94,6 +95,8 @@ void ReadKeypad(void)
     CS_DSPY = 1;
     CS_DSPY = 1;
     CS_DSPY = 1;
+    key = spi_read[3];
+    key &= 0xF0;
     lenght = 0;
     reg[0] = 0x45;
     CS_DSPY = 0;
@@ -101,50 +104,46 @@ void ReadKeypad(void)
     CS_DSPY = 1;
     CS_DSPY = 1;
     CS_DSPY = 1;
+    key |= spi_read[3];
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    return key;
 }
 
-void HandleSIRSC(void)
+void HandleSIRSC(char data)
 {
-	switch ( keypad )
+	switch ( data )
 	{
 		case 1:
 			trameok = KEY1;
-			keypad = 0;
 			break;
 
 		case 2:
-			trameok = KEY9;
-			keypad = 0;
+			trameok = KEY5;
 			break;
 
 		case 4:
-			trameok = KEY10;
-			keypad = 0;
+			trameok = KEY6;
 			break;
 
 		case 8:
-			trameok = KEY11;
-			keypad = 0;
+			trameok = KEY9;
 			break;
 
 		case 16:
 			trameok = KEY3;
-			keypad = 0;
 			break;
 
 		case 32:
-			trameok = KEY6;
-			keypad = 0;
+			trameok = KEY7;
 			break;
 
 		case 64:
-			trameok = KEY5;
-			keypad = 0;
+			trameok = KEY10;
 			break;
 
 		case 128:
-			trameok = KEY7;
-			keypad = 0;
+			trameok = KEY11;
 			break;
 
 		default:
@@ -563,14 +562,17 @@ unsigned char ConvertDigit2(unsigned char letter)
 }
 
 void ProcessIO(void)
-{   
-    HandleSIRSC();
-    if ( !(count_100us % 1024))
+{      
+    if ( !(count_100us % 1024) )
     {
-        PORTTEST=~PORTTEST;
-        ReadKeypad();
+        
+        if (!release) keypad = ReadKeypad();
+        release = ReadKeypad();       
         count_100us++;
     }
+    
+    HandleSIRSC(keypad);
+    keypad = 0;
     
     if (UART_RX_OERR)
     {

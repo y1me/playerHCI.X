@@ -116,7 +116,6 @@ extern char *pDataTXEnd;
 extern volatile char DataRX[20];
 extern char *pDataRX;
 
-extern char keypad;
 extern long trameok;
 volatile long trame_capt;
 volatile long count_IR;
