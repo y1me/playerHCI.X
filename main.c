@@ -92,7 +92,7 @@
 
 
 extern volatile struct chbits{
-						unsigned spi:1; 
+						unsigned IR:1; 
 						unsigned tim0:1; 
 						unsigned int1:1; 
 						unsigned tim1:1; 
@@ -145,6 +145,7 @@ void interrupt high_int(void)
                 if (count_IR_BIT == 32)
                 {
                     trameok = trame_capt;
+                    flag.IR = 1; 
                     flag.bit7 = 0;
                 }
             }
@@ -316,7 +317,7 @@ void main(void)
 	Timer0_Init();
 	Timer1_Init();
 
-    flag.spi = 0; 
+    flag.IR = 0; 
 	flag.tim0 = 0; 
 	flag.int1 = 0; 
 	flag.tim1 = 0; 

@@ -11,7 +11,7 @@
 
 /** V A R I A B L E S ********************************************************/
 volatile struct chbits{
-	unsigned spi:1; 
+	unsigned IR:1; 
 	unsigned tim0:1; 
 	unsigned int1:1; 
 	unsigned tim1:1; 
@@ -40,12 +40,12 @@ char *pDataRX;
 char keypad, release;
 long trameok;
 
-volatile int count_100us;
+volatile int count_100us, count_led = 0;
 
 char Init23S17_40[25] = { 0x40,0x00,0xE0,0xF0,0x00,0x00,0x00,0xF0,0x00,0xF0,0x00,0xF0,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x1E,0x0F };
 //IODIRA,IODIRB,IPOLA,IPOLB,GPINTENA,GPINTENB,DEFVALA,DEFVALB,INTCONA,INTCONB,IOCON,IOCON,GPPUA,GPPUB,INTFA,INTFB,INTCAPA,INTCAPB,GPIOA,GPIOB
 char Init23S17_42[25] = { 0x42,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
-char Init23S17_44[25] = { 0x44,0x00,0x00,0x0F,0x00,0x00,0x00,0x0F,0x00,0x0F,0x00,0x0F,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x0F,0x00 };
+char Init23S17_44[25] = { 0x44,0x00,0x00,0x0F,0x00,0x00,0x00,0x0F,0x00,0x0F,0x00,0x0F,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0x00 };
 char spi_read[25];
 
 int test;
@@ -58,6 +58,7 @@ void HandleSIRSC(char);
 unsigned char ConvertDigit4(unsigned char );
 unsigned char ConvertDigit2(unsigned char );
 char ReadKeypad(void);
+void UpdateLED(char );
 /*****************************************************************************/
 void InitMCP23S17(void)
 {   
@@ -82,6 +83,60 @@ void InitMCP23S17(void)
 
 void InitDSPY(void)
 {
+}
+
+void UpdateLED(char led)
+{
+    char lenght = 0; 
+    char reg[8] = { 0x44,0x12,0x00,0x00,0x00,0x00,0x00,0x00 };
+    switch ( led )
+        {
+            case 1:
+                reg[2] = 8;
+                break;
+
+            case 2:
+                reg[2] = 4;
+                break;
+
+            case 4:
+                reg[2] = 2;
+                break;
+
+            case 8:
+                reg[2] = 1;
+                break;
+
+            case 16:
+                reg[2] = 16;
+                break;
+
+            case 32:
+                reg[2] = 32;
+                break;
+
+            case 64:
+                reg[2] = 64;
+                break;
+
+            case 128:
+                reg[2] = 128;
+                break;
+            
+            case 255:
+                reg[2] = 255;
+                break;
+                
+            default:
+                reg[2] = 0;
+	
+        }
+    CS_DSPY = 1;
+    CS_DSPY = 0;
+    lenght = SPI1_Exchange8bitBuffer(&reg[0], 3, &spi_read[0]);
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    CS_DSPY = 1;
 }
 
 char ReadKeypad(void)
@@ -150,7 +205,18 @@ void HandleSIRSC(char data)
 			keypad = keypad;
 	}
 
-	if (ProcessIrCode(&trameok) == 1) trameok = 0;
+	if (ProcessIrCode(&trameok) == 1)
+    {
+        if (flag.IR)
+        {
+            UpdateLED(255);
+            count_led = 5;
+            flag.IR = 0; 
+        }
+        trameok = 0;
+        
+    }
+        
 }
 
 unsigned char ProcessIrCode(long *trameToProcess)
@@ -566,9 +632,21 @@ void ProcessIO(void)
     if ( !(count_100us % 1024) )
     {
         
-        if (!release) keypad = ReadKeypad();
+        if (!release)
+        {
+            keypad = ReadKeypad();
+            count_led = 10;
+            UpdateLED(keypad);
+        }
         release = ReadKeypad();       
         count_100us++;
+        count_led--;
+        if (count_led < 0)
+        {
+            count_led == 0;
+            UpdateLED(0);
+        }
+            
     }
     
     HandleSIRSC(keypad);
