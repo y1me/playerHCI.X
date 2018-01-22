@@ -23,7 +23,7 @@ volatile struct chbits{
 }flag ;
 
 
-volatile char data[8];
+volatile char datashort[8];
 volatile char datainfo[64];
 char *pdata;
 char *pdataInfoEnd;
@@ -37,7 +37,7 @@ char *pDataTXEnd;
 volatile char DataRX[20];
 char *pDataRX;
 
-char keypad, release, count_dspy;
+char keypad, release, count_dspy, timedot;
 long trameok;
 
 volatile int count_100us, count_led = 0;
@@ -688,27 +688,45 @@ void ProcessIO(void)
         switch ( count_dspy )
         {
             case 1:
-                UpdateDSPY( d_z,D_y ,~count_dspy );
+                UpdateDSPY( ConvertDigit4(*(pdata+2)), ConvertDigit2(*(pdata+1)), ~count_dspy );
+                count_dspy = 33;
+                break;
+            case 33:
+                UpdateDSPY( 255, 255, 255 );
                 count_dspy = 2;
                 break;
-
             case 2:
-                UpdateDSPY( d_x,D_w ,~count_dspy );
+                UpdateDSPY( ConvertDigit4(*(pdata+3)), ConvertDigit2(*pdata),~count_dspy );
+                count_dspy = 34;
+                break;
+            case 34:
+                UpdateDSPY( 255, 255, 255 );
                 count_dspy = 4;
                 break;
-
             case 4:
-                UpdateDSPY( 1,1 ,~count_dspy );
+                if (!*(pdata+6))  timedot = 255;
+                else timedot = 250;
+                UpdateDSPY( timedot, 255, ~count_dspy );
+                count_dspy = 35;
+                break;
+            case 35:
+                UpdateDSPY( 255, 255, 255 );
                 count_dspy = 8;
                 break;
-
             case 8:
-                UpdateDSPY( d_p,d_q ,~count_dspy );
+                UpdateDSPY( ConvertDigit4(*(pdata+4)), 255,~count_dspy );
+                count_dspy = 36;
+                break;
+            case 36:
+                UpdateDSPY( 255, 255, 255 );
                 count_dspy = 16;
                 break;
-
             case 16:
-                UpdateDSPY( d_a,d_b ,~count_dspy );
+                UpdateDSPY( ConvertDigit4(*(pdata+5)),255 ,~count_dspy );
+                count_dspy = 37;
+                break;
+            case 37:
+                UpdateDSPY( 255, 255, 255 );
                 count_dspy = 1;
                 break;
             default:

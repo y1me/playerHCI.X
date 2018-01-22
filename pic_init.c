@@ -105,7 +105,7 @@ void Timer0_Init(void)  //init timer0
 	INTCONbits.TMR0IE = 1;
 	INTCON2bits.TMR0IP = 0;
 
-	T0CONbits.TMR0ON = 1;
+	T0CONbits.TMR0ON = 1; //count 25,6µs
 }
 
 void Timer1_Init(void)  //init timer1
@@ -132,7 +132,7 @@ void Timer2_Init(void)  //init timer2
     T2CONbits.T2OUTPS3 = 0;
 	T2CONbits.T2CKPS = 1;
 
-        PR2 = 125; // T = 100µs
+        PR2 = 120; // T = 100µs
         TMR2 = 0;
 
 	PIE1bits.TMR2IE = 1;

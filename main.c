@@ -104,7 +104,7 @@ extern volatile struct chbits{
 					}flag ;
 
 
-extern volatile char data[8];
+extern volatile char datashort[8];
 extern volatile char datainfo[64];
 extern char *pdata;
 extern char *pdataInfoEnd;
@@ -115,6 +115,8 @@ extern char *pDataTXEnd;
 
 extern volatile char DataRX[20];
 extern char *pDataRX;
+
+extern char count_dspy;
 
 extern long trameok;
 volatile long trame_capt;
@@ -212,22 +214,22 @@ void interrupt high_int(void)
             if (*(pDataRX +2) == 'A' && *(pDataRX +3) == '=')
             {
                 // command : ~#A=XXXXXX time info 6 digit
-                data[0] = *(pDataRX +4);
-                data[1] = *(pDataRX +5);
-                data[2] = *(pDataRX +6);
-                data[3] = *(pDataRX +7);
-                data[4] = *(pDataRX +8);
-                data[5] = *(pDataRX +9);
+                datashort[0] = *(pDataRX +4);
+                datashort[1] = *(pDataRX +5);
+                datashort[2] = *(pDataRX +6);
+                datashort[3] = *(pDataRX +7);
+                datashort[4] = *(pDataRX +8);
+                datashort[5] = *(pDataRX +9);
             }
             if (*(pDataRX +2) == 'B' && *(pDataRX +3) == '=')
             {
                 // command : ~#B=XXXXXX info 6 letter
-                data[0] = *(pDataRX +4);
-                data[1] = *(pDataRX +5);
-                data[2] = *(pDataRX +6);
-                data[3] = *(pDataRX +7);
-                data[4] = *(pDataRX +8);
-                data[5] = *(pDataRX +9);
+                datashort[0] = *(pDataRX +4);
+                datashort[1] = *(pDataRX +5);
+                datashort[2] = *(pDataRX +6);
+                datashort[3] = *(pDataRX +7);
+                datashort[4] = *(pDataRX +8);
+                datashort[5] = *(pDataRX +9);
             }
             
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
@@ -287,8 +289,18 @@ void interrupt low_priority low_int(void)
 	{
 
 		flag.tim0 = 1;//0,6s
-		TIMERSUB_REGH = 0xA4; 
-		TIMERSUB_REG = 0x71;
+        if (count_dspy > 32)
+        {
+            TIMERSUB_REGH = 0xFF; 
+            TIMERSUB_REG = 0xF8;
+        }
+        else
+        {
+            
+            TIMERSUB_REGH = 0xFF; 
+            TIMERSUB_REG = 0x80;
+        }
+        PORTTEST=~PORTTEST;
 		TIMSUB_INT_F =0;
 	}
     
@@ -334,7 +346,8 @@ void main(void)
 	Timer2_Init();
 	trameok = 0;
     strcpy(datainfo,"the pixies where is my mind");
-    ptest = &data[0];
+    strcpy(datashort,"initok");
+    pdata = &datashort[0];
     pDataRX = &DataRX[0];
     
 
