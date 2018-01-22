@@ -24,6 +24,7 @@ volatile struct chbits{
 
 
 volatile char datashort[8];
+volatile char datalong[8];
 volatile char datainfo[64];
 char *pdata;
 char *pdataInfoEnd;
@@ -40,7 +41,7 @@ char *pDataRX;
 char keypad, release, count_dspy, timedot;
 long trameok;
 
-volatile int count_100us, count_led = 0;
+volatile int count_100us, count_led = 0, en_data_short, en_data_info, count_data_info, count_stay_info;
 
 char Init23S17_40[25] = { 0x40,0x00,0xE0,0xF0,0x00,0x00,0x00,0xF0,0x00,0xF0,0x00,0xF0,0x08,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x1E,0x0F };
 //IODIRA,IODIRB,IPOLA,IPOLB,GPINTENA,GPINTENB,DEFVALA,DEFVALB,INTCONA,INTCONB,IOCON,IOCON,GPPUA,GPPUB,INTFA,INTFB,INTCAPA,INTCAPB,GPIOA,GPIOB
@@ -682,9 +683,51 @@ void ProcessIO(void)
         UART_RX_EN = 1;
         
     }
+    
+    if (flag.tim1)    
+    {
+        if (!en_data_info)
+        {
+            if (en_data_short == 0) 
+            {
+                pdata = &datalong[0];
+            }
+            if (en_data_short == STAY_3S) 
+            {
+                pdata = &datashort[0];
+            }
+            if (en_data_short < 0) 
+            {
+                en_data_short = -1;
+            }
+            en_data_short--;
+        }
+        else
+        {
+            if (en_data_info == INFO_IT)
+            {
+                en_data_info--;
+                pdata = &datainfo[0];
+                count_stay_info = 0;
+            }
+            if ( count_stay_info == INFO_STAY )
+            {
+                count_stay_info = 0;
+                *pdata++;
+                if ( (pdata+3) == pdataInfoEnd )
+                {
+                    en_data_info--;
+                    pdata = &datainfo[0];
+                    if (!en_data_info) pdata = &datashort[0];
+                }
+            }   
+        }
+        flag.tim1 = 0;
+    }
 
     if (flag.tim0)    
     {
+        count_stay_info++;
         switch ( count_dspy )
         {
             case 1:
@@ -696,7 +739,7 @@ void ProcessIO(void)
                 count_dspy = 2;
                 break;
             case 2:
-                UpdateDSPY( ConvertDigit4(*(pdata+3)), ConvertDigit2(*pdata),~count_dspy );
+                UpdateDSPY( ConvertDigit4(*(pdata+3)), ConvertDigit2(*pdata), ~count_dspy );
                 count_dspy = 34;
                 break;
             case 34:
@@ -704,8 +747,9 @@ void ProcessIO(void)
                 count_dspy = 4;
                 break;
             case 4:
-                if (!*(pdata+6))  timedot = 255;
-                else timedot = 250;
+                timedot = 250;
+                if ( !(*(pdata+6)) )  timedot = 255;
+                if ( en_data_info )  timedot = 255;
                 UpdateDSPY( timedot, 255, ~count_dspy );
                 count_dspy = 35;
                 break;
@@ -714,7 +758,7 @@ void ProcessIO(void)
                 count_dspy = 8;
                 break;
             case 8:
-                UpdateDSPY( ConvertDigit4(*(pdata+4)), 255,~count_dspy );
+                UpdateDSPY( ConvertDigit4(*(pdata+4)), 255, ~count_dspy );
                 count_dspy = 36;
                 break;
             case 36:
@@ -722,7 +766,7 @@ void ProcessIO(void)
                 count_dspy = 16;
                 break;
             case 16:
-                UpdateDSPY( ConvertDigit4(*(pdata+5)),255 ,~count_dspy );
+                UpdateDSPY( ConvertDigit4(*(pdata+5)), 255 , ~count_dspy );
                 count_dspy = 37;
                 break;
             case 37:

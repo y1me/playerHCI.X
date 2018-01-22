@@ -105,8 +105,10 @@ extern volatile struct chbits{
 
 
 extern volatile char datashort[8];
+extern volatile char datalong[8];
 extern volatile char datainfo[64];
 extern char *pdata;
+extern char *pdataInfo;
 extern char *pdataInfoEnd;
 extern char *ptest;
 
@@ -124,7 +126,7 @@ volatile long count_IR;
 volatile long count_IR_BIT;
 volatile unsigned long start_IR_MSB, start_IR_LSB;
 volatile int count_info;
-extern volatile int count_100us;
+extern volatile int count_100us, en_data_short, en_data_info;
 
 void interrupt high_int(void)
 {      
@@ -132,6 +134,7 @@ void interrupt high_int(void)
     if(TIMDSPY_INT_F)
 	{
         count_100us++;
+        flag.tim1 = 1;
         TIMERDSPY_REG = 0;
         TIMDSPY_INT_F = 0;
 	}
@@ -214,68 +217,78 @@ void interrupt high_int(void)
             if (*(pDataRX +2) == 'A' && *(pDataRX +3) == '=')
             {
                 // command : ~#A=XXXXXX time info 6 digit
-                datashort[0] = *(pDataRX +4);
-                datashort[1] = *(pDataRX +5);
-                datashort[2] = *(pDataRX +6);
-                datashort[3] = *(pDataRX +7);
-                datashort[4] = *(pDataRX +8);
-                datashort[5] = *(pDataRX +9);
+                datalong[0] = *(pDataRX +4);
+                datalong[1] = *(pDataRX +5);
+                datalong[2] = *(pDataRX +6);
+                datalong[3] = *(pDataRX +7);
+                datalong[4] = *(pDataRX +8);
+                datalong[5] = *(pDataRX +9);
+                datalong[6] = 'T';
+                
             }
             if (*(pDataRX +2) == 'B' && *(pDataRX +3) == '=')
             {
                 // command : ~#B=XXXXXX info 6 letter
-                datashort[0] = *(pDataRX +4);
-                datashort[1] = *(pDataRX +5);
-                datashort[2] = *(pDataRX +6);
-                datashort[3] = *(pDataRX +7);
-                datashort[4] = *(pDataRX +8);
-                datashort[5] = *(pDataRX +9);
+                datalong[0] = *(pDataRX +4);
+                datalong[1] = *(pDataRX +5);
+                datalong[2] = *(pDataRX +6);
+                datalong[3] = *(pDataRX +7);
+                datalong[4] = *(pDataRX +8);
+                datalong[5] = *(pDataRX +9);
+                datalong[6] = 0x00;
             }
             
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
             {
-                // command : ~#C=XXXXXX info data 64 symbols 
+                // command : ~#C=XXXXXX info data min 10 symbols max 64 symbols  
                 flag.Data2 = 1;
-                pdata = &datainfo[0];
-                *pdata = *(pDataRX +4); 
+                pdataInfo = &datainfo[0];
+                *pdataInfo = *(pDataRX +4); 
             }
             
             if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
             {
                 // command : ~#D=XXXXXX time info data?
-                count_info = *(pDataRX +4);
-                count_info = count_info << 8;
-                count_info |= *(pDataRX +5);
+                datashort[0] = *(pDataRX +4);
+                datashort[1] = *(pDataRX +5);
+                datashort[2] = *(pDataRX +6);
+                datashort[3] = *(pDataRX +7);
+                datashort[4] = *(pDataRX +8);
+                datashort[5] = *(pDataRX +9);
+                en_data_short = STAY_3S;
             }
+            /*
             if (*(pDataRX +2) == 'E' && *(pDataRX +3) == '=')
             {
                 // command : ~#E=XXXXXX show info data
 
             }
+            */
         }
         else
         {
-            if (flag.Data2 && pdata < &datainfo[53])
+            if (flag.Data2 && pdataInfo < &datainfo[53])
             {
-                *pdata++;
+                *pdataInfo++;
                 if (*(pDataRX +15) == '#' && *(pDataRX +14) == '~')
                 {
-                    *pdata = *(pDataRX +4);
-                    *(pdata +1) = *(pDataRX +4);
-                    *(pdata +2) = *(pDataRX +5);
-                    *(pdata +3) = *(pDataRX +6);
-                    *(pdata +4) = *(pDataRX +7);
-                    *(pdata +5) = *(pDataRX +8);
-                    *(pdata +6) = *(pDataRX +9);
-                    *(pdata +7) = *(pDataRX +10);
-                    *(pdata +8) = *(pDataRX +11);
-                    *(pdata +9) = *(pDataRX +12);
-                    *(pdata +10) = *(pDataRX +13);
-                    pdataInfoEnd = pdata +10;
+                    *pdataInfo = *(pDataRX +4);
+                    *(pdataInfo +1) = *(pDataRX +4);
+                    *(pdataInfo +2) = *(pDataRX +5);
+                    *(pdataInfo +3) = *(pDataRX +6);
+                    *(pdataInfo +4) = *(pDataRX +7);
+                    *(pdataInfo +5) = *(pDataRX +8);
+                    *(pdataInfo +6) = *(pDataRX +9);
+                    *(pdataInfo +7) = *(pDataRX +10);
+                    *(pdataInfo +8) = *(pDataRX +11);
+                    *(pdataInfo +9) = *(pDataRX +12);
+                    *(pdataInfo +10) = *(pDataRX +13);
+                    pdataInfoEnd = pdataInfo +10;
                     flag.Data2 = 0;
+                    en_data_info = INFO_IT;
                 }
-                else *pdata = *(pDataRX +4);    
-                if (pdata == &datainfo[53]) flag.Data2 = 0;
+                else *pdataInfo = *(pDataRX +4);    
+                if (pdataInfo == &datainfo[53]) flag.Data2 = 0;
             }
         }
 
@@ -347,7 +360,11 @@ void main(void)
 	trameok = 0;
     strcpy(datainfo,"the pixies where is my mind");
     strcpy(datashort,"initok");
+    strcpy(datalong,"  idle");
     pdata = &datashort[0];
+    pdataInfoEnd = &datainfo[25];
+    en_data_short = STAY_3S;
+    en_data_info = INFO_IT;
     pDataRX = &DataRX[0];
     
 

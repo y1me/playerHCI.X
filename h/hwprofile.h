@@ -72,8 +72,7 @@
  	#define TIMDSPY_INT_F       TMR2IF
 	#define TIMERDSPY_REG       TMR2
 	#define EN_TIMDSPY          TMR2ON
-    #define MODULO_16_MASK      0x0010
-
+   
     /** External Int1 ****************************************************/
 
  	#define INT1_INT_F          INT1IF
@@ -159,5 +158,9 @@
  	#define d_minus             253
  	#define d_void              255
     #define d_pp                250
+
+    #define STAY_3S             30000
+    #define INFO_IT             3
+    #define INFO_STAY           250
 
 #endif  //HARDWARE_PROFILE_H
