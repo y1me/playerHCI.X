@@ -333,7 +333,6 @@ void main(void)
 	InitMCP23S17();
 	Timer2_Init();
 	trameok = 0;
-	InitDSPY();
     strcpy(datainfo,"the pixies where is my mind");
     ptest = &data[0];
     pDataRX = &DataRX[0];

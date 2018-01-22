@@ -37,7 +37,7 @@ char *pDataTXEnd;
 volatile char DataRX[20];
 char *pDataRX;
 
-char keypad, release;
+char keypad, release, count_dspy;
 long trameok;
 
 volatile int count_100us, count_led = 0;
@@ -59,6 +59,7 @@ unsigned char ConvertDigit4(unsigned char );
 unsigned char ConvertDigit2(unsigned char );
 char ReadKeypad(void);
 void UpdateLED(char );
+void UpdateDSPY(char , char , char );
 /*****************************************************************************/
 void InitMCP23S17(void)
 {   
@@ -81,8 +82,28 @@ void InitMCP23S17(void)
     CS_DSPY = 1;
 }
 
-void InitDSPY(void)
+void UpdateDSPY(char data1, char data2, char digit)
 {
+    char lenght = 0; 
+    char reg[8] = { 0x42,0x12,0x00,0x00,0x00,0x00,0x00,0x00 };
+    reg[2] = data1;
+    reg[3] = data2;
+    CS_DSPY = 1;
+    CS_DSPY = 0;
+    lenght = SPI1_Exchange8bitBuffer(&reg[0], 4, &spi_read[0]);
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    lenght = 0; 
+    reg[0] = 0x40;
+    reg[2] = digit;
+    CS_DSPY = 1;
+    CS_DSPY = 0;
+    lenght = SPI1_Exchange8bitBuffer(&reg[0], 3, &spi_read[0]);
+    CS_DSPY = 1;
+    CS_DSPY = 1;
+    CS_DSPY = 1;   
+  
 }
 
 void UpdateLED(char led)
@@ -664,6 +685,35 @@ void ProcessIO(void)
 
     if (flag.tim0)    
     {
+        switch ( count_dspy )
+        {
+            case 1:
+                UpdateDSPY( d_z,D_y ,~count_dspy );
+                count_dspy = 2;
+                break;
+
+            case 2:
+                UpdateDSPY( d_x,D_w ,~count_dspy );
+                count_dspy = 4;
+                break;
+
+            case 4:
+                UpdateDSPY( 1,1 ,~count_dspy );
+                count_dspy = 8;
+                break;
+
+            case 8:
+                UpdateDSPY( d_p,d_q ,~count_dspy );
+                count_dspy = 16;
+                break;
+
+            case 16:
+                UpdateDSPY( d_a,d_b ,~count_dspy );
+                count_dspy = 1;
+                break;
+            default:
+                count_dspy = 1;
+        }
         flag.tim0 = 0;
     }
     	
