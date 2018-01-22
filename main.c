@@ -248,7 +248,7 @@ void interrupt high_int(void)
             
             if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
             {
-                // command : ~#D=XXXXXX time info data?
+                // command : ~#D=XXXXXX timed info data?
                 datashort[0] = *(pDataRX +4);
                 datashort[1] = *(pDataRX +5);
                 datashort[2] = *(pDataRX +6);
@@ -273,16 +273,16 @@ void interrupt high_int(void)
                 if (*(pDataRX +15) == '#' && *(pDataRX +14) == '~')
                 {
                     *pdataInfo = *(pDataRX +4);
-                    *(pdataInfo +1) = *(pDataRX +4);
-                    *(pdataInfo +2) = *(pDataRX +5);
-                    *(pdataInfo +3) = *(pDataRX +6);
-                    *(pdataInfo +4) = *(pDataRX +7);
-                    *(pdataInfo +5) = *(pDataRX +8);
-                    *(pdataInfo +6) = *(pDataRX +9);
-                    *(pdataInfo +7) = *(pDataRX +10);
-                    *(pdataInfo +8) = *(pDataRX +11);
-                    *(pdataInfo +9) = *(pDataRX +12);
-                    *(pdataInfo +10) = *(pDataRX +13);
+                    *(pdataInfo +1) = *(pDataRX +5);
+                    *(pdataInfo +2) = *(pDataRX +6);
+                    *(pdataInfo +3) = *(pDataRX +7);
+                    *(pdataInfo +4) = *(pDataRX +8);
+                    *(pdataInfo +5) = *(pDataRX +9);
+                    *(pdataInfo +6) = *(pDataRX +10);
+                    *(pdataInfo +7) = *(pDataRX +11);
+                    *(pdataInfo +8) = *(pDataRX +12);
+                    *(pdataInfo +9) = *(pDataRX +13);
+                    *(pdataInfo +10) = *(pDataRX +14);
                     pdataInfoEnd = pdataInfo +10;
                     flag.Data2 = 0;
                     en_data_info = INFO_IT;
@@ -358,7 +358,7 @@ void main(void)
 	InitMCP23S17();
 	Timer2_Init();
 	trameok = 0;
-    strcpy(datainfo,"the pixies where is my mind");
+    strcpy(datainfo,"this is radio clash");
     strcpy(datashort,"initok");
     strcpy(datalong,"  idle");
     pdata = &datashort[0];

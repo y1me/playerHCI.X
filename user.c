@@ -714,11 +714,16 @@ void ProcessIO(void)
             {
                 count_stay_info = 0;
                 *pdata++;
-                if ( (pdata+3) == pdataInfoEnd )
+                if ( (pdata+5) == pdataInfoEnd )
                 {
                     en_data_info--;
                     pdata = &datainfo[0];
-                    if (!en_data_info) pdata = &datashort[0];
+                    if ( !en_data_info ) 
+                    {
+                        pdata = &datalong[0];
+                        if ( en_data_short > 0 ) pdata = &datashort[0];
+                    }
+                        
                 }
             }   
         }
