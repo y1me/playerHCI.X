@@ -240,7 +240,7 @@ void interrupt high_int(void)
             
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
             {
-                // command : ~#C=XXXXXX info data min 10 symbols max 64 symbols  
+                // command : ~#C=XXXXXXXXXX~# info data min 10 symbols max 64 symbols  
                 flag.Data2 = 1;
                 pdataInfo = &datainfo[0];
                 *pdataInfo = *(pDataRX +4); 
@@ -248,7 +248,7 @@ void interrupt high_int(void)
             
             if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
             {
-                // command : ~#D=XXXXXX timed info data?
+                // command : ~#D=XXXXXX timed info data
                 datashort[0] = *(pDataRX +4);
                 datashort[1] = *(pDataRX +5);
                 datashort[2] = *(pDataRX +6);
