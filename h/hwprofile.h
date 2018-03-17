@@ -4,6 +4,7 @@
 
 
     #define CLOCK_FREQ          40000000
+    #define _XTAL_FREQ          40000000
     #define Time_info           20000
     #define Scan_time           70 //x * 0.01s
     #define Nb_Retry            50000

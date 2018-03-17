@@ -355,6 +355,7 @@ void main(void)
 	CS_DSPY = 1;
 	count_info = Time_info;
     INT_Init();
+    __delay_ms(5000);
 	InitMCP23S17();
 	Timer2_Init();
 	trameok = 0;
