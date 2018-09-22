@@ -359,13 +359,13 @@ void main(void)
 	InitMCP23S17();
 	Timer2_Init();
 	trameok = 0;
-    strcpy(datainfo,"this is radio clash");
-    strcpy(datashort,"initok");
-    strcpy(datalong,"  idle");
+    //strcpy(datainfo,"this is radio clash");
+    //strcpy(datashort,"initok");
+    //strcpy(datalong,"  idle");
     pdata = &datashort[0];
     pdataInfoEnd = &datainfo[25];
     en_data_short = STAY_3S;
-    en_data_info = INFO_IT;
+    //en_data_info = INFO_IT;
     pDataRX = &DataRX[0];
     
 
