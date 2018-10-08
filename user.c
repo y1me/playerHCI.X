@@ -722,6 +722,10 @@ void ProcessIO(void)
                     {
                         pdata = &datalong[0];
                         if ( en_data_short > 0 ) pdata = &datashort[0];
+                        strcpy(DataTX,"ENDINFO\r\n");
+                        pDataTX = &DataTX[0];
+                        pDataTXEnd = &DataTX[9];
+                        TX_UART_INT_E = 1;
                     }
                         
                 }

@@ -224,6 +224,8 @@ void interrupt high_int(void)
                 datalong[4] = *(pDataRX +8);
                 datalong[5] = *(pDataRX +9);
                 datalong[6] = 'T';
+                pdata = &datalong[0];
+                en_data_info = 0;
                 
             }
             if (*(pDataRX +2) == 'B' && *(pDataRX +3) == '=')
@@ -236,6 +238,8 @@ void interrupt high_int(void)
                 datalong[4] = *(pDataRX +8);
                 datalong[5] = *(pDataRX +9);
                 datalong[6] = 0x00;
+                pdata = &datalong[0];
+                en_data_info = 0;
             }
             
             if (*(pDataRX +2) == 'C' && *(pDataRX +3) == '=')
@@ -244,6 +248,7 @@ void interrupt high_int(void)
                 flag.Data2 = 1;
                 pdataInfo = &datainfo[0];
                 *pdataInfo = *(pDataRX +4); 
+                en_data_info = 0;
             }
             
             if (*(pDataRX +2) == 'D' && *(pDataRX +3) == '=')
@@ -256,6 +261,7 @@ void interrupt high_int(void)
                 datashort[4] = *(pDataRX +8);
                 datashort[5] = *(pDataRX +9);
                 en_data_short = STAY_3S;
+                en_data_info = 0;
             }
             /*
             if (*(pDataRX +2) == 'E' && *(pDataRX +3) == '=')
